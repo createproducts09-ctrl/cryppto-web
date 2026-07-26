@@ -344,7 +344,7 @@ export default function AskClient() {
       if (autoSentRef.current === sentKey) return;
       const label = basket?.name || coinNameParam || basketId;
       const prompt = custom
-        ? `Regarding portfolio basket “${label}”:\n\n${custom}`
+        ? custom
         : basket
           ? buildBasketResearchPrompt(basket)
           : `Run a full portfolio research desk brief on basket “${label}”.`;
@@ -363,11 +363,14 @@ export default function AskClient() {
 
     const label = coin?.name || coinNameParam || coinId;
     const prompt = custom
-      ? `Regarding ${label}${
-          coin?.symbol ? ` (${String(coin.symbol).toUpperCase()})` : ""
-        }:\n\n${custom}`
+      ? custom
       : buildCoinResearchPrompt(
-          coin || { id: coinId, name: coinNameParam || undefined }
+          coin ||
+            ({
+              id: coinId,
+              name: coinNameParam || coinId,
+              symbol: "",
+            } as Coin)
         );
 
     autoSentRef.current = sentKey;

@@ -18,7 +18,6 @@ export const FUNDAMENTAL_TITLES: Record<string, { title: string; icon: string }>
   catalysts: { title: "Possible catalysts", icon: "rocket" },
   risks: { title: "Risk stack", icon: "shield" },
   regulatory: { title: "Regulatory note", icon: "book" },
-  how_to_read: { title: "How to use this page", icon: "book" },
   utility: { title: "Utility", icon: "map" },
   ecosystem: { title: "Ecosystem", icon: "map" },
   roadmap: { title: "Roadmap", icon: "rocket" },

@@ -1,25 +1,26 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   BadgeCheck,
-  ChevronRight,
+  Camera,
   CreditCard,
   LogOut,
-  ShieldAlert,
-  UserRound,
+  Trash2,
   Wallet,
 } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { PageHeader, PageShell } from "@/components/shell/PageChrome";
+import { UserAvatar } from "@/components/ui/UserAvatar";
+import { PageShell } from "@/components/shell/PageChrome";
 import { Modal } from "@/components/ui/Modal";
 import { Skeleton } from "@/components/ui/Card";
 import { endpoints } from "@/lib/api/client";
+import { fileToAvatarDataUrl } from "@/lib/avatar";
 import { useAuthStore } from "@/lib/store/auth";
 import type { Entitlements, User } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -32,8 +33,15 @@ export default function ProfilePage() {
   const storeUser = useAuthStore((s) => s.user);
   const setUser = useAuthStore((s) => s.setUser);
   const logout = useAuthStore((s) => s.logout);
+  const fileRef = useRef<HTMLInputElement>(null);
 
+  const [displayName, setDisplayName] = useState("");
   const [username, setUsername] = useState("");
+  const [bio, setBio] = useState("");
+  const [avatarDraft, setAvatarDraft] = useState<string | null | undefined>(
+    undefined
+  );
+  const [avatarBusy, setAvatarBusy] = useState(false);
   const [saveError, setSaveError] = useState("");
   const [saveOk, setSaveOk] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -69,16 +77,45 @@ export default function ProfilePage() {
   });
 
   useEffect(() => {
-    if (user?.username) setUsername(user.username);
-  }, [user?.username]);
+    if (!user) return;
+    setUsername(user.username || "");
+    setDisplayName(user.display_name || "");
+    setBio(user.bio || "");
+    setAvatarDraft(undefined);
+  }, [user?.id, user?.username, user?.display_name, user?.bio, user?.avatar]);
+
+  const displayAvatar =
+    avatarDraft === undefined ? user?.avatar : avatarDraft;
+  const displayLabel =
+    displayName.trim() || user?.display_name || user?.username || "User";
+
+  const dirty =
+    username.trim() !== (user?.username || "") ||
+    displayName.trim() !== (user?.display_name || "") ||
+    bio.trim() !== (user?.bio || "") ||
+    avatarDraft !== undefined;
 
   const save = useMutation({
     mutationFn: async () => {
-      const { data } = await endpoints.updateMe({ username: username.trim() });
+      const body: {
+        username?: string;
+        display_name?: string | null;
+        bio?: string | null;
+        avatar?: string | null;
+      } = {
+        username: username.trim(),
+        display_name: displayName.trim() || null,
+        bio: bio.trim() || null,
+      };
+      if (avatarDraft !== undefined) {
+        body.avatar = avatarDraft;
+      }
+      const { data } = await endpoints.updateMe(body);
       return data as User;
     },
     onSuccess: (u) => {
       setUser(u);
+      setAvatarDraft(undefined);
       setSaveOk(true);
       setSaveError("");
       queryClient.setQueryData(["me"], u);
@@ -110,6 +147,21 @@ export default function ProfilePage() {
     },
   });
 
+  async function onPickAvatar(file: File | null) {
+    if (!file) return;
+    setAvatarBusy(true);
+    setSaveError("");
+    try {
+      const dataUrl = await fileToAvatarDataUrl(file);
+      setAvatarDraft(dataUrl);
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : "Could not read image");
+    } finally {
+      setAvatarBusy(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  }
+
   if (!hydrated || (!accessToken && hydrated)) {
     return (
       <div className="flex min-h-[40vh] items-center justify-center">
@@ -120,32 +172,33 @@ export default function ProfilePage() {
 
   if (isLoading && !user) {
     return (
-      <PageShell width="sm" className="space-y-4">
-        <Skeleton className="h-10 w-40" />
-        <Skeleton className="h-40 w-full rounded-2xl" />
-        <Skeleton className="h-48 w-full rounded-2xl" />
+      <PageShell width="sm" className="space-y-3">
+        <Skeleton className="h-8 w-32" />
+        <Skeleton className="h-56 w-full rounded-2xl" />
       </PageShell>
     );
   }
 
   const plan = entitlements?.plan || user?.plan || "free";
   const isKeel = plan === "keel" || entitlements?.is_keel;
-  const initial = (user?.username || user?.email || "U")
-    .slice(0, 1)
-    .toUpperCase();
-  const memberSince = user?.created_at
-    ? new Date(user.created_at).toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      })
-    : null;
 
   function onSave(e: FormEvent) {
     e.preventDefault();
     setSaveError("");
     if (!username.trim()) {
       setSaveError("Username is required");
+      return;
+    }
+    if (username.trim().length < 2) {
+      setSaveError("Username must be at least 2 characters");
+      return;
+    }
+    if (displayName.trim().length > 48) {
+      setSaveError("Nickname is too long (max 48)");
+      return;
+    }
+    if (bio.trim().length > 160) {
+      setSaveError("Bio is too long (max 160)");
       return;
     }
     save.mutate();
@@ -157,169 +210,180 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-[calc(100dvh-4rem)] bg-bg">
-      <PageShell width="sm">
-        <PageHeader
-          title="Profile"
-          description="Manage your account, plan, and privacy."
-        />
-
-        {/* Identity */}
-        <section className="rounded-2xl border border-border bg-bg-elevated p-5 shadow-[var(--shadow-card)] sm:p-6">
-          <div className="flex items-start gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary-soft text-lg font-bold text-primary">
-              {initial}
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <h2 className="truncate text-lg font-semibold text-text">
-                  {user?.username || "User"}
-                </h2>
-                {user?.email_verified ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-up-soft px-2 py-0.5 text-[11px] font-semibold text-up">
-                    <BadgeCheck className="h-3 w-3" />
-                    Verified
-                  </span>
-                ) : (
-                  <span className="rounded-full bg-bg-muted px-2 py-0.5 text-[11px] font-semibold text-text-muted">
-                    Unverified
-                  </span>
-                )}
-              </div>
-              <p className="mt-0.5 truncate text-sm text-text-secondary">
-                {user?.email}
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2 text-xs">
-                <span
-                  className={cn(
-                    "rounded-full px-2.5 py-1 font-semibold capitalize",
-                    isKeel
-                      ? "bg-primary-soft text-primary"
-                      : "bg-bg-muted text-text-secondary"
-                  )}
-                >
-                  {isKeel ? "Keel plan" : "Free plan"}
-                </span>
-                {memberSince ? (
-                  <span className="rounded-full bg-bg-muted px-2.5 py-1 font-medium text-text-muted">
-                    Joined {memberSince}
-                  </span>
-                ) : null}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Edit */}
-        <section className="mt-4 rounded-2xl border border-border bg-bg-elevated p-5 shadow-[var(--shadow-card)] sm:p-6">
-          <div className="mb-4 flex items-center gap-2">
-            <UserRound className="h-4 w-4 text-primary" />
-            <h3 className="text-sm font-semibold text-text">Account details</h3>
-          </div>
-          <form onSubmit={onSave} className="space-y-4">
-            <Input
-              label="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              autoComplete="username"
-            />
-            <Input label="Email" value={user?.email || ""} disabled />
-            {saveError ? <p className="text-xs text-down">{saveError}</p> : null}
-            {saveOk ? (
-              <p className="text-xs text-up">Profile updated</p>
-            ) : null}
-            <div className="flex justify-end">
+    <div className="bg-bg pb-8">
+      <PageShell width="sm" className="!py-4 sm:!py-5">
+        <form onSubmit={onSave} className="space-y-3">
+          {/* One compact card: photo + fields */}
+          <section className="rounded-2xl border border-border bg-bg-elevated p-4 shadow-[var(--shadow-card)] sm:p-5">
+            <div className="flex items-center justify-between gap-3">
+              <h1 className="text-lg font-semibold tracking-tight text-text">
+                Profile
+              </h1>
               <Button
                 type="submit"
                 size="sm"
                 loading={save.isPending}
-                disabled={
-                  !username.trim() || username.trim() === user?.username
-                }
+                disabled={!dirty || !username.trim() || avatarBusy}
               >
-                Save changes
+                Save
               </Button>
             </div>
-          </form>
-        </section>
 
-        {/* Shortcuts */}
-        <section className="mt-4 overflow-hidden rounded-2xl border border-border bg-bg-elevated shadow-[var(--shadow-card)]">
-          <Link
-            href="/pricing"
-            className="flex items-center gap-3 border-b border-border px-4 py-3.5 transition hover:bg-bg-muted/60 sm:px-5"
-          >
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-soft text-primary">
-              <CreditCard className="h-4 w-4" />
-            </span>
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold text-text">
-                {isKeel ? "Manage plan" : "Upgrade to Keel"}
-              </p>
-              <p className="text-xs text-text-muted">
-                {isKeel
-                  ? "You’re on Keel — unlimited Ask AI and more"
-                  : "Unlock unlimited AI and advanced filters"}
-              </p>
-            </div>
-            <ChevronRight className="h-4 w-4 text-text-muted" />
-          </Link>
-          <Link
-            href="/portfolio"
-            className="flex items-center gap-3 border-b border-border px-4 py-3.5 transition hover:bg-bg-muted/60 sm:px-5"
-          >
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-bg-muted text-text-secondary">
-              <Wallet className="h-4 w-4" />
-            </span>
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold text-text">Portfolio</p>
-              <p className="text-xs text-text-muted">
-                Baskets and holdings
-              </p>
-            </div>
-            <ChevronRight className="h-4 w-4 text-text-muted" />
-          </Link>
-          <button
-            type="button"
-            onClick={onLogout}
-            className="flex w-full items-center gap-3 px-4 py-3.5 text-left transition hover:bg-bg-muted/60 cursor-pointer sm:px-5"
-          >
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-bg-muted text-text-secondary">
-              <LogOut className="h-4 w-4" />
-            </span>
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold text-text">Log out</p>
-              <p className="text-xs text-text-muted">
-                Sign out of this device
-              </p>
-            </div>
-            <ChevronRight className="h-4 w-4 text-text-muted" />
-          </button>
-        </section>
+            <div className="mt-4 flex gap-3 sm:gap-4">
+              <div className="relative shrink-0 self-start">
+                <UserAvatar
+                  avatar={displayAvatar}
+                  name={displayLabel}
+                  email={user?.email}
+                  className="h-14 w-14 rounded-xl sm:h-16 sm:w-16 sm:rounded-2xl"
+                  textClassName="text-lg sm:text-xl"
+                />
+                <button
+                  type="button"
+                  onClick={() => fileRef.current?.click()}
+                  disabled={avatarBusy}
+                  className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border border-border bg-white text-text shadow-sm transition hover:bg-bg-muted cursor-pointer disabled:opacity-60"
+                  aria-label="Upload profile photo"
+                >
+                  <Camera className="h-3.5 w-3.5" />
+                </button>
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  className="hidden"
+                  onChange={(e) => onPickAvatar(e.target.files?.[0] || null)}
+                />
+              </div>
 
-        {/* Danger zone */}
-        <section className="mt-4 rounded-2xl border border-down/25 bg-bg-elevated p-5 shadow-[var(--shadow-card)] sm:p-6">
-          <div className="mb-2 flex items-center gap-2 text-down">
-            <ShieldAlert className="h-4 w-4" />
-            <h3 className="text-sm font-semibold">Danger zone</h3>
+              <div className="min-w-0 flex-1 space-y-2.5">
+                <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                  {user?.email_verified ? (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-up-soft px-2 py-0.5 font-semibold text-up">
+                      <BadgeCheck className="h-3 w-3" />
+                      Verified
+                    </span>
+                  ) : (
+                    <span className="rounded-full bg-bg-muted px-2 py-0.5 font-semibold text-text-muted">
+                      Unverified
+                    </span>
+                  )}
+                  <span
+                    className={cn(
+                      "rounded-full px-2 py-0.5 font-semibold",
+                      isKeel
+                        ? "bg-primary-soft text-primary"
+                        : "bg-bg-muted text-text-secondary"
+                    )}
+                  >
+                    {isKeel ? "Keel" : "Free"}
+                  </span>
+                  {(avatarDraft !== undefined
+                    ? avatarDraft
+                    : user?.avatar) && (
+                    <button
+                      type="button"
+                      onClick={() => setAvatarDraft(null)}
+                      className="inline-flex items-center gap-1 font-medium text-text-muted transition hover:text-down cursor-pointer"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                      Remove photo
+                    </button>
+                  )}
+                </div>
+
+                <Input
+                  label="Nickname"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  placeholder="Display name"
+                  maxLength={48}
+                  autoComplete="nickname"
+                  className="h-9"
+                />
+                <Input
+                  label="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  autoComplete="username"
+                  maxLength={32}
+                  className="h-9"
+                />
+              </div>
+            </div>
+
+            <label className="mt-3 flex flex-col gap-1 text-sm">
+              <span className="font-medium text-text-secondary">Bio</span>
+              <textarea
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                maxLength={160}
+                rows={2}
+                placeholder="Short bio (optional)"
+                className="w-full resize-none rounded-[10px] border border-border bg-bg px-3 py-2 text-sm text-text placeholder:text-text-muted outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+              />
+              <span className="text-[11px] text-text-muted">{bio.length}/160</span>
+            </label>
+
+            <p className="mt-2 truncate text-xs text-text-muted">
+              {user?.email}
+            </p>
+
+            {avatarBusy ? (
+              <p className="mt-2 text-xs text-text-muted">Preparing photo…</p>
+            ) : null}
+            {saveError ? (
+              <p className="mt-2 text-xs text-down">{saveError}</p>
+            ) : null}
+            {saveOk ? (
+              <p className="mt-2 text-xs text-up">Profile updated</p>
+            ) : null}
+          </section>
+
+          {/* Compact actions */}
+          <section className="grid grid-cols-3 gap-2">
+            <Link
+              href="/pricing"
+              className="flex flex-col items-center gap-1.5 rounded-xl border border-border bg-bg-elevated px-2 py-3 text-center transition hover:bg-bg-muted/60"
+            >
+              <CreditCard className="h-4 w-4 text-primary" />
+              <span className="text-[11px] font-semibold text-text">
+                {isKeel ? "Plan" : "Upgrade"}
+              </span>
+            </Link>
+            <Link
+              href="/portfolio"
+              className="flex flex-col items-center gap-1.5 rounded-xl border border-border bg-bg-elevated px-2 py-3 text-center transition hover:bg-bg-muted/60"
+            >
+              <Wallet className="h-4 w-4 text-text-secondary" />
+              <span className="text-[11px] font-semibold text-text">
+                Portfolio
+              </span>
+            </Link>
+            <button
+              type="button"
+              onClick={onLogout}
+              className="flex flex-col items-center gap-1.5 rounded-xl border border-border bg-bg-elevated px-2 py-3 text-center transition hover:bg-bg-muted/60 cursor-pointer"
+            >
+              <LogOut className="h-4 w-4 text-text-secondary" />
+              <span className="text-[11px] font-semibold text-text">Log out</span>
+            </button>
+          </section>
+
+          <div className="flex justify-center pt-1">
+            <button
+              type="button"
+              onClick={() => {
+                setDeleteOpen(true);
+                setConfirmText("");
+                setDeleteError("");
+              }}
+              className="text-xs font-medium text-text-muted underline-offset-2 transition hover:text-down hover:underline cursor-pointer"
+            >
+              Delete account
+            </button>
           </div>
-          <p className="text-sm text-text-secondary">
-            Permanently delete your account and personal data. Your posts
-            will be anonymized. This can’t be undone.
-          </p>
-          <Button
-            variant="danger"
-            size="sm"
-            className="mt-4"
-            onClick={() => {
-              setDeleteOpen(true);
-              setConfirmText("");
-              setDeleteError("");
-            }}
-          >
-            Delete account
-          </Button>
-        </section>
+        </form>
       </PageShell>
 
       <Modal

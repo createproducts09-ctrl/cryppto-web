@@ -20,7 +20,7 @@ export function AppFooter() {
       <div className="mx-auto flex max-w-[1400px] flex-col gap-8 px-6 py-10">
         <div className="flex flex-wrap items-start justify-between gap-8">
           <div className="max-w-xs">
-            <BrandLogo className="h-12" />
+            <BrandLogo className="h-9" />
             <p className="mt-3 text-sm leading-relaxed text-text-secondary">
               Crypto research tools — swipe markets, ask AI, track baskets.
             </p>

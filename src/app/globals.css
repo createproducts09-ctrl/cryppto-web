@@ -287,6 +287,27 @@ body {
     #ffffff;
 }
 
+/* Seamless market ticker — 4 identical rows, shift by 25% */
+@keyframes landing-ticker-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-25%, 0, 0);
+  }
+}
+
+.landing-ticker {
+  animation: landing-ticker-scroll 40s linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-ticker {
+    animation: none;
+  }
+}
+
 /* Research report hero art */
 .report-art-float {
   animation: research-card-float 4.2s ease-in-out infinite;

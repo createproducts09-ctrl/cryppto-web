@@ -58,8 +58,13 @@ export const endpoints = {
   resendVerification: (body?: { email?: string }) =>
     api.post("/auth/resend-verification", body || {}),
   me: () => api.get("/auth/me"),
-  updateMe: (body: { username?: string; avatar?: string | null; preferences?: object }) =>
-    api.patch("/users/me", body),
+  updateMe: (body: {
+    username?: string;
+    display_name?: string | null;
+    bio?: string | null;
+    avatar?: string | null;
+    preferences?: object;
+  }) => api.patch("/users/me", body),
   deleteAccount: () => api.delete("/users/me"),
   deck: (
     filter: string,

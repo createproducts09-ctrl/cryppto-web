@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { BrandLogo } from "@/components/brand/BrandLogo";
 import { Button } from "@/components/ui/Button";
+import { UserAvatar } from "@/components/ui/UserAvatar";
 import { useAuthStore } from "@/lib/store/auth";
 import { cn } from "@/lib/utils";
 
@@ -50,7 +51,8 @@ export function TopBar({ onOpenSearch }: { onOpenSearch: () => void }) {
     return "Alphora";
   }, [pathname]);
 
-  const initial = (user?.username || user?.email || "U").slice(0, 1).toUpperCase();
+  const displayName =
+    user?.display_name?.trim() || user?.username || user?.email || "User";
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-white/95 backdrop-blur-xl">
@@ -61,7 +63,7 @@ export function TopBar({ onOpenSearch }: { onOpenSearch: () => void }) {
           className="flex shrink-0 items-center"
           aria-label="Alphora Labs home"
         >
-          <BrandLogo className="h-12 w-auto" priority />
+          <BrandLogo className="h-8" priority />
         </Link>
         <div className="min-w-0 flex-1">
           <p className="truncate font-display text-[17px] font-semibold tracking-tight text-text">
@@ -80,10 +82,16 @@ export function TopBar({ onOpenSearch }: { onOpenSearch: () => void }) {
           <button
             type="button"
             onClick={() => setSheetOpen(true)}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-soft text-xs font-bold text-primary cursor-pointer"
+            className="overflow-hidden rounded-full cursor-pointer"
             aria-label="Account"
           >
-            {initial}
+            <UserAvatar
+              avatar={user.avatar}
+              name={displayName}
+              email={user.email}
+              className="h-9 w-9"
+              textClassName="text-xs"
+            />
           </button>
         ) : (
           <button
@@ -103,7 +111,7 @@ export function TopBar({ onOpenSearch }: { onOpenSearch: () => void }) {
           className="flex shrink-0 items-center"
           aria-label="Alphora Labs home"
         >
-          <BrandLogo className="h-14 w-auto" priority />
+          <BrandLogo className="h-8" priority />
         </Link>
 
         <button
@@ -156,11 +164,15 @@ export function TopBar({ onOpenSearch }: { onOpenSearch: () => void }) {
                 className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 transition hover:bg-bg-muted"
                 title="Profile"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-soft text-xs font-bold text-primary">
-                  {initial}
-                </div>
+                <UserAvatar
+                  avatar={user.avatar}
+                  name={displayName}
+                  email={user.email}
+                  className="h-8 w-8 rounded-full"
+                  textClassName="text-xs"
+                />
                 <span className="max-w-[7rem] truncate text-sm font-medium text-text">
-                  {user.username}
+                  {displayName}
                 </span>
               </Link>
               <Button
@@ -205,14 +217,21 @@ export function TopBar({ onOpenSearch }: { onOpenSearch: () => void }) {
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-border-strong" />
             {user ? (
               <div className="mb-4 flex items-center gap-3 px-1">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-soft text-base font-bold text-primary">
-                  {initial}
-                </div>
+                <UserAvatar
+                  avatar={user.avatar}
+                  name={displayName}
+                  email={user.email}
+                  className="h-12 w-12 rounded-full"
+                  textClassName="text-base"
+                />
                 <div className="min-w-0">
                   <p className="truncate font-display text-base font-semibold">
-                    {user.username}
+                    {displayName}
                   </p>
-                  <p className="truncate text-xs text-text-muted">{user.email}</p>
+                  <p className="truncate text-xs text-text-muted">
+                    @{user.username}
+                    {user.email ? ` · ${user.email}` : null}
+                  </p>
                 </div>
               </div>
             ) : null}

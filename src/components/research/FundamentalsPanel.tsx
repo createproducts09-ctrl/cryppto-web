@@ -91,20 +91,25 @@ function SectionBody({ bullets }: { bullets: string[] }) {
 const WIDE_KEYS = new Set([
   "snapshot",
   "project_overview",
-  "how_to_read",
 ]);
 
+const HIDDEN_KEYS = new Set(["how_to_read"]);
+
 export function FundamentalsPanel({ sections }: { sections: SectionBlock[] }) {
-  const [active, setActive] = useState(sections[0]?.key ?? "");
+  const visible = useMemo(
+    () => sections.filter((s) => !HIDDEN_KEYS.has(s.key)),
+    [sections]
+  );
+  const [active, setActive] = useState(visible[0]?.key ?? "");
 
   const { lead, rest } = useMemo(() => {
-    if (!sections.length) {
+    if (!visible.length) {
       return { lead: null as SectionBlock | null, rest: [] as SectionBlock[] };
     }
-    const leadIdx = sections.findIndex((s) => WIDE_KEYS.has(s.key));
+    const leadIdx = visible.findIndex((s) => WIDE_KEYS.has(s.key));
     const i = leadIdx >= 0 ? leadIdx : 0;
-    const lead = sections[i];
-    const leftover = sections.filter((_, idx) => idx !== i);
+    const lead = visible[i];
+    const leftover = visible.filter((_, idx) => idx !== i);
 
     // Prefer paired columns: strength/weakness, opportunity/risk, etc.
     const pairOrder = [
@@ -125,7 +130,6 @@ export function FundamentalsPanel({ sections }: { sections: SectionBlock[] }) {
       "competitors",
       "roadmap",
       "partnerships",
-      "how_to_read",
     ];
     const rank = (key: string) => {
       const n = pairOrder.indexOf(key);
@@ -133,9 +137,9 @@ export function FundamentalsPanel({ sections }: { sections: SectionBlock[] }) {
     };
     const rest = [...leftover].sort((a, b) => rank(a.key) - rank(b.key));
     return { lead, rest };
-  }, [sections]);
+  }, [visible]);
 
-  if (!sections.length) return null;
+  if (!visible.length) return null;
 
   function jump(key: string) {
     setActive(key);
@@ -151,7 +155,7 @@ export function FundamentalsPanel({ sections }: { sections: SectionBlock[] }) {
         className="sticky top-[calc(4rem+3.25rem)] z-10 -mx-4 border-b border-border bg-bg/95 px-4 py-2.5 backdrop-blur-md sm:-mx-6 sm:px-6"
       >
         <div className="flex gap-1.5 overflow-x-auto pb-0.5 scrollbar-thin">
-          {sections.map((s, i) => (
+          {visible.map((s, i) => (
             <button
               key={s.key}
               type="button"

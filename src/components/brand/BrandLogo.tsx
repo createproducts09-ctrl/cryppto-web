@@ -5,22 +5,23 @@ import { cn } from "@/lib/utils";
 type Props = {
   className?: string;
   priority?: boolean;
-  /** Invert black wordmark for dark surfaces */
+  /** White wordmark for dark surfaces */
   onDark?: boolean;
 };
 
+/** Transparent Alphora Labs wordmark (`/logo.png`). */
 export function BrandLogo({ className, priority, onDark }: Props) {
   return (
     <Image
       src="/logo.png"
       alt="Alphora Labs"
-      width={1774}
-      height={887}
+      width={1399}
+      height={287}
       priority={priority}
       className={cn(
-        "h-11 w-auto max-w-none object-contain object-left",
+        "w-auto max-w-none object-contain object-left",
         onDark && "brightness-0 invert",
-        className
+        className || "h-8"
       )}
     />
   );

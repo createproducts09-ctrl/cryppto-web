@@ -2,7 +2,9 @@ export type User = {
   id: string;
   email: string;
   username: string;
+  display_name?: string | null;
   avatar?: string | null;
+  bio?: string | null;
   email_verified?: boolean;
   plan?: "free" | "keel" | string;
   preferences?: Record<string, unknown>;

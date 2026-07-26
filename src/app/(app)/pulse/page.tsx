@@ -8,6 +8,7 @@ import { UpgradeModal } from "@/components/billing/UpgradeModal";
 import { PriceChange } from "@/components/coins/PriceChange";
 import { PageHeader, PageShell } from "@/components/shell/PageChrome";
 import { Button } from "@/components/ui/Button";
+import { Chip } from "@/components/ui/Chip";
 import { Skeleton } from "@/components/ui/Card";
 import { endpoints } from "@/lib/api/client";
 import { formatCompact, formatPrice } from "@/lib/format";
@@ -26,6 +27,58 @@ type PulseData = {
   most_interested?: PulseRow[];
   most_watchlisted?: PulseRow[];
 };
+
+type BoardFilter = "all" | "passed" | "interested" | "watchlisted";
+type MoveFilter = "any" | "gainers" | "losers";
+type CapFilter = "any" | "large" | "mid" | "small";
+
+const BOARD_FILTERS: { key: BoardFilter; label: string }[] = [
+  { key: "all", label: "All" },
+  { key: "passed", label: "Passed" },
+  { key: "interested", label: "Interested" },
+  { key: "watchlisted", label: "Watchlisted" },
+];
+
+const MOVE_FILTERS: { key: MoveFilter; label: string }[] = [
+  { key: "any", label: "Any move" },
+  { key: "gainers", label: "Gainers" },
+  { key: "losers", label: "Losers" },
+];
+
+const CAP_FILTERS: { key: CapFilter; label: string }[] = [
+  { key: "any", label: "Any size" },
+  { key: "large", label: "Large" },
+  { key: "mid", label: "Mid" },
+  { key: "small", label: "Small" },
+];
+
+function filterRows(
+  rows: PulseRow[] | undefined,
+  move: MoveFilter,
+  cap: CapFilter
+): PulseRow[] {
+  let out = rows || [];
+  if (move === "gainers") {
+    out = out.filter((r) => (r.coin.price_change_percentage_24h ?? 0) > 0);
+  } else if (move === "losers") {
+    out = out.filter((r) => (r.coin.price_change_percentage_24h ?? 0) < 0);
+  }
+  if (cap === "large") {
+    out = out.filter(
+      (r) => r.coin.market_cap_rank != null && r.coin.market_cap_rank <= 50
+    );
+  } else if (cap === "mid") {
+    out = out.filter((r) => {
+      const rank = r.coin.market_cap_rank;
+      return rank != null && rank > 50 && rank <= 200;
+    });
+  } else if (cap === "small") {
+    out = out.filter(
+      (r) => r.coin.market_cap_rank == null || r.coin.market_cap_rank > 200
+    );
+  }
+  return out;
+}
 
 function LockMark({ className }: { className?: string }) {
   return (
@@ -199,36 +252,120 @@ function RankList({
 function PulseGrid({
   data,
   locked,
+  board = "all",
 }: {
   data: PulseData;
   locked?: boolean;
+  board?: BoardFilter;
+}) {
+  const showPassed = board === "all" || board === "passed";
+  const showInterested = board === "all" || board === "interested";
+  const showWatch = board === "all" || board === "watchlisted";
+  const single = board !== "all";
+
+  return (
+    <div
+      className={cn(
+        "grid gap-4",
+        single ? "grid-cols-1" : "lg:grid-cols-3"
+      )}
+    >
+      {showPassed ? (
+        <RankList
+          title="Most passed"
+          subtitle="Left swipe · skipped on Discover"
+          accent="text-down"
+          rows={data.most_passed || []}
+          emptyHint="No matches for this filter — try another chip."
+          locked={locked}
+        />
+      ) : null}
+      {showInterested ? (
+        <RankList
+          title="Most interested"
+          subtitle="Right swipe · desk attention"
+          accent="text-up"
+          rows={data.most_interested || []}
+          emptyHint="No matches for this filter — try another chip."
+          locked={locked}
+        />
+      ) : null}
+      {showWatch ? (
+        <RankList
+          title="Most watchlisted"
+          subtitle="Saved from Discover + watchlist"
+          accent="text-primary"
+          rows={data.most_watchlisted || []}
+          emptyHint="No matches for this filter — try another chip."
+          locked={locked}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+function PulseFilters({
+  board,
+  move,
+  cap,
+  onBoard,
+  onMove,
+  onCap,
+  disabled,
+}: {
+  board: BoardFilter;
+  move: MoveFilter;
+  cap: CapFilter;
+  onBoard: (v: BoardFilter) => void;
+  onMove: (v: MoveFilter) => void;
+  onCap: (v: CapFilter) => void;
+  disabled?: boolean;
 }) {
   return (
-    <div className="grid gap-4 lg:grid-cols-3">
-      <RankList
-        title="Most passed"
-        subtitle="Left swipe · skipped on Discover"
-        accent="text-down"
-        rows={data.most_passed || []}
-        emptyHint="No pass votes yet — keep swiping on Discover."
-        locked={locked}
+    <div
+      className={cn(
+        "mb-5 flex gap-1.5 overflow-x-auto rounded-2xl border border-border bg-bg-elevated p-2.5 scrollbar-thin sm:p-3",
+        disabled && "pointer-events-none opacity-60"
+      )}
+    >
+      {BOARD_FILTERS.map((f) => (
+        <Chip
+          key={f.key}
+          active={board === f.key}
+          onClick={() => onBoard(f.key)}
+          className="shrink-0"
+        >
+          {f.label}
+        </Chip>
+      ))}
+      <span
+        aria-hidden
+        className="mx-0.5 my-auto h-5 w-px shrink-0 bg-border"
       />
-      <RankList
-        title="Most interested"
-        subtitle="Right swipe · desk attention"
-        accent="text-up"
-        rows={data.most_interested || []}
-        emptyHint="No interested votes yet — swipe right on Discover."
-        locked={locked}
+      {MOVE_FILTERS.map((f) => (
+        <Chip
+          key={f.key}
+          active={move === f.key}
+          onClick={() => onMove(f.key)}
+          className="shrink-0"
+        >
+          {f.label}
+        </Chip>
+      ))}
+      <span
+        aria-hidden
+        className="mx-0.5 my-auto h-5 w-px shrink-0 bg-border"
       />
-      <RankList
-        title="Most watchlisted"
-        subtitle="Saved from Discover + watchlist"
-        accent="text-primary"
-        rows={data.most_watchlisted || []}
-        emptyHint="No watchlist saves yet — star coins while you swipe."
-        locked={locked}
-      />
+      {CAP_FILTERS.map((f) => (
+        <Chip
+          key={f.key}
+          active={cap === f.key}
+          onClick={() => onCap(f.key)}
+          className="shrink-0"
+        >
+          {f.label}
+        </Chip>
+      ))}
     </div>
   );
 }
@@ -237,6 +374,9 @@ export default function PulsePage() {
   const accessToken = useAuthStore((s) => s.accessToken);
   const user = useAuthStore((s) => s.user);
   const [paywallOpen, setPaywallOpen] = useState(false);
+  const [board, setBoard] = useState<BoardFilter>("all");
+  const [move, setMove] = useState<MoveFilter>("any");
+  const [cap, setCap] = useState<CapFilter>("any");
 
   const { data: entitlements } = useQuery({
     queryKey: ["entitlements"],
@@ -273,6 +413,24 @@ export default function PulsePage() {
     []
   );
 
+  const filteredLive = useMemo<PulseData>(
+    () => ({
+      most_passed: filterRows(data?.most_passed, move, cap),
+      most_interested: filterRows(data?.most_interested, move, cap),
+      most_watchlisted: filterRows(data?.most_watchlisted, move, cap),
+    }),
+    [data, move, cap]
+  );
+
+  const filteredPreview = useMemo<PulseData>(
+    () => ({
+      most_passed: filterRows(preview.most_passed, move, cap),
+      most_interested: filterRows(preview.most_interested, move, cap),
+      most_watchlisted: filterRows(preview.most_watchlisted, move, cap),
+    }),
+    [preview, move, cap]
+  );
+
   return (
     <div className="min-h-[calc(100dvh-4rem)] bg-bg">
       <PageShell width="lg">
@@ -287,6 +445,16 @@ export default function PulsePage() {
               </Button>
             ) : null
           }
+        />
+
+        <PulseFilters
+          board={board}
+          move={move}
+          cap={cap}
+          onBoard={setBoard}
+          onMove={setMove}
+          onCap={setCap}
+          disabled={locked && !accessToken}
         />
 
         {accessToken && isKeel && isLoading ? (
@@ -316,7 +484,7 @@ export default function PulsePage() {
               className="pointer-events-none select-none blur-[6px] opacity-70 sm:blur-[7px]"
               aria-hidden
             >
-              <PulseGrid data={preview} locked />
+              <PulseGrid data={filteredPreview} locked board={board} />
             </div>
 
             <div className="absolute inset-0 z-10 flex items-center justify-center bg-bg/25 px-4 backdrop-blur-[1px]">
@@ -359,13 +527,7 @@ export default function PulsePage() {
             </div>
           </div>
         ) : (
-          <PulseGrid
-            data={{
-              most_passed: data?.most_passed || [],
-              most_interested: data?.most_interested || [],
-              most_watchlisted: data?.most_watchlisted || [],
-            }}
-          />
+          <PulseGrid data={filteredLive} board={board} />
         )}
       </PageShell>
 
