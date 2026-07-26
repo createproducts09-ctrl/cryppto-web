@@ -66,7 +66,7 @@ export function PortfolioAskDock({
     setCollapsed(false);
     setMobileOpen(true);
     requestAnimationFrame(() => taRef.current?.focus());
-  }, [attached?.id]);
+  }, [attached]);
 
   useEffect(() => {
     if (dragging) setCollapsed(false);

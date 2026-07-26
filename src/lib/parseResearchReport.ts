@@ -190,7 +190,7 @@ export function parseResearchReport(raw: string): ResearchReport {
   const lines = text.split("\n");
   const sections: ReportSection[] = [];
   let current: ReportSection | null = null;
-  let preamble: string[] = [];
+  const preamble: string[] = [];
 
   for (const line of lines) {
     const header = isSectionHeader(line);
