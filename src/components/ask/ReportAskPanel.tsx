@@ -102,7 +102,7 @@ export function ReportAskPanel({
       setPendingSelection("");
     }
 
-    function onMouseUp(e: MouseEvent) {
+    function onSelectionChange(e: Event) {
       const root = reportRef.current;
       if (!root) return;
       // Don't clear when interacting with the float / panel
@@ -139,11 +139,11 @@ export function ReportAskPanel({
       });
     }
 
-    document.addEventListener("mouseup", onMouseUp);
-    document.addEventListener("keyup", onMouseUp);
+    document.addEventListener("mouseup", onSelectionChange);
+    document.addEventListener("keyup", onSelectionChange);
     return () => {
-      document.removeEventListener("mouseup", onMouseUp);
-      document.removeEventListener("keyup", onMouseUp);
+      document.removeEventListener("mouseup", onSelectionChange);
+      document.removeEventListener("keyup", onSelectionChange);
     };
   }, [reportRef]);
 
