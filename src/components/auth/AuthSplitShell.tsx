@@ -4,8 +4,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { type ReactNode } from "react";
 
-import { BrandLogo } from "@/components/brand/BrandLogo";
-
 export function AuthSplitShell({
   children,
   eyebrow = "Welcome",
@@ -31,8 +29,11 @@ export function AuthSplitShell({
         </div>
 
         <div className="relative z-10 p-10 xl:p-12">
-          <Link href="/" className="inline-flex items-center" aria-label="Alphora Labs">
-            <BrandLogo className="h-14" onDark priority />
+          <Link
+            href="/"
+            className="font-display text-lg font-bold tracking-tight text-white/90 transition hover:text-white"
+          >
+            Alphora Labs
           </Link>
         </div>
 
@@ -99,10 +100,9 @@ export function AuthSplitShell({
         <header className="flex items-center justify-between px-5 py-4 lg:px-10">
           <Link
             href="/"
-            className="flex items-center lg:invisible"
-            aria-label="Alphora Labs"
+            className="font-display text-sm font-bold text-text lg:invisible"
           >
-            <BrandLogo className="h-12" />
+            Alphora Labs
           </Link>
           <span className="hidden text-xs font-medium text-text-muted sm:inline">
             {eyebrow}
@@ -113,11 +113,8 @@ export function AuthSplitShell({
           <div className="w-full max-w-[400px] animate-fade-in">{children}</div>
         </div>
 
-        <footer className="hidden flex-col items-center gap-2 px-5 py-6 lg:flex lg:px-10">
-          <BrandLogo className="h-12" />
-          <p className="text-center text-[11px] text-text-muted">
-            Research only · Not financial advice
-          </p>
+        <footer className="hidden px-5 py-4 text-center text-[11px] text-text-muted lg:block lg:px-10">
+          Research only · Not financial advice
         </footer>
       </section>
     </div>

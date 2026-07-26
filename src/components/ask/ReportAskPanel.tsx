@@ -102,7 +102,7 @@ export function ReportAskPanel({
       setPendingSelection("");
     }
 
-    function onSelectionChange(e: Event) {
+    const onSelectionChange: EventListener = (e) => {
       const root = reportRef.current;
       if (!root) return;
       // Don't clear when interacting with the float / panel
@@ -137,7 +137,7 @@ export function ReportAskPanel({
           window.innerWidth - 140
         ),
       });
-    }
+    };
 
     document.addEventListener("mouseup", onSelectionChange);
     document.addEventListener("keyup", onSelectionChange);

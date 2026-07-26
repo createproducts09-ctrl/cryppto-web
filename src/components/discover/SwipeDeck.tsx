@@ -223,6 +223,7 @@ function DeckCard({
   onOpen,
   onUnlockWhy,
   onAskAttach,
+  onAskHoverChange,
   onAskDragMove,
   onAskDragEnd,
   askDragActive,
