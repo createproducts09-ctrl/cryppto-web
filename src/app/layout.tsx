@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Outfit, Syne } from "next/font/google";
+import Script from "next/script";
 
 import { Providers } from "@/components/providers";
 import { SITE } from "@/lib/seo";
@@ -18,6 +19,9 @@ const syne = Syne({
   display: "swap",
   weight: ["500", "600", "700", "800"],
 });
+
+const CLARITY_ID =
+  process.env.NEXT_PUBLIC_CLARITY_ID || "xt2brqazbt";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -90,8 +94,9 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    // Add when available:
-    // google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    google:
+      process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ||
+      "ZPXGWyM7GZtdPVcFRQDx8iKy2V5FjPUVBSf90Zg9aLo",
   },
   other: {
     "msapplication-TileColor": "#6d28d9",
@@ -148,6 +153,15 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {CLARITY_ID ? (
+          <Script id="microsoft-clarity" strategy="afterInteractive">
+            {`(function(c,l,a,r,i,t,y){
+c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+})(window, document, "clarity", "script", "${CLARITY_ID}");`}
+          </Script>
+        ) : null}
         <Providers>{children}</Providers>
       </body>
     </html>
