@@ -6,6 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowUp, Plus, Sparkles, Trash2 } from "lucide-react";
 import Link from "next/link";
 
+import { MarkdownMessage } from "@/components/ask/MarkdownMessage";
 import {
   isDeskResearchReport,
   isResearchReportContent,
@@ -625,14 +626,16 @@ export default function AskClient() {
                       >
                         {m.role === "user" ? "You" : "Alphora AI"}
                       </div>
-                      <div className="whitespace-pre-wrap">
-                        {m.role === "user"
-                          ? displayUserContent(
-                              m.content,
-                              coinId ? displayName : undefined
-                            )
-                          : m.content}
-                      </div>
+                      {m.role === "user" ? (
+                        <div className="whitespace-pre-wrap">
+                          {displayUserContent(
+                            m.content,
+                            coinId ? displayName : undefined
+                          )}
+                        </div>
+                      ) : (
+                        <MarkdownMessage content={m.content} />
+                      )}
                     </div>
                   );
                 })}

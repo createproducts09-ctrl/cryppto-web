@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 const NAV = [
   { href: "/discover", label: "Discover" },
   { href: "/research", label: "Research" },
+  { href: "/news", label: "News" },
   { href: "/ask", label: "Ask AI" },
   { href: "/portfolio", label: "Portfolio" },
   { href: "/pulse", label: "Pulse" },
@@ -22,6 +23,7 @@ const NAV = [
 const MOBILE_TITLES: Array<{ match: RegExp; title: string }> = [
   { match: /^\/discover/, title: "Explore" },
   { match: /^\/research/, title: "Research" },
+  { match: /^\/news/, title: "News" },
   { match: /^\/ask/, title: "Ask" },
   { match: /^\/portfolio/, title: "Portfolio" },
   { match: /^\/pulse/, title: "Pulse" },
@@ -135,7 +137,7 @@ export function TopBar({ onOpenSearch }: { onOpenSearch: () => void }) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "rounded-lg px-3 py-1.5 text-sm font-medium transition",
+                  "rounded-lg px-2.5 py-1.5 text-sm font-medium transition",
                   active
                     ? "bg-primary-soft text-primary"
                     : "text-text-secondary hover:bg-bg-muted hover:text-text"
@@ -241,6 +243,12 @@ export function TopBar({ onOpenSearch }: { onOpenSearch: () => void }) {
                 className="rounded-xl px-3 py-3 text-sm font-medium text-text hover:bg-bg"
               >
                 Profile & plan
+              </Link>
+              <Link
+                href="/news"
+                className="rounded-xl px-3 py-3 text-sm font-medium text-text hover:bg-bg"
+              >
+                News
               </Link>
               <Link
                 href="/pulse"

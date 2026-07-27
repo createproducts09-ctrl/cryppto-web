@@ -20,22 +20,27 @@ function IconDiscover({ className }: { className?: string }) {
   );
 }
 
-function IconResearch({ className }: { className?: string }) {
+function IconNews({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden>
       <path
-        d="M4.5 16.5 9 12l3.2 3.2L19.5 7.5"
+        d="M6.5 5.75h8.25A1.75 1.75 0 0 1 16.5 7.5v9.25a1.5 1.5 0 0 1-1.5 1.5H6.5A1.75 1.75 0 0 1 4.75 16.5V7.5A1.75 1.75 0 0 1 6.5 5.75Z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M16.5 8.75h1.75A1.5 1.5 0 0 1 19.75 10.25v6A2 2 0 0 1 17.75 18.25H15"
         stroke="currentColor"
         strokeWidth="1.7"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
-        d="M15 7.5h4.5V12"
+        d="M7.75 9.25h5.5M7.75 12h5.5M7.75 14.75h3.5"
         stroke="currentColor"
-        strokeWidth="1.7"
+        strokeWidth="1.55"
         strokeLinecap="round"
-        strokeLinejoin="round"
       />
     </svg>
   );
@@ -104,7 +109,7 @@ function IconYou({ className }: { className?: string }) {
 
 const TABS = [
   { href: "/discover", label: "Explore", Icon: IconDiscover },
-  { href: "/research", label: "Research", Icon: IconResearch },
+  { href: "/news", label: "News", Icon: IconNews },
   { href: "/ask", label: "Ask", Icon: IconAsk, center: true },
   { href: "/portfolio", label: "Portfolio", Icon: IconPortfolio },
   { href: "/profile", label: "You", Icon: IconYou },

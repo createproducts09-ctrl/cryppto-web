@@ -194,6 +194,9 @@ export type NewsItem = {
   image?: string;
   published_at?: string;
   ai_summary?: string;
+  sentiment?: "bullish" | "bearish" | "neutral" | string;
+  market_impact?: string;
+  categories?: string[];
 };
 
 export type SearchResult = {

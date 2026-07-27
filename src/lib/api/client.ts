@@ -143,6 +143,14 @@ export const endpoints = {
     basket_id?: string;
   }) => api.post("/ai/chat", body, { timeout: 120000 }),
   search: (q: string) => api.get("/search", { params: { q } }),
+  news: (opts?: { limit?: number; category?: string }) =>
+    api.get("/news", {
+      params: {
+        limit: opts?.limit ?? 40,
+        category: opts?.category,
+      },
+    }),
+  newsArticle: (id: string) => api.get(`/news/${id}`),
   billingPlans: () => api.get("/billing/plans"),
   entitlements: () => api.get("/billing/entitlements"),
   upgradePlan: (plan: "keel" | "free" = "keel") =>

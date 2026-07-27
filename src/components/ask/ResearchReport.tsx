@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 
+import { MarkdownMessage } from "@/components/ask/MarkdownMessage";
 import { ReportHeroArt } from "@/components/ask/ReportHeroArt";
 import { Button } from "@/components/ui/Button";
 import {
@@ -244,11 +245,7 @@ export function ResearchReportView({
   const inline = variant === "inline";
 
   if (!report.isReport) {
-    return (
-      <div className="whitespace-pre-wrap text-[13px] leading-relaxed text-text-secondary">
-        {content}
-      </div>
-    );
+    return <MarkdownMessage content={content} className="text-[13px]" />;
   }
 
   if (inline) {

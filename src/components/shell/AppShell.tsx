@@ -26,8 +26,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   const isReport = pathname.startsWith("/report");
   const isDiscover = pathname.startsWith("/discover");
   const isPortfolio = pathname.startsWith("/portfolio");
+  const isNews = pathname.startsWith("/news");
   /** Full-bleed desks — no desktop footer chrome */
-  const hideFooter = isAsk || isReport || isDiscover || isPortfolio;
+  const hideFooter = isAsk || isReport || isDiscover || isPortfolio || isNews;
 
   useEffect(() => {
     const open = () => setSearchOpen(true);

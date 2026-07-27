@@ -206,10 +206,18 @@ function ResearchResults() {
 
           {news.length > 0 ? (
             <section>
-              <h3 className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-text-muted">
-                <Newspaper className="h-3.5 w-3.5 text-primary" />
-                News
-              </h3>
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <h3 className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-text-muted">
+                  <Newspaper className="h-3.5 w-3.5 text-primary" />
+                  News
+                </h3>
+                <Link
+                  href="/news"
+                  className="text-[11px] font-semibold text-primary hover:text-primary-hover"
+                >
+                  Open shorts →
+                </Link>
+              </div>
               <div className="space-y-2">
                 {news.slice(0, 6).map((n) => (
                   <Card

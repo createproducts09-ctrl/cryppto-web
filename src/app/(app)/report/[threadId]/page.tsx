@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
+import { MarkdownMessage } from "@/components/ask/MarkdownMessage";
 import { ReportAskPanel } from "@/components/ask/ReportAskPanel";
 import {
   isResearchReportContent,
@@ -23,6 +24,7 @@ export default function ThreadReportPage() {
   const { threadId } = useParams<{ threadId: string }>();
   const search = useSearchParams();
   const accessToken = useAuthStore((s) => s.accessToken);
+  const hydrated = useAuthStore((s) => s.hydrated);
   const coinName = search.get("name") || undefined;
   const coinId = search.get("coin") || undefined;
   const previewKey = search.get("k") || undefined;
@@ -57,22 +59,38 @@ export default function ThreadReportPage() {
       const { data } = await endpoints.aiThread(threadId);
       return data as { messages?: AiMessage[]; id?: string; title?: string };
     },
-    enabled: !!accessToken && !!threadId,
+    enabled: hydrated && !!accessToken && !!threadId,
   });
 
-  const reportContent = useMemo(() => {
+  const { reportContent, structured } = useMemo(() => {
     const messages = data?.messages || [];
     for (let i = messages.length - 1; i >= 0; i--) {
       const m = messages[i];
-      if (m.role === "assistant" && isResearchReportContent(m.content)) {
-        return m.content;
+      if (m.role !== "assistant" || !m.content?.trim()) continue;
+      if (isResearchReportContent(m.content)) {
+        return { reportContent: m.content, structured: true };
       }
     }
-    return preview?.content || "";
+    // Prefer any latest assistant reply over an empty page
+    for (let i = messages.length - 1; i >= 0; i--) {
+      const m = messages[i];
+      if (m.role === "assistant" && m.content?.trim()) {
+        return { reportContent: m.content, structured: false };
+      }
+    }
+    if (preview?.content?.trim()) {
+      return {
+        reportContent: preview.content,
+        structured: isResearchReportContent(preview.content),
+      };
+    }
+    return { reportContent: "", structured: false };
   }, [data, preview]);
 
   const title =
     coinName || preview?.coinName || data?.title || "Research report";
+
+  const needsLogin = hydrated && !accessToken && !preview?.content;
 
   return (
     <div className="min-h-[calc(100dvh-4rem)] bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(109,40,217,0.08),transparent_55%),var(--bg)]">
@@ -130,11 +148,33 @@ export default function ThreadReportPage() {
           </div>
         ) : null}
 
-        {isLoading && !reportContent ? (
+        {!hydrated || (isLoading && !reportContent) ? (
           <div className="space-y-3">
             <Skeleton className="h-40 w-full rounded-2xl" />
             <Skeleton className="h-28 w-full rounded-2xl" />
             <Skeleton className="h-28 w-full rounded-2xl" />
+          </div>
+        ) : needsLogin ? (
+          <div className="rounded-2xl border border-border bg-bg-elevated px-4 py-10 text-center">
+            <p className="text-sm font-medium text-text">
+              Sign in to open this research report
+            </p>
+            <p className="mt-1 text-sm text-text-muted">
+              Reports are loaded from your Ask AI thread.
+            </p>
+            <Button
+              className="mt-4"
+              size="sm"
+              onClick={() => {
+                window.location.href = `/login?next=${encodeURIComponent(
+                  typeof window !== "undefined"
+                    ? window.location.pathname + window.location.search
+                    : `/report/${threadId}`
+                )}`;
+              }}
+            >
+              Log in
+            </Button>
           </div>
         ) : isError && !reportContent ? (
           <div className="rounded-2xl border border-border bg-bg-elevated px-4 py-10 text-center text-sm text-text-muted">
@@ -146,14 +186,28 @@ export default function ThreadReportPage() {
               <p className="print:hidden mb-2 text-[11px] text-text-muted lg:hidden">
                 Tip: drag to highlight text, then use Ask more below.
               </p>
-              <ResearchReportView
-                content={reportContent}
-                coinName={title}
-                coinId={coinId || preview?.coinId}
-                threadId={threadId}
-                variant="full"
-                showOpenButton={false}
-              />
+              {structured ? (
+                <ResearchReportView
+                  content={reportContent}
+                  coinName={title}
+                  coinId={coinId || preview?.coinId}
+                  threadId={threadId}
+                  variant="full"
+                  showOpenButton={false}
+                />
+              ) : (
+                <article className="rounded-2xl border border-border bg-bg-elevated px-5 py-6 shadow-[var(--shadow-card)] sm:px-7">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
+                    Desk reply
+                  </p>
+                  <h2 className="mt-2 font-display text-2xl font-semibold tracking-tight text-text">
+                    {title}
+                  </h2>
+                  <div className="mt-5">
+                    <MarkdownMessage content={reportContent} />
+                  </div>
+                </article>
+              )}
             </div>
 
             <div className="print:hidden lg:sticky lg:top-20 lg:h-[calc(100dvh-6.5rem)]">
@@ -168,7 +222,8 @@ export default function ThreadReportPage() {
           </div>
         ) : (
           <div className="rounded-2xl border border-border bg-bg-elevated px-4 py-10 text-center text-sm text-text-muted">
-            No structured research brief found in this thread yet.
+            No research reply found in this thread yet. Go back to Ask AI and
+            generate a full brief, then open the report again.
           </div>
         )}
       </div>

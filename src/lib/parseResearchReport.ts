@@ -20,9 +20,15 @@ export type ResearchReport = {
 
 const KNOWN_TITLES: Array<{ match: RegExp; id: string; title: string }> = [
   { match: /^basket\s*snapshot\b/i, id: "snapshot", title: "Basket Snapshot" },
+  {
+    match: /^portfolio\s*overview\b|^overview\b/i,
+    id: "snapshot",
+    title: "Portfolio Overview",
+  },
   { match: /^snapshot\b/i, id: "snapshot", title: "Snapshot" },
   { match: /^holdings?\s*tape\b/i, id: "market_tape", title: "Holdings Tape" },
   { match: /^market\s*tape\b/i, id: "market_tape", title: "Market Tape" },
+  { match: /^holdings?\b/i, id: "market_tape", title: "Holdings" },
   {
     match: /^concentration\b|^weights?\b/i,
     id: "trend",
@@ -34,6 +40,7 @@ const KNOWN_TITLES: Array<{ match: RegExp; id: string; title: string }> = [
     title: "Trend & Technical Read",
   },
   { match: /^performance\b/i, id: "fundamentals", title: "Performance Read" },
+  { match: /^assessment\b|^summary\b/i, id: "fundamentals", title: "Assessment" },
   { match: /^fundamentals?\b/i, id: "fundamentals", title: "Fundamentals" },
   {
     match: /^narratives?\b|^catalysts?\b/i,
@@ -47,6 +54,27 @@ const KNOWN_TITLES: Array<{ match: RegExp; id: string; title: string }> = [
     title: "What to Monitor Next",
   },
 ];
+
+/** Match **Label**: value and **Label:** value (colon inside or outside bold). */
+function matchBoldMetric(
+  body: string
+): { label: string; value: string } | null {
+  const outside = body.match(/^\*\*(.+?)\*\*\s*[:：]\s*(.+)$/);
+  if (outside) {
+    return {
+      label: stripInlineMd(outside[1]),
+      value: stripInlineMd(outside[2]),
+    };
+  }
+  const inside = body.match(/^\*\*(.+?)[:：]\*\*\s*(.+)$/);
+  if (inside) {
+    return {
+      label: stripInlineMd(inside[1]),
+      value: stripInlineMd(inside[2]),
+    };
+  }
+  return null;
+}
 
 function normalizeTitle(raw: string): { id: string; title: string } | null {
   const cleaned = raw
@@ -112,21 +140,25 @@ function parseBodyLine(line: string): ReportBlock | null {
   const bullet = trimmed.match(/^([-*•])\s+(.*)$/);
   if (bullet) {
     const body = bullet[2].trim();
-    // * **Label**: value — short values become metric chips; long ones stay bullets
-    const metric = body.match(/^\*\*(.+?)\*\*\s*[:：]\s*(.+)$/);
+    // * **Label**: value / **Label:** value — short values become metric chips
+    const metric = matchBoldMetric(body);
     if (metric) {
-      const label = stripInlineMd(metric[1]);
-      const value = stripInlineMd(metric[2]);
-      if (value.length <= 56) {
-        return { type: "metric", label, value };
+      if (metric.value.length <= 56) {
+        return { type: "metric", label: metric.label, value: metric.value };
       }
-      return { type: "bullet", text: `${label}: ${value}` };
+      return { type: "bullet", text: `${metric.label}: ${metric.value}` };
     }
-    const metricPlain = body.match(/^([^:：]{2,40})\s*[:：]\s*(.+)$/);
-    if (metricPlain && /\*\*/.test(body)) {
+    // Quantity: 90 tokens — plain label:value on holding lines
+    const metricPlain = body.match(/^([^:：*]{2,40})\s*[:：]\s*(.+)$/);
+    if (metricPlain) {
       const label = stripInlineMd(metricPlain[1]);
       const value = stripInlineMd(metricPlain[2]);
-      if (value.length <= 56) {
+      // Skip sentence-like bullets ("The portfolio is down about 5%")
+      const looksLikeSentence =
+        /\b(the|a|an|this|that|is|are|was|were|could|would|should|adding|lack)\b/i.test(
+          label
+        ) || label.split(/\s+/).length > 5;
+      if (!looksLikeSentence && value.length <= 56) {
         return { type: "metric", label, value };
       }
       return { type: "bullet", text: `${label}: ${value}` };
@@ -144,13 +176,13 @@ function parseBodyLine(line: string): ReportBlock | null {
     };
   }
 
-  // Bare **Label**: value
-  const metricLine = trimmed.match(/^\*\*(.+?)\*\*\s*[:：]\s*(.+)$/);
+  // Bare **Label**: value / **Label:** value
+  const metricLine = matchBoldMetric(trimmed);
   if (metricLine) {
     return {
       type: "metric",
-      label: stripInlineMd(metricLine[1]),
-      value: stripInlineMd(metricLine[2]),
+      label: metricLine.label,
+      value: metricLine.value,
     };
   }
 
@@ -172,9 +204,14 @@ function normalizeReportText(raw: string): string {
   text = text.replace(/^```(?:markdown|md|text)?\s*|\s*```$/gim, "");
   // **1) Snapshot** → ### 1) Snapshot
   text = text.replace(/^\*\*(\d{1,2}[).]\s+.+?)\*\*$/gm, "### $1");
+  // **Portfolio Overview** / **Holdings** / **Assessment** → ### headings
+  text = text.replace(
+    /^\*\*((?:Portfolio\s+Overview|Overview|Holdings?(?:\s+Tape)?|Assessment|Summary|Basket\s+Snapshot|Snapshot|Market\s+Tape|Concentration(?:\s*&\s*Weights)?|Performance(?:\s+Read)?|Narratives?(?:\s*&\s*Catalysts)?|Risks?(?:\s*&\s*Watch[- ]?Outs)?|What\s+to\s+Monitor(?:\s+Next)?))\*\*$/gim,
+    "### $1"
+  );
   // Bare desk headers
   text = text.replace(
-    /^(\d{1,2})[).]\s+(Snapshot|Market Tape|Trend.*|Fundamentals?|Narratives?.*|Risks?.*|What to Monitor.*)$/gim,
+    /^(\d{1,2})[).]\s+(Snapshot|Market Tape|Trend.*|Fundamentals?|Narratives?.*|Risks?.*|What to Monitor.*|Portfolio Overview|Holdings|Assessment)$/gim,
     "### $1) $2"
   );
   text = text.replace(/([^#\n])[ \t]+(#{1,3}\s+\d+[).]\s+)/g, "$1\n\n$2");

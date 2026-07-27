@@ -10,6 +10,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 
+import { MarkdownMessage } from "@/components/ask/MarkdownMessage";
 import {
   isResearchReportContent,
   ResearchReportView,
@@ -360,7 +361,7 @@ export function ReportAskPanel({
                       showOpenButton={false}
                     />
                   ) : (
-                    <div className="whitespace-pre-wrap">{m.content}</div>
+                    <MarkdownMessage content={m.content} />
                   )}
                 </div>
               );

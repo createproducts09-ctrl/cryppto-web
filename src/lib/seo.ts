@@ -179,6 +179,7 @@ export function getPublicSeoPaths(): {
     { path: "/pricing", changeFrequency: "weekly", priority: 0.9 },
     { path: "/discover", changeFrequency: "daily", priority: 0.85 },
     { path: "/research", changeFrequency: "daily", priority: 0.8 },
+    { path: "/news", changeFrequency: "hourly", priority: 0.85 },
     { path: "/pulse", changeFrequency: "daily", priority: 0.75 },
     { path: "/portfolio", changeFrequency: "weekly", priority: 0.75 },
     { path: "/register", changeFrequency: "monthly", priority: 0.6 },

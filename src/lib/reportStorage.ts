@@ -7,25 +7,50 @@ export type StoredReport = {
 };
 
 const PREFIX = "lk-research-report:";
+const MAX_AGE_MS = 1000 * 60 * 60 * 24; // 24h
+
+function store(): Storage | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return window.localStorage;
+  } catch {
+    return null;
+  }
+}
 
 export function saveReportPreview(payload: Omit<StoredReport, "savedAt">): string {
   const id =
     payload.threadId ||
     `preview-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
-  const data: StoredReport = { ...payload, threadId: payload.threadId, savedAt: Date.now() };
-  try {
-    sessionStorage.setItem(`${PREFIX}${id}`, JSON.stringify(data));
-  } catch {
-    /* quota / private mode */
+  const data: StoredReport = {
+    ...payload,
+    threadId: payload.threadId,
+    savedAt: Date.now(),
+  };
+  const s = store();
+  if (s) {
+    try {
+      s.setItem(`${PREFIX}${id}`, JSON.stringify(data));
+    } catch {
+      /* quota / private mode */
+    }
   }
   return id;
 }
 
 export function loadReportPreview(id: string): StoredReport | null {
+  const s = store();
+  if (!s) return null;
   try {
-    const raw = sessionStorage.getItem(`${PREFIX}${id}`);
+    const raw = s.getItem(`${PREFIX}${id}`);
     if (!raw) return null;
-    return JSON.parse(raw) as StoredReport;
+    const data = JSON.parse(raw) as StoredReport;
+    if (!data?.content) return null;
+    if (data.savedAt && Date.now() - data.savedAt > MAX_AGE_MS) {
+      s.removeItem(`${PREFIX}${id}`);
+      return null;
+    }
+    return data;
   } catch {
     return null;
   }
@@ -50,5 +75,6 @@ export function openReportInNewTab(opts: {
   const path = opts.threadId
     ? `/report/${opts.threadId}?${params.toString()}`
     : `/report/preview?${params.toString()}`;
+  // localStorage is shared across tabs — noopener is fine.
   window.open(path, "_blank", "noopener,noreferrer");
 }
