@@ -66,6 +66,12 @@ export default function LandingPage() {
           <BrandLogo className="h-9 sm:h-10" priority />
         </Link>
         <div className="flex items-center gap-2">
+          <Link
+            href="/blog"
+            className="hidden text-sm font-medium text-text-secondary transition hover:text-text sm:inline"
+          >
+            Blog
+          </Link>
           {entered ? (
             <Link href="/discover">
               <Button size="sm">Open app</Button>
@@ -377,14 +383,119 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="relative z-10 hidden border-t border-border bg-bg-elevated px-5 py-12 sm:px-8 lg:block">
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-4">
-          <BrandLogo className="h-9" />
-          <p className="text-center text-xs text-text-muted">
-            © {new Date().getFullYear()} Alphora Labs · Research only · Not
-            financial advice
-          </p>
+      <footer className="relative z-10 border-t border-border bg-bg-elevated px-5 py-12 sm:px-8">
+        <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-4">
+          <div>
+            <BrandLogo className="h-9" />
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-text-secondary">
+              Crypto research desk — swipe markets, ask AI, track baskets.
+            </p>
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-text-muted">
+              Product
+            </p>
+            <ul className="mt-4 space-y-2 text-sm text-text-secondary">
+              <li>
+                <Link href="/crypto-research" className="hover:text-primary">
+                  Crypto research
+                </Link>
+              </li>
+              <li>
+                <Link href="/ai-crypto-assistant" className="hover:text-primary">
+                  AI crypto assistant
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/crypto-portfolio-tracker"
+                  className="hover:text-primary"
+                >
+                  Portfolio tracker
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/best-crypto-research-tools"
+                  className="hover:text-primary"
+                >
+                  Best research tools
+                </Link>
+              </li>
+              <li>
+                <Link href="/pricing" className="hover:text-primary">
+                  Pricing
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-text-muted">
+              Learn
+            </p>
+            <ul className="mt-4 space-y-2 text-sm text-text-secondary">
+              <li>
+                <Link href="/blog" className="hover:text-primary">
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link href="/guides" className="hover:text-primary">
+                  Guides
+                </Link>
+              </li>
+              <li>
+                <Link href="/glossary" className="hover:text-primary">
+                  Glossary
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/blog/how-to-research-cryptocurrency"
+                  className="hover:text-primary"
+                >
+                  How to research crypto
+                </Link>
+              </li>
+              <li>
+                <Link href="/faq" className="hover:text-primary">
+                  FAQ
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="hover:text-primary">
+                  About
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-text-muted">
+              App
+            </p>
+            <ul className="mt-4 space-y-2 text-sm text-text-secondary">
+              <li>
+                <Link href="/discover" className="hover:text-primary">
+                  Discover
+                </Link>
+              </li>
+              <li>
+                <Link href="/register" className="hover:text-primary">
+                  Create account
+                </Link>
+              </li>
+              <li>
+                <Link href="/login" className="hover:text-primary">
+                  Sign in
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
+        <p className="mx-auto mt-10 max-w-6xl text-center text-xs text-text-muted">
+          © {new Date().getFullYear()} Alphora Labs · Research only · Not
+          financial advice
+        </p>
       </footer>
     </div>
   );

@@ -8,6 +8,19 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
+        disallow: [
+          "/profile",
+          "/ask",
+          "/report/",
+          "/watchlist",
+          "/community/new",
+          "/verify-email",
+          "/api/",
+        ],
+      },
+      {
+        userAgent: "GPTBot",
+        allow: ["/", "/blog", "/crypto-research", "/about", "/pricing"],
         disallow: ["/profile", "/ask", "/report/", "/watchlist"],
       },
     ],

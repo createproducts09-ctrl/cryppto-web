@@ -40,12 +40,20 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "/",
+    types: {
+      "application/rss+xml": `${SITE.url}/feed.xml`,
+    },
   },
   icons: {
-    icon: [{ url: "/logo.png", type: "image/png" }],
-    apple: [{ url: "/logo.png", type: "image/png" }],
-    shortcut: "/logo.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
+      { url: "/icon", type: "image/png", sizes: "32x32" },
+      { url: "/icon.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: [{ url: "/apple-icon", type: "image/png", sizes: "180x180" }],
+    shortcut: "/favicon.ico",
   },
+  manifest: "/manifest.webmanifest",
   openGraph: {
     type: "website",
     locale: SITE.locale,
@@ -82,19 +90,51 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    // Add when available: google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    // Add when available:
+    // google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+  },
+  other: {
+    "msapplication-TileColor": "#6d28d9",
   },
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: SITE.name,
-  url: SITE.url,
-  logo: `${SITE.url}/logo.png`,
-  description: SITE.description,
-  sameAs: [],
-};
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: SITE.name,
+    url: SITE.url,
+    logo: `${SITE.url}/icon.png`,
+    description: SITE.description,
+    sameAs: ["https://twitter.com/alphoralabs"],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE.name,
+    url: SITE.url,
+    description: SITE.description,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${SITE.url}/search?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: SITE.name,
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "Web",
+    url: SITE.url,
+    description: SITE.description,
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+  },
+];
 
 export default function RootLayout({
   children,

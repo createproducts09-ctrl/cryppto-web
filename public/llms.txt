@@ -1,0 +1,31 @@
+# Alphora Labs — llms.txt
+# https://alphoralabs.com
+
+> Alphora Labs is a crypto research desk: swipe Discover, Ask AI for structured briefs, track thesis baskets with live P&L, and read Pulse crowd signals. Research only — not financial advice.
+
+## Primary
+- [Home](https://alphoralabs.com/): Product overview
+- [Crypto research platform](https://alphoralabs.com/crypto-research): Main commercial page
+- [AI crypto assistant](https://alphoralabs.com/ai-crypto-assistant): Ask desk
+- [Crypto portfolio tracker](https://alphoralabs.com/crypto-portfolio-tracker): Baskets & P&L
+- [Best crypto research tools](https://alphoralabs.com/best-crypto-research-tools): Tooling landscape
+- [Pricing](https://alphoralabs.com/pricing): Free + Keel
+- [About](https://alphoralabs.com/about): Company
+- [FAQ](https://alphoralabs.com/faq): Common questions
+
+## Learn
+- [Blog](https://alphoralabs.com/blog): Research guides
+- [Guides hub](https://alphoralabs.com/guides): How-to cluster
+- [Glossary](https://alphoralabs.com/glossary): FDV, TVL, unlocks, liquidity, tokenomics
+- [How to research cryptocurrency](https://alphoralabs.com/blog/how-to-research-cryptocurrency)
+- [Crypto research for beginners](https://alphoralabs.com/blog/crypto-research-for-beginners)
+- [AI crypto research tools](https://alphoralabs.com/blog/ai-crypto-research-tools)
+- [RSS feed](https://alphoralabs.com/feed.xml)
+
+## App
+- [Discover](https://alphoralabs.com/discover)
+- [Register](https://alphoralabs.com/register)
+
+## Optional
+- Sitemap: https://alphoralabs.com/sitemap.xml
+- Robots: https://alphoralabs.com/robots.txt

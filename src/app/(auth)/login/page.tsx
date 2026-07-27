@@ -9,6 +9,7 @@ import { AuthSplitShell } from "@/components/auth/AuthSplitShell";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { endpoints } from "@/lib/api/client";
+import { getApiError } from "@/lib/api/errors";
 import { useAuthStore } from "@/lib/store/auth";
 import type { User } from "@/lib/types";
 
@@ -40,13 +41,7 @@ export default function LoginPage() {
         router.push("/discover");
       }
     } catch (err: unknown) {
-      const msg =
-        (err as { response?: { data?: { error?: string; message?: string } } })
-          ?.response?.data?.error ||
-        (err as { response?: { data?: { message?: string } } })?.response?.data
-          ?.message ||
-        "Login failed";
-      setError(String(msg));
+      setError(getApiError(err, "Login failed"));
     } finally {
       setLoading(false);
     }
@@ -100,7 +95,14 @@ export default function LoginPage() {
             </button>
           </div>
 
-          {error ? <p className="text-sm text-down">{error}</p> : null}
+          {error ? (
+            <div
+              role="alert"
+              className="rounded-[10px] border border-down/30 bg-down-soft px-3 py-2.5 text-sm text-down"
+            >
+              {error}
+            </div>
+          ) : null}
 
           <Button type="submit" loading={loading} className="mt-1 w-full" size="lg">
             Continue

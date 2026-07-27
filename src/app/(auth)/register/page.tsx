@@ -9,6 +9,7 @@ import { AuthSplitShell } from "@/components/auth/AuthSplitShell";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { endpoints } from "@/lib/api/client";
+import { getApiError } from "@/lib/api/errors";
 import { useAuthStore } from "@/lib/store/auth";
 import type { User } from "@/lib/types";
 
@@ -35,14 +36,12 @@ export default function RegisterPage() {
       });
       router.push("/verify-email");
     } catch (err: unknown) {
-      const msg =
-        (err as { response?: { data?: { error?: string } } })?.response?.data
-          ?.error || "Registration failed";
-      setError(String(msg));
+      setError(getApiError(err, "Registration failed"));
     } finally {
       setLoading(false);
     }
   }
+
 
   return (
     <AuthSplitShell eyebrow="Create account">
@@ -58,11 +57,22 @@ export default function RegisterPage() {
         </p>
 
         <form onSubmit={onSubmit} className="mt-8 flex flex-col gap-4">
+          {error ? (
+            <div
+              role="alert"
+              className="rounded-[10px] border border-down/30 bg-down-soft px-3 py-2.5 text-sm text-down"
+            >
+              {error}
+            </div>
+          ) : null}
           <Input
             label="Username"
             required
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => {
+              setUsername(e.target.value);
+              if (error) setError("");
+            }}
             placeholder="satoshi"
           />
           <Input
@@ -71,7 +81,10 @@ export default function RegisterPage() {
             autoComplete="email"
             required
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (error) setError("");
+            }}
             placeholder="you@email.com"
           />
           <Input
@@ -84,7 +97,6 @@ export default function RegisterPage() {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="At least 6 characters"
           />
-          {error ? <p className="text-sm text-down">{error}</p> : null}
           <Button type="submit" loading={loading} className="w-full" size="lg">
             Create account
             <ArrowRight className="h-4 w-4" />
