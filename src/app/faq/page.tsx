@@ -1,6 +1,10 @@
 import Link from "next/link";
 
 import { MarketingShell } from "@/components/marketing/MarketingShell";
+import {
+  MarketingHeroArt,
+  MarketingStatStrip,
+} from "@/components/marketing/MarketingVisuals";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { blogPosts } from "@/content/blog";
@@ -68,23 +72,34 @@ export default function FaqPage() {
   return (
     <MarketingShell>
       <JsonLd data={ld} />
-      <div className="mx-auto max-w-3xl px-5 py-14 sm:px-8">
+      <div className="mx-auto max-w-6xl px-5 pb-16 pt-10 sm:px-8">
         <Breadcrumbs items={[{ name: "FAQ" }]} />
-        <h1 className="font-display mt-6 text-4xl font-extrabold tracking-tight">
-          Frequently asked questions
-        </h1>
-        <p className="mt-4 text-text-secondary">
-          Straight answers about the {SITE.name} research desk. Still stuck?{" "}
-          <Link href="/register" className="font-semibold text-primary">
-            Create an account
-          </Link>{" "}
-          and try the product.
-        </p>
+        <section className="mt-8 grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+          <div>
+            <h1 className="text-4xl font-extrabold tracking-tight">
+              Frequently asked questions
+            </h1>
+            <p className="mt-4 max-w-xl text-text-secondary">
+              Straight answers about the {SITE.name} research desk. Still stuck?{" "}
+              <Link href="/register" className="font-semibold text-primary">
+                Create an account
+              </Link>{" "}
+              and try the product.
+            </p>
+            <div className="mt-8">
+              <MarketingStatStrip />
+            </div>
+          </div>
+          <MarketingHeroArt variant="faq" />
+        </section>
 
-        <dl className="mt-12 space-y-8">
+        <dl className="mx-auto mt-14 max-w-3xl space-y-4">
           {faqs.map((f) => (
-            <div key={f.q} className="border-b border-border pb-8">
-              <dt className="font-display text-lg font-bold">{f.q}</dt>
+            <div
+              key={f.q}
+              className="rounded-2xl border border-border bg-bg-elevated/90 p-5 shadow-sm backdrop-blur"
+            >
+              <dt className="text-lg font-bold">{f.q}</dt>
               <dd className="mt-3 text-sm leading-relaxed text-text-secondary">
                 {f.a}
               </dd>
@@ -92,8 +107,8 @@ export default function FaqPage() {
           ))}
         </dl>
 
-        <section className="mt-14">
-          <h2 className="font-display text-xl font-bold">Keep learning</h2>
+        <section className="mx-auto mt-14 max-w-3xl rounded-2xl border border-border bg-bg-elevated/80 p-6">
+          <h2 className="text-xl font-bold">Keep learning</h2>
           <ul className="mt-4 space-y-2 text-sm">
             {blogPosts.slice(0, 4).map((p) => (
               <li key={p.slug}>

@@ -1,16 +1,9 @@
 import Link from "next/link";
 
 import { BrandLogo } from "@/components/brand/BrandLogo";
-import { Button } from "@/components/ui/Button";
+import { MarketingHeader } from "@/components/marketing/MarketingHeader";
+import { MarketingAtmosphere } from "@/components/marketing/MarketingVisuals";
 import { SITE } from "@/lib/seo";
-
-const nav = [
-  { href: "/blog", label: "Blog" },
-  { href: "/guides", label: "Guides" },
-  { href: "/glossary", label: "Glossary" },
-  { href: "/crypto-research", label: "Research" },
-  { href: "/pricing", label: "Pricing" },
-];
 
 const footerCols = [
   {
@@ -54,44 +47,17 @@ export function MarketingShell({
   showCta?: boolean;
 }) {
   return (
-    <div className="min-h-dvh bg-bg text-text">
-      <header className="sticky top-0 z-30 border-b border-border/80 bg-bg/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
-          <Link href="/" className="flex items-center" aria-label={SITE.name}>
-            <BrandLogo className="h-8 sm:h-9" priority />
-          </Link>
-          <nav className="hidden items-center gap-5 text-sm font-medium text-text-secondary lg:flex">
-            {nav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="transition hover:text-text"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-          {showCta ? (
-            <div className="flex items-center gap-2">
-              <Link href="/login" className="hidden sm:block">
-                <Button variant="ghost" size="sm">
-                  Login
-                </Button>
-              </Link>
-              <Link href="/register">
-                <Button size="sm">Get started</Button>
-              </Link>
-            </div>
-          ) : null}
-        </div>
-      </header>
+    <div className="relative min-h-dvh bg-bg font-sans text-text">
+      <MarketingAtmosphere />
 
-      <main>{children}</main>
+      <MarketingHeader showCta={showCta} />
 
-      <footer className="border-t border-border bg-bg-elevated">
+      <main className="relative z-10">{children}</main>
+
+      <footer className="relative z-10 border-t border-border bg-bg-elevated/95 backdrop-blur">
         <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-8 md:grid-cols-4">
           <div className="md:col-span-1">
-            <BrandLogo className="h-8" />
+            <BrandLogo className="h-4 w-auto max-w-[7rem]" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-text-secondary">
               {SITE.tagline}. Swipe markets, ask AI, track baskets — research without the noise.
             </p>

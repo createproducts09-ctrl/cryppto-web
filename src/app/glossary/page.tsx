@@ -1,6 +1,10 @@
 import Link from "next/link";
 
 import { MarketingShell } from "@/components/marketing/MarketingShell";
+import {
+  MarketingHeroArt,
+  MarketingStatStrip,
+} from "@/components/marketing/MarketingVisuals";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { glossaryTerms } from "@/content/glossary-seo";
@@ -38,23 +42,32 @@ export default function GlossaryIndexPage() {
   return (
     <MarketingShell>
       <JsonLd data={ld} />
-      <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
+      <div className="mx-auto max-w-6xl px-5 pb-16 pt-10 sm:px-8">
         <Breadcrumbs items={[{ name: "Glossary" }]} />
-        <h1 className="font-display mt-6 text-4xl font-extrabold tracking-tight sm:text-5xl">
-          Crypto research glossary
-        </h1>
-        <p className="mt-4 max-w-2xl text-base text-text-secondary">
-          Definitions written for desk work — what the term means and why it changes Pass / Watch / Interested decisions.
-        </p>
+        <section className="mt-8 grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+          <div>
+            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
+              Crypto research glossary
+            </h1>
+            <p className="mt-4 max-w-xl text-base text-text-secondary">
+              Definitions written for desk work — what the term means and why it changes Pass / Watch / Interested decisions.
+            </p>
+            <div className="mt-8">
+              <MarketingStatStrip />
+            </div>
+          </div>
+          <MarketingHeroArt variant="glossary" />
+        </section>
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {glossaryTerms.map((t) => (
             <Link
               key={t.slug}
               href={`/glossary/${t.slug}`}
-              className="rounded-2xl border border-border bg-bg-elevated p-5 transition hover:border-primary/40"
+              className="group rounded-2xl border border-border bg-bg-elevated/90 p-5 shadow-sm backdrop-blur transition hover:border-primary/40 hover:shadow-md"
             >
-              <h2 className="font-display text-lg font-bold">{t.term}</h2>
+              <div className="mb-3 h-1.5 w-10 rounded-full bg-primary/40 transition group-hover:w-14 group-hover:bg-primary" />
+              <h2 className="text-lg font-bold">{t.term}</h2>
               <p className="mt-2 text-sm leading-relaxed text-text-secondary">
                 {t.short}
               </p>

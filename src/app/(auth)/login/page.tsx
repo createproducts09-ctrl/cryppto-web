@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { FormEvent, Suspense, useState } from "react";
 import { ArrowRight, Eye, EyeOff } from "lucide-react";
 
 import { AuthSplitShell } from "@/components/auth/AuthSplitShell";
@@ -13,8 +13,15 @@ import { getApiError } from "@/lib/api/errors";
 import { useAuthStore } from "@/lib/store/auth";
 import type { User } from "@/lib/types";
 
-export default function LoginPage() {
+function safeNext(raw: string | null) {
+  if (!raw || !raw.startsWith("/") || raw.startsWith("//")) return null;
+  return raw;
+}
+
+function LoginForm() {
   const router = useRouter();
+  const search = useSearchParams();
+  const next = safeNext(search.get("next"));
   const setSession = useAuthStore((s) => s.setSession);
   const setGuest = useAuthStore((s) => s.setGuest);
   const [email, setEmail] = useState("");
@@ -38,7 +45,7 @@ export default function LoginPage() {
       if (user.email_verified === false) {
         router.push("/verify-email");
       } else {
-        router.push("/discover");
+        router.push(next || "/discover");
       }
     } catch (err: unknown) {
       setError(getApiError(err, "Login failed"));
@@ -53,7 +60,7 @@ export default function LoginPage() {
         <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
           Sign in
         </p>
-        <h1 className="font-display mt-2 text-3xl font-extrabold tracking-tight text-text">
+        <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-text">
           Welcome back
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-text-secondary">
@@ -127,7 +134,7 @@ export default function LoginPage() {
           size="lg"
           onClick={() => {
             setGuest();
-            router.push("/discover");
+            router.push(next || "/discover");
           }}
         >
           Explore as guest
@@ -136,7 +143,7 @@ export default function LoginPage() {
         <p className="mt-6 text-center text-sm text-text-secondary">
           New to Alphora Labs?{" "}
           <Link
-            href="/register"
+            href={next ? `/register?next=${encodeURIComponent(next)}` : "/register"}
             className="font-semibold text-primary hover:underline"
           >
             Create an account
@@ -144,5 +151,13 @@ export default function LoginPage() {
         </p>
       </div>
     </AuthSplitShell>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   );
 }

@@ -8,6 +8,7 @@ export type User = {
   email_verified?: boolean;
   plan?: "free" | "keel" | string;
   preferences?: Record<string, unknown>;
+  fortune_pick?: { coin_id: string; picked_at?: string | null } | null;
   created_at?: string | null;
 };
 

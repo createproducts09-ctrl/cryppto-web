@@ -63,7 +63,7 @@ export default async function GlossaryTermPage({ params }: Props) {
             { name: term.term },
           ]}
         />
-        <h1 className="font-display mt-6 text-3xl font-extrabold tracking-tight sm:text-4xl">
+        <h1 className="mt-6 text-3xl font-extrabold tracking-tight sm:text-4xl">
           {term.term}
         </h1>
         <p className="mt-4 text-lg text-text-secondary">{term.short}</p>
@@ -73,14 +73,14 @@ export default async function GlossaryTermPage({ params }: Props) {
         </div>
 
         <section className="mt-10">
-          <h2 className="font-display text-xl font-bold">Definition</h2>
+          <h2 className="text-xl font-bold">Definition</h2>
           <p className="mt-3 text-[15px] leading-relaxed text-text-secondary">
             {term.definition}
           </p>
         </section>
 
         <section className="mt-10">
-          <h2 className="font-display text-xl font-bold">Why researchers care</h2>
+          <h2 className="text-xl font-bold">Why researchers care</h2>
           <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-text-secondary">
             {term.whyItMatters.map((item) => (
               <li key={item}>{item}</li>

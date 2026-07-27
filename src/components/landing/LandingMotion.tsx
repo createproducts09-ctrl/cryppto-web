@@ -1,121 +1,309 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+
+const HERO_CARDS = [
+  {
+    id: "eth",
+    name: "Ethereum",
+    symbol: "ETH",
+    price: "$3,412",
+    change: "+1.8%",
+    up: true,
+    tag: "L2 narrative",
+    img: "https://assets.coingecko.com/coins/images/279/small/ethereum.png",
+  },
+  {
+    id: "sol",
+    name: "Solana",
+    symbol: "SOL",
+    price: "$148.20",
+    change: "−0.9%",
+    up: false,
+    tag: "App throughput",
+    img: "https://assets.coingecko.com/coins/images/4128/small/solana.png",
+  },
+  {
+    id: "btc",
+    name: "Bitcoin",
+    symbol: "BTC",
+    price: "$67,840",
+    change: "+2.4%",
+    up: true,
+    tag: "Liquidity beta",
+    img: "https://assets.coingecko.com/coins/images/1/small/bitcoin.png",
+  },
+] as const;
 
 /** Animated swipe stack — hero visual anchor */
 export function SwipeStackVisual() {
+  const [index, setIndex] = useState(0);
+  const [swipeDir, setSwipeDir] = useState(1);
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setSwipeDir((d) => -d);
+      setIndex((i) => (i + 1) % HERO_CARDS.length);
+    }, 3200);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const active = HERO_CARDS[index]!;
+  const next = HERO_CARDS[(index + 1) % HERO_CARDS.length]!;
+  const peek = HERO_CARDS[(index + 2) % HERO_CARDS.length]!;
+
   return (
-    <div className="relative mx-auto aspect-[4/5] w-full max-w-[380px]">
+    <div className="relative mx-auto aspect-[4/5] w-full max-w-[400px]">
+      {/* Soft stage light */}
       <motion.div
         aria-hidden
-        className="absolute inset-[-12%] rounded-[2.25rem] bg-[radial-gradient(ellipse_at_30%_15%,rgba(109,40,217,0.18),transparent_55%),radial-gradient(ellipse_at_85%_85%,rgba(5,150,105,0.12),transparent_50%)]"
-        animate={{ opacity: [0.85, 1, 0.85] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute inset-[-8%] rounded-[2.5rem] bg-[radial-gradient(ellipse_at_40%_20%,rgba(109,40,217,0.22),transparent_55%),radial-gradient(ellipse_at_80%_90%,rgba(5,150,105,0.12),transparent_50%)]"
+        animate={{ opacity: [0.7, 1, 0.7] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
       />
 
+      {/* Floating side chips */}
       <motion.div
-        className="absolute inset-x-6 top-4 bottom-10 rounded-3xl border border-border bg-bg-muted"
-        animate={{ y: [0, -4, 0], rotate: [-3, -2.5, -3] }}
-        transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute inset-x-3 top-8 bottom-6 rounded-3xl border border-border bg-bg-elevated"
-        animate={{ y: [0, -6, 0], rotate: [2.5, 3, 2.5] }}
-        transition={{ duration: 4.8, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-      />
-
-      <motion.div
-        className="absolute inset-x-0 top-12 bottom-0 overflow-hidden rounded-3xl border border-border bg-bg-elevated shadow-card"
-        animate={{ y: [0, -10, 0], rotate: [-0.5, 0.8, -0.5] }}
-        transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
+        aria-hidden
+        className="absolute -left-2 top-[18%] z-20 hidden rounded-2xl border border-border/80 bg-bg-elevated/95 px-3 py-2 shadow-[var(--shadow-card)] backdrop-blur-sm sm:block"
+        animate={{ y: [0, -8, 0], rotate: [-2, -1, -2] }}
+        transition={{ duration: 5.2, repeat: Infinity, ease: "easeInOut" }}
       >
-        <div className="flex h-full flex-col px-6 pt-6 pb-5">
-          <div className="flex items-center justify-between text-[11px] font-semibold tracking-[0.14em] text-text-muted uppercase">
-            <span className="inline-flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-              Discover
-            </span>
-            <span>01</span>
+        <div className="flex items-center gap-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="https://assets.coingecko.com/coins/images/1/small/bitcoin.png"
+            alt=""
+            width={22}
+            height={22}
+            className="h-[22px] w-[22px] rounded-full"
+          />
+          <div>
+            <p className="text-[11px] font-medium text-text">BTC</p>
+            <p className="text-[10px] font-medium text-up">+2.4%</p>
           </div>
+        </div>
+      </motion.div>
 
-          <div className="mt-8 flex items-center gap-4">
-            <motion.div
-              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-lg font-bold text-white"
-              animate={{ scale: [1, 1.04, 1] }}
-              transition={{ duration: 2.8, repeat: Infinity }}
-            >
-              Ξ
-            </motion.div>
-            <div>
-              <p className="font-display text-2xl font-bold tracking-tight text-text">
-                Ethereum
-              </p>
-              <p className="mt-0.5 text-sm text-text-secondary">
-                $3,412 · <span className="font-semibold text-up">+1.8%</span>
-              </p>
+      <motion.div
+        aria-hidden
+        className="absolute -right-1 top-[58%] z-20 hidden rounded-2xl border border-border/80 bg-bg-elevated/95 px-3 py-2 shadow-[var(--shadow-card)] backdrop-blur-sm sm:block"
+        animate={{ y: [0, 10, 0], rotate: [2, 1, 2] }}
+        transition={{ duration: 4.6, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
+      >
+        <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-text-muted">
+          Desk pulse
+        </p>
+        <p className="mt-0.5 text-[11px] font-medium text-text">3 watching</p>
+      </motion.div>
+
+      {/* Back cards */}
+      <div
+        aria-hidden
+        className="absolute inset-x-8 top-6 bottom-14 rounded-[1.6rem] border border-border/70 bg-bg-muted/80"
+        style={{ transform: "rotate(-6deg) translateY(6px)" }}
+      />
+      <div
+        aria-hidden
+        className="absolute inset-x-4 top-10 bottom-10 overflow-hidden rounded-[1.7rem] border border-border bg-bg-elevated/90"
+        style={{ transform: "rotate(4deg)" }}
+      >
+        <div className="flex items-center gap-3 px-5 pt-5 opacity-50">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={peek.img}
+            alt=""
+            width={36}
+            height={36}
+            className="h-9 w-9 rounded-full bg-bg"
+          />
+          <div>
+            <p className="text-sm font-medium text-text">{peek.name}</p>
+            <p className="text-xs text-text-muted">{peek.symbol}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Mid peek card */}
+      <motion.div
+        aria-hidden
+        className="absolute inset-x-2 top-14 bottom-6 overflow-hidden rounded-[1.75rem] border border-border bg-bg-elevated shadow-sm"
+        animate={{ rotate: [2.2, 2.8, 2.2], y: [0, -4, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <div className="flex items-center gap-3 px-5 pt-5 opacity-70">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={next.img}
+            alt=""
+            width={36}
+            height={36}
+            className="h-9 w-9 rounded-full bg-bg"
+          />
+          <div>
+            <p className="text-sm font-medium text-text">{next.name}</p>
+            <p className="text-xs text-text-muted">{next.symbol}</p>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Front card */}
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.div
+          key={active.id}
+          className="absolute inset-x-0 top-16 bottom-0 z-10 overflow-hidden rounded-[1.85rem] border border-border bg-bg-elevated shadow-[var(--shadow-card)]"
+          initial={{
+            x: swipeDir * 56,
+            rotate: swipeDir * 8,
+            opacity: 0,
+            scale: 0.96,
+          }}
+          animate={{ x: 0, rotate: 0, opacity: 1, scale: 1 }}
+          exit={{
+            x: swipeDir * -120,
+            rotate: swipeDir * -12,
+            opacity: 0,
+            scale: 0.94,
+          }}
+          transition={{ type: "spring", stiffness: 320, damping: 28 }}
+        >
+          <div
+            aria-hidden
+            className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-primary-soft/80 to-transparent"
+          />
+
+          <div className="relative flex h-full flex-col px-5 pb-5 pt-5 sm:px-6">
+            <div className="flex items-center justify-between">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-bg/70 px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.12em] text-text-muted backdrop-blur-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                Discover
+              </span>
+              <span className="text-[11px] font-medium tabular-nums text-text-muted">
+                {String(index + 1).padStart(2, "0")} / 0{HERO_CARDS.length}
+              </span>
+            </div>
+
+            <div className="mt-7 flex items-center gap-3.5">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={active.img}
+                alt=""
+                width={56}
+                height={56}
+                className="h-14 w-14 rounded-2xl border border-border bg-bg object-cover shadow-sm"
+              />
+              <div className="min-w-0">
+                <p className="truncate text-xl font-semibold tracking-tight text-text">
+                  {active.name}
+                </p>
+                <p className="mt-0.5 text-sm text-text-secondary">
+                  {active.price}{" "}
+                  <span className={active.up ? "font-medium text-up" : "font-medium text-down"}>
+                    {active.change}
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-3">
+              <span className="inline-flex rounded-lg bg-primary-soft/80 px-2.5 py-1 text-[11px] font-medium text-primary">
+                {active.tag}
+              </span>
+            </div>
+
+            <div className="mt-5 flex-1">
+              <SparklineDraw up={active.up} />
+            </div>
+
+            <div className="mt-2 grid grid-cols-3 gap-2 text-[10px] text-text-muted sm:text-[11px]">
+              <div className="rounded-xl border border-border/80 bg-bg/60 px-2.5 py-2">
+                <p className="font-medium uppercase tracking-[0.08em]">Vol</p>
+                <p className="mt-0.5 font-medium text-text-secondary">$12.4B</p>
+              </div>
+              <div className="rounded-xl border border-border/80 bg-bg/60 px-2.5 py-2">
+                <p className="font-medium uppercase tracking-[0.08em]">Rank</p>
+                <p className="mt-0.5 font-medium text-text-secondary">#2</p>
+              </div>
+              <div className="rounded-xl border border-border/80 bg-bg/60 px-2.5 py-2">
+                <p className="font-medium uppercase tracking-[0.08em]">Bias</p>
+                <p className="mt-0.5 font-medium text-primary">Watch</p>
+              </div>
+            </div>
+
+            <div className="mt-4 grid grid-cols-3 gap-2 text-center text-[11px] font-medium tracking-wide">
+              <span className="rounded-xl border border-border bg-bg py-2.5 text-down">
+                Pass
+              </span>
+              <span className="rounded-xl border border-primary/30 bg-primary-soft py-2.5 text-primary shadow-[0_0_0_1px_rgba(109,40,217,0.06)]">
+                Watch
+              </span>
+              <span className="rounded-xl border border-border bg-bg py-2.5 text-up">
+                Interested
+              </span>
             </div>
           </div>
 
-          <div className="mt-8 flex-1">
-            <SparklineDraw />
-          </div>
-
-          <div className="mt-4 grid grid-cols-3 gap-2 text-center text-[11px] font-semibold tracking-wide">
-            <span className="rounded-lg border border-border bg-bg py-2.5 text-down">
-              Pass
-            </span>
-            <span className="rounded-lg border border-primary/25 bg-primary-soft py-2.5 text-primary">
-              Watch
-            </span>
-            <span className="rounded-lg border border-border bg-bg py-2.5 text-up">
-              Interested
-            </span>
-          </div>
-        </div>
-
-        <motion.div
-          aria-hidden
-          className="pointer-events-none absolute inset-y-16 right-0 w-1.5 rounded-l-full bg-primary/70"
-          animate={{ opacity: [0, 0.9, 0], x: [0, 6, 0] }}
-          transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-        />
-      </motion.div>
+          {/* Swipe hint edge */}
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-20 right-0 w-1 rounded-l-full bg-primary/60"
+            animate={{ opacity: [0.15, 0.85, 0.15], x: [0, 4, 0] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
 
-function SparklineDraw() {
+function SparklineDraw({ up = true }: { up?: boolean }) {
   const d =
-    "M4 48 C28 46 40 28 60 32 S96 58 120 40 S168 12 192 22 S220 44 236 28";
+    "M4 52 C24 50 36 34 54 38 S88 58 112 42 S152 14 176 24 S208 48 236 22";
+  const stroke = up ? "var(--up, #059669)" : "var(--down, #dc2626)";
+  const fillId = up ? "heroSparkUp" : "heroSparkDown";
 
   return (
-    <svg viewBox="0 0 240 72" className="h-20 w-full" fill="none">
+    <svg viewBox="0 0 240 72" className="h-[4.5rem] w-full" fill="none">
+      <defs>
+        <linearGradient id={fillId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={stroke} stopOpacity="0.22" />
+          <stop offset="100%" stopColor={stroke} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path
+        d={`${d} L236 72 L4 72 Z`}
+        fill={`url(#${fillId})`}
+        opacity="0.9"
+      />
       <motion.path
         d={d}
-        stroke="var(--primary)"
-        strokeWidth="2.2"
+        stroke={stroke}
+        strokeWidth="2.1"
         strokeLinecap="round"
-        initial={{ pathLength: 0, opacity: 0.35 }}
+        initial={{ pathLength: 0, opacity: 0.4 }}
         animate={{ pathLength: 1, opacity: 1 }}
-        transition={{
-          duration: 2.2,
-          ease: "easeInOut",
-          repeat: Infinity,
-          repeatDelay: 1.4,
-        }}
+        transition={{ duration: 1.4, ease: "easeOut" }}
       />
       <motion.circle
         cx="236"
-        cy="28"
-        r="4"
-        fill="var(--primary)"
-        animate={{ opacity: [0, 1, 1, 0], scale: [0.6, 1, 1, 0.6] }}
-        transition={{
-          duration: 2.2,
-          ease: "easeInOut",
-          repeat: Infinity,
-          repeatDelay: 1.4,
-        }}
+        cy="22"
+        r="4.5"
+        fill={stroke}
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.9, type: "spring", stiffness: 280, damping: 18 }}
+      />
+      <motion.circle
+        cx="236"
+        cy="22"
+        r="9"
+        stroke={stroke}
+        strokeWidth="1.2"
+        fill="none"
+        initial={{ opacity: 0, scale: 0.6 }}
+        animate={{ opacity: [0, 0.45, 0], scale: [0.6, 1.35, 1.5] }}
+        transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut", delay: 1 }}
       />
     </svg>
   );
@@ -137,11 +325,11 @@ export function AskDeskVisual() {
         className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-primary-soft to-transparent"
       />
       <div className="relative flex items-center justify-between">
-        <p className="font-display text-lg font-bold tracking-tight text-text">
+        <p className="text-base font-semibold tracking-tight text-text">
           Ask desk
         </p>
         <motion.span
-          className="text-xs font-semibold text-primary"
+          className="text-xs font-medium text-primary"
           animate={{ opacity: [0.45, 1, 0.45] }}
           transition={{ duration: 1.6, repeat: Infinity }}
         >
@@ -173,7 +361,7 @@ export function AskDeskVisual() {
         viewport={{ once: true }}
         transition={{ delay: 0.7, duration: 0.4 }}
       >
-        <p className="text-[11px] font-semibold tracking-[0.14em] text-text-muted uppercase">
+        <p className="text-[11px] font-medium tracking-[0.14em] text-text-muted uppercase">
           Snapshot
         </p>
         <p className="mt-2 text-sm leading-relaxed text-text-secondary">
@@ -215,14 +403,14 @@ export function BasketStripVisual() {
     <div className="overflow-hidden rounded-[1.75rem] border border-border bg-bg-elevated shadow-card">
       <div className="flex items-center justify-between border-b border-border bg-bg px-5 py-4">
         <div>
-          <p className="font-display text-base font-bold tracking-tight">
+          <p className="text-base font-semibold tracking-tight">
             Core holds
           </p>
           <p className="text-xs text-text-muted">Basket · 3 coins</p>
         </div>
         <div className="text-right">
-          <p className="text-sm font-semibold tabular-nums">$24,180</p>
-          <p className="text-xs font-semibold text-up">+$812 · +3.5%</p>
+          <p className="text-sm font-medium tabular-nums">$24,180</p>
+          <p className="text-xs font-medium text-up">+$812 · +3.5%</p>
         </div>
       </div>
       <ul className="divide-y divide-border">
@@ -246,14 +434,14 @@ export function BasketStripVisual() {
               decoding="async"
             />
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold">{r.name}</p>
+              <p className="truncate text-sm font-medium">{r.name}</p>
               <p className="text-xs text-text-muted">{r.sym}</p>
             </div>
             <span
               className={
                 r.up
-                  ? "text-sm font-semibold tabular-nums text-up"
-                  : "text-sm font-semibold tabular-nums text-down"
+                  ? "text-sm font-medium tabular-nums text-up"
+                  : "text-sm font-medium tabular-nums text-down"
               }
             >
               {r.pnl}
@@ -268,20 +456,30 @@ export function BasketStripVisual() {
 export function OrbitField({ className }: { className?: string }) {
   return (
     <div aria-hidden className={className}>
-      {[0, 1, 2, 3].map((i) => (
+      <div className="absolute inset-6 rounded-[2rem] border border-primary/10" />
+      <div className="absolute inset-12 rounded-[1.75rem] border border-dashed border-primary/15" />
+      {[
+        { left: "8%", top: "22%", size: 6, delay: 0 },
+        { left: "88%", top: "18%", size: 5, delay: 0.4 },
+        { left: "12%", top: "72%", size: 4, delay: 0.8 },
+        { left: "84%", top: "78%", size: 7, delay: 1.1 },
+        { left: "48%", top: "8%", size: 4, delay: 0.2 },
+      ].map((dot, i) => (
         <motion.span
           key={i}
-          className="absolute h-2 w-2 rounded-full bg-primary/40"
+          className="absolute rounded-full bg-primary/35"
           style={{
-            left: `${12 + i * 22}%`,
-            top: `${18 + (i % 3) * 28}%`,
+            left: dot.left,
+            top: dot.top,
+            width: dot.size,
+            height: dot.size,
           }}
-          animate={{ y: [0, -12, 0], opacity: [0.3, 1, 0.3] }}
+          animate={{ y: [0, -10, 0], opacity: [0.25, 0.9, 0.25] }}
           transition={{
-            duration: 3 + i * 0.4,
+            duration: 3.2 + i * 0.35,
             repeat: Infinity,
             ease: "easeInOut",
-            delay: i * 0.35,
+            delay: dot.delay,
           }}
         />
       ))}
@@ -360,7 +558,7 @@ export function MarketTicker() {
         {items.map((item) => (
           <span
             key={`${suffix}-${item.s}`}
-            className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-border bg-bg-elevated px-3 py-2 text-xs font-semibold shadow-sm"
+            className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-border bg-bg-elevated px-3 py-2 text-xs font-medium shadow-sm"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img

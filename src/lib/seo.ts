@@ -158,6 +158,7 @@ export function getPublicSeoPaths(): {
     priority: number;
   }[] = [
     { path: "/", changeFrequency: "weekly", priority: 1 },
+    { path: "/luck", changeFrequency: "weekly", priority: 0.88 },
     { path: "/blog", changeFrequency: "daily", priority: 0.95 },
     { path: "/guides", changeFrequency: "weekly", priority: 0.92 },
     { path: "/glossary", changeFrequency: "weekly", priority: 0.9 },

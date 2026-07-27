@@ -19,9 +19,9 @@ export function BrandLogo({ className, priority, onDark }: Props) {
       height={287}
       priority={priority}
       className={cn(
-        "w-auto max-w-none object-contain object-left",
+        "w-auto object-contain object-left",
         onDark && "brightness-0 invert",
-        className || "h-8"
+        className ?? "h-8 max-h-8"
       )}
     />
   );

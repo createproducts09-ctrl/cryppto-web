@@ -62,7 +62,7 @@ export function RelatedCluster({
   if (!links.length) return null;
   return (
     <section className="border-t border-border pt-10">
-      <h2 className="font-display text-xl font-bold tracking-tight">{title}</h2>
+      <h2 className="text-xl font-bold tracking-tight">{title}</h2>
       <ul className="mt-5 grid gap-3 sm:grid-cols-2">
         {links.map((link) => (
           <li key={link.href}>

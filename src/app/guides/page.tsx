@@ -1,7 +1,12 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { MarkArrow } from "@/components/marketing/MarketingMarks";
 
 import { MarketingShell } from "@/components/marketing/MarketingShell";
+import {
+  BlogCardAccent,
+  MarketingHeroArt,
+  MarketingStatStrip,
+} from "@/components/marketing/MarketingVisuals";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { blogPosts } from "@/content/blog";
@@ -39,32 +44,41 @@ export default function GuidesHubPage() {
   return (
     <MarketingShell>
       <JsonLd data={ld} />
-      <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
+      <div className="mx-auto max-w-6xl px-5 pb-16 pt-10 sm:px-8">
         <Breadcrumbs items={[{ name: "Guides" }]} />
-        <h1 className="font-display mt-6 text-4xl font-extrabold tracking-tight sm:text-5xl">
-          Crypto research guides
-        </h1>
-        <p className="mt-4 max-w-2xl text-text-secondary">
-          Step-by-step playbooks for discovery, AI briefs, tokenomics, and portfolio conviction — written for desk work, not hype.
-        </p>
+        <section className="mt-8 grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+          <div>
+            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
+              Crypto research guides
+            </h1>
+            <p className="mt-4 max-w-xl text-text-secondary">
+              Step-by-step playbooks for discovery, AI briefs, tokenomics, and portfolio conviction — written for desk work, not hype.
+            </p>
+            <div className="mt-8">
+              <MarketingStatStrip />
+            </div>
+          </div>
+          <MarketingHeroArt variant="guides" />
+        </section>
 
-        <div className="mt-12 grid gap-5 md:grid-cols-2">
-          {guides.map((g) => (
+        <div className="mt-14 grid gap-5 md:grid-cols-2">
+          {guides.map((g, i) => (
             <Link
               key={g.slug}
               href={`/blog/${g.slug}`}
-              className="group rounded-2xl border border-border bg-bg-elevated p-6 transition hover:border-primary/40"
+              className="group rounded-2xl border border-border bg-bg-elevated/90 p-6 shadow-sm backdrop-blur transition hover:border-primary/40"
             >
+              <BlogCardAccent index={i} />
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">
                 {g.category}
               </p>
-              <h2 className="font-display mt-2 text-xl font-bold group-hover:text-primary">
+              <h2 className="mt-2 text-xl font-bold group-hover:text-primary">
                 {g.title}
               </h2>
               <p className="mt-2 text-sm text-text-secondary">{g.description}</p>
               <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary">
                 Open guide
-                <ArrowRight className="h-4 w-4" />
+                <MarkArrow className="h-4 w-4" />
               </span>
             </Link>
           ))}

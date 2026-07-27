@@ -1,7 +1,13 @@
 import Link from "next/link";
-import { ArrowRight, Check } from "lucide-react";
+import { MarkArrow, MarkCheck } from "@/components/marketing/MarketingMarks";
 
 import { MarketingShell } from "@/components/marketing/MarketingShell";
+import {
+  MarketingCtaGlow,
+  MarketingHeroArt,
+  MarketingStatStrip,
+  type MarketingVisualVariant,
+} from "@/components/marketing/MarketingVisuals";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
@@ -14,11 +20,19 @@ import { Button } from "@/components/ui/Button";
 import type { SeoLanding } from "@/content/seo-landings";
 import { SITE } from "@/lib/seo";
 
+function visualForSlug(slug: string): MarketingVisualVariant {
+  if (slug.includes("ai") || slug.includes("assistant")) return "ask";
+  if (slug.includes("portfolio")) return "portfolio";
+  if (slug.includes("tools")) return "tools";
+  return "desk";
+}
+
 export function SeoLandingView({ page }: { page: SeoLanding }) {
   const headings = page.sections.map((s) => ({
     id: slugifyHeading(s.heading),
     label: s.heading,
   }));
+  const visual = visualForSlug(page.slug);
 
   const softwareLd = {
     "@context": "https://schema.org",
@@ -61,34 +75,41 @@ export function SeoLandingView({ page }: { page: SeoLanding }) {
       <JsonLd data={faqLd} />
       <JsonLd data={webPageLd} />
 
-      <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
+      <div className="mx-auto max-w-6xl px-5 pb-16 pt-10 sm:px-8">
         <Breadcrumbs items={[{ name: page.title }]} />
 
-        <p className="mt-6 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
-          {SITE.name}
-        </p>
-        <h1 className="font-display mt-3 max-w-3xl text-4xl font-extrabold tracking-tight sm:text-5xl">
-          {page.h1}
-        </h1>
-        <p className="mt-5 max-w-2xl text-base leading-relaxed text-text-secondary sm:text-lg">
-          {page.hero}
-        </p>
+        <section className="mt-8 grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+              {SITE.name}
+            </p>
+            <h1 className="mt-3 max-w-xl text-4xl font-extrabold tracking-tight sm:text-5xl">
+              {page.h1}
+            </h1>
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-text-secondary sm:text-lg">
+              {page.hero}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/register">
+                <Button size="lg">
+                  {page.cta}
+                  <MarkArrow className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Link href="/pricing">
+                <Button size="lg" variant="secondary">
+                  View pricing
+                </Button>
+              </Link>
+            </div>
+            <div className="mt-8">
+              <MarketingStatStrip />
+            </div>
+          </div>
+          <MarketingHeroArt variant={visual} />
+        </section>
 
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/register">
-            <Button size="lg">
-              {page.cta}
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
-          <Link href="/pricing">
-            <Button size="lg" variant="secondary">
-              View pricing
-            </Button>
-          </Link>
-        </div>
-
-        <div className="mt-10 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="mt-14 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
           {page.takeaways?.length ? (
             <KeyTakeaways items={page.takeaways} />
           ) : (
@@ -101,9 +122,9 @@ export function SeoLandingView({ page }: { page: SeoLanding }) {
           {page.bullets.map((b) => (
             <li
               key={b}
-              className="flex items-start gap-3 rounded-xl border border-border bg-bg-elevated px-4 py-3 text-sm text-text-secondary"
+              className="flex items-start gap-3 rounded-xl border border-border bg-bg-elevated/90 px-4 py-3.5 text-sm text-text-secondary shadow-sm backdrop-blur"
             >
-              <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+              <MarkCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
               {b}
             </li>
           ))}
@@ -113,8 +134,12 @@ export function SeoLandingView({ page }: { page: SeoLanding }) {
           {page.sections.map((section) => {
             const id = slugifyHeading(section.heading);
             return (
-              <section key={section.heading} id={id} className="max-w-3xl">
-                <h2 className="font-display text-2xl font-bold tracking-tight scroll-mt-24">
+              <section
+                key={section.heading}
+                id={id}
+                className="max-w-3xl rounded-2xl border border-border/70 bg-bg-elevated/60 p-6 backdrop-blur sm:p-8"
+              >
+                <h2 className="scroll-mt-24 text-2xl font-bold tracking-tight">
                   {section.heading}
                 </h2>
                 {section.body.map((para) => (
@@ -130,10 +155,8 @@ export function SeoLandingView({ page }: { page: SeoLanding }) {
           })}
         </div>
 
-        <section className="mt-16 max-w-3xl border-t border-border pt-12">
-          <h2 className="font-display text-2xl font-bold">
-            Frequently asked questions
-          </h2>
+        <section className="mt-16 max-w-3xl rounded-2xl border border-border bg-bg-elevated/80 p-6 backdrop-blur sm:p-8">
+          <h2 className="text-2xl font-bold">Frequently asked questions</h2>
           <dl className="mt-8 space-y-6">
             {page.faqs.map((f) => (
               <div key={f.q}>
@@ -152,20 +175,18 @@ export function SeoLandingView({ page }: { page: SeoLanding }) {
           </div>
         ) : null}
 
-        <div className="mt-16 rounded-2xl border border-primary/20 bg-primary-soft/50 px-6 py-10 text-center">
-          <h2 className="font-display text-2xl font-bold">
-            Ready to research with less noise?
-          </h2>
+        <MarketingCtaGlow className="mt-16">
+          <h2 className="text-2xl font-bold">Ready to research with less noise?</h2>
           <p className="mx-auto mt-2 max-w-md text-sm text-text-secondary">
             Create a free Alphora Labs account and open the desk in minutes.
           </p>
           <Link href="/register" className="mt-6 inline-block">
             <Button size="lg">
               Get started
-              <ArrowRight className="h-4 w-4" />
+              <MarkArrow className="h-4 w-4" />
             </Button>
           </Link>
-        </div>
+        </MarketingCtaGlow>
       </div>
     </MarketingShell>
   );

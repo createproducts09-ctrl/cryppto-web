@@ -65,6 +65,8 @@ export const endpoints = {
     avatar?: string | null;
     preferences?: object;
   }) => api.patch("/users/me", body),
+  claimFortune: (body: { coin_id: string }) =>
+    api.post("/users/me/fortune", body),
   deleteAccount: () => api.delete("/users/me"),
   deck: (
     filter: string,

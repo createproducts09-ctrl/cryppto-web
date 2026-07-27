@@ -8,12 +8,14 @@ import Link from "next/link";
 import { ArrowRight, Newspaper, Search, Users } from "lucide-react";
 
 import { Sparkline } from "@/components/research/PriceChart";
+import { FortuneResearchGate } from "@/components/research/FortuneResearchGate";
 import { PriceChange } from "@/components/coins/PriceChange";
 import { PageHeader, PageShell } from "@/components/shell/PageChrome";
 import { Card, EmptyState, Skeleton } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { endpoints } from "@/lib/api/client";
 import { formatCompact, formatPrice } from "@/lib/format";
+import { useAuthStore } from "@/lib/store/auth";
 import type { Coin, NewsItem, SearchResult } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -23,7 +25,11 @@ function ResearchResults() {
   const params = useSearchParams();
   const router = useRouter();
   const q = (params.get("q") || "").trim();
+  const fortuneId = (params.get("fortune") || "").trim();
+  const accessToken = useAuthStore((s) => s.accessToken);
   const [local, setLocal] = useState(q);
+
+  const showFortuneGate = !!fortuneId && !accessToken;
 
   const { data, isFetching, isLoading } = useQuery({
     queryKey: ["research-page", q],
@@ -60,6 +66,14 @@ function ResearchResults() {
 
   return (
     <div className="space-y-6">
+      {showFortuneGate ? (
+        <Suspense fallback={<Skeleton className="h-64 w-full" />}>
+          <FortuneResearchGate />
+        </Suspense>
+      ) : null}
+
+      {!showFortuneGate ? (
+        <>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -227,6 +241,8 @@ function ResearchResults() {
           ) : null}
         </div>
       )}
+      </>
+      ) : null}
     </div>
   );
 }

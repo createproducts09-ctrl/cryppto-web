@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { FormEvent, Suspense, useState } from "react";
 import { ArrowRight } from "lucide-react";
 
 import { AuthSplitShell } from "@/components/auth/AuthSplitShell";
@@ -13,8 +13,15 @@ import { getApiError } from "@/lib/api/errors";
 import { useAuthStore } from "@/lib/store/auth";
 import type { User } from "@/lib/types";
 
-export default function RegisterPage() {
+function safeNext(raw: string | null) {
+  if (!raw || !raw.startsWith("/") || raw.startsWith("//")) return null;
+  return raw;
+}
+
+function RegisterForm() {
   const router = useRouter();
+  const search = useSearchParams();
+  const next = safeNext(search.get("next"));
   const setSession = useAuthStore((s) => s.setSession);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -34,7 +41,7 @@ export default function RegisterPage() {
         accessToken: data.access_token,
         refreshToken: data.refresh_token,
       });
-      router.push("/verify-email");
+      router.push(next ? `/verify-email?next=${encodeURIComponent(next)}` : "/verify-email");
     } catch (err: unknown) {
       setError(getApiError(err, "Registration failed"));
     } finally {
@@ -106,7 +113,7 @@ export default function RegisterPage() {
         <p className="mt-6 text-center text-sm text-text-secondary">
           Already have an account?{" "}
           <Link
-            href="/login"
+            href={next ? `/login?next=${encodeURIComponent(next)}` : "/login"}
             className="font-semibold text-primary hover:underline"
           >
             Sign in
@@ -114,5 +121,14 @@ export default function RegisterPage() {
         </p>
       </div>
     </AuthSplitShell>
+  );
+}
+
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={null}>
+      <RegisterForm />
+    </Suspense>
   );
 }
