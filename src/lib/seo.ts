@@ -20,9 +20,9 @@ function resolveSiteUrl() {
 export const SITE = {
   name: "Alphora Labs",
   shortName: "Alphora",
-  tagline: "Crypto research, rebuilt",
+  tagline: "Crypto research platform",
   description:
-    "Swipe markets, ask AI, and track baskets — clean crypto research from Alphora Labs. Discover coins, desk briefs, and live P&L without the noise.",
+    "Alphora Labs is a crypto research platform for discovering, analyzing, and tracking digital assets. Research tokens with AI-powered analysis, market data, risk insights, narratives, and portfolio tracking — all in one place.",
   url: resolveSiteUrl(),
   twitter: "@alphoralabs",
   locale: "en_US",
@@ -30,26 +30,25 @@ export const SITE = {
     "Alphora Labs",
     "crypto research",
     "crypto research platform",
+    "AI crypto analysis",
+    "token research",
     "cryptocurrency analysis",
     "cryptocurrency research",
+    "crypto analysis platform",
+    "crypto research tools",
+    "best crypto research tools",
     "AI crypto assistant",
     "AI crypto research",
+    "crypto due diligence",
+    "tokenomics analysis",
+    "crypto risk analysis",
+    "crypto fundamental analysis",
+    "crypto project screener",
     "coin research desk",
-    "crypto discover swipe",
     "crypto portfolio tracker",
-    "crypto P&L tracker",
-    "bitcoin ethereum research",
-    "meme coin analysis",
-    "meme coin research",
+    "bitcoin research",
+    "ethereum research",
     "DeFi research",
-    "DeFi tokenomics",
-    "crypto narratives",
-    "market pulse",
-    "crypto watchlist",
-    "how to research cryptocurrency",
-    "best crypto research tools",
-    "crypto analysis tool",
-    "crypto research for beginners",
     "token unlocks",
     "FDV crypto",
     "crypto glossary",
@@ -146,18 +145,28 @@ export function pageMetadata({
   };
 }
 
-/** Absolute paths included in sitemap.xml */
-export function getPublicSeoPaths(): {
+type SeoPath = {
   path: string;
-  changeFrequency: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
+  changeFrequency:
+    | "always"
+    | "hourly"
+    | "daily"
+    | "weekly"
+    | "monthly"
+    | "yearly"
+    | "never";
   priority: number;
-}[] {
-  const core: {
-    path: string;
-    changeFrequency: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
-    priority: number;
-  }[] = [
+};
+
+/** Absolute paths included in sitemap.xml */
+export async function getPublicSeoPaths(): Promise<SeoPath[]> {
+  const { fetchCoinsList } = await import("@/lib/publicApi");
+  const { sectors } = await import("@/content/sectors");
+
+  const core: SeoPath[] = [
     { path: "/", changeFrequency: "weekly", priority: 1 },
+    { path: "/crypto", changeFrequency: "daily", priority: 0.96 },
+    { path: "/sectors", changeFrequency: "weekly", priority: 0.9 },
     { path: "/luck", changeFrequency: "weekly", priority: 0.88 },
     { path: "/blog", changeFrequency: "daily", priority: 0.95 },
     { path: "/guides", changeFrequency: "weekly", priority: 0.92 },
@@ -205,8 +214,35 @@ export function getPublicSeoPaths(): {
     priority: 0.75,
   }));
 
+  const sectorPaths = sectors.map((s) => ({
+    path: `/sectors/${s.slug}`,
+    changeFrequency: "weekly" as const,
+    priority: 0.86,
+  }));
+
+  let cryptoPaths: SeoPath[] = [];
+  try {
+    const coins = await fetchCoinsList(100);
+    cryptoPaths = coins
+      .filter((c) => c.id)
+      .map((c) => ({
+        path: `/crypto/${c.id}`,
+        changeFrequency: "daily" as const,
+        priority: 0.85,
+      }));
+  } catch {
+    cryptoPaths = [];
+  }
+
   const seen = new Set<string>();
-  return [...core, ...posts, ...landings, ...glossary].filter((item) => {
+  return [
+    ...core,
+    ...cryptoPaths,
+    ...sectorPaths,
+    ...posts,
+    ...landings,
+    ...glossary,
+  ].filter((item) => {
     if (seen.has(item.path)) return false;
     seen.add(item.path);
     return true;

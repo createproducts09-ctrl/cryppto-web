@@ -20,7 +20,16 @@ export default function robots(): MetadataRoute.Robots {
       },
       {
         userAgent: "GPTBot",
-        allow: ["/", "/blog", "/crypto-research", "/about", "/pricing"],
+        allow: [
+          "/",
+          "/blog",
+          "/crypto",
+          "/crypto-research",
+          "/sectors",
+          "/glossary",
+          "/about",
+          "/pricing",
+        ],
         disallow: ["/profile", "/ask", "/report/", "/watchlist"],
       },
     ],

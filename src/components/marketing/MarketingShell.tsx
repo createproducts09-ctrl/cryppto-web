@@ -7,34 +7,38 @@ import { SITE } from "@/lib/seo";
 
 const footerCols = [
   {
-    title: "Product",
+    title: "Research",
     links: [
-      { href: "/crypto-research", label: "Crypto research desk" },
-      { href: "/ai-crypto-assistant", label: "AI crypto assistant" },
-      { href: "/crypto-portfolio-tracker", label: "Portfolio tracker" },
+      { href: "/crypto", label: "Token research hub" },
+      { href: "/sectors", label: "Crypto sectors" },
+      { href: "/crypto-research", label: "Research platform" },
       { href: "/best-crypto-research-tools", label: "Best research tools" },
+      { href: "/crypto-project-screener", label: "Project screener" },
       { href: "/pricing", label: "Pricing" },
     ],
   },
   {
     title: "Learn",
     links: [
-      { href: "/blog", label: "Blog" },
-      { href: "/guides", label: "Guides hub" },
+      { href: "/how-to-research-cryptocurrency", label: "How to research crypto" },
+      { href: "/crypto-due-diligence", label: "Due diligence" },
+      { href: "/tokenomics-analysis", label: "Tokenomics analysis" },
+      { href: "/crypto-risk-analysis", label: "Risk analysis" },
       { href: "/glossary", label: "Glossary" },
-      { href: "/faq", label: "FAQ" },
-      { href: "/blog/how-to-research-cryptocurrency", label: "How to research crypto" },
-      { href: "/blog/crypto-research-for-beginners", label: "Beginners plan" },
+      { href: "/guides", label: "Guides hub" },
+      { href: "/blog", label: "Blog" },
       { href: "/feed.xml", label: "RSS feed" },
     ],
   },
   {
-    title: "Company",
+    title: "Product",
     links: [
+      { href: "/ai-crypto-assistant", label: "AI crypto assistant" },
+      { href: "/crypto-portfolio-tracker", label: "Portfolio tracker" },
+      { href: "/discover", label: "Open Discover" },
       { href: "/about", label: "About" },
       { href: "/register", label: "Create account" },
       { href: "/login", label: "Sign in" },
-      { href: "/discover", label: "Open app" },
     ],
   },
 ];
@@ -59,7 +63,8 @@ export function MarketingShell({
           <div className="md:col-span-1">
             <BrandLogo className="h-4 w-auto max-w-[7rem]" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-text-secondary">
-              {SITE.tagline}. Swipe markets, ask AI, track baskets — research without the noise.
+              {SITE.tagline} for discovering, analyzing, and tracking digital
+              assets — AI briefs, token research, and thesis baskets.
             </p>
           </div>
           {footerCols.map((col) => (

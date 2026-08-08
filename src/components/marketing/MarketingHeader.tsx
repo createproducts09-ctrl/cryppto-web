@@ -9,11 +9,12 @@ import { useAuthStore } from "@/lib/store/auth";
 import { cn } from "@/lib/utils";
 
 export const MARKETING_NAV = [
-  { href: "/luck", label: "Pick a coin" },
-  { href: "/blog", label: "Blog" },
-  { href: "/guides", label: "Guides" },
+  { href: "/crypto", label: "Tokens" },
+  { href: "/sectors", label: "Sectors" },
   { href: "/glossary", label: "Glossary" },
-  { href: "/crypto-research", label: "Research" },
+  { href: "/guides", label: "Guides" },
+  { href: "/best-crypto-research-tools", label: "Tools" },
+  { href: "/blog", label: "Blog" },
   { href: "/pricing", label: "Pricing" },
 ] as const;
 

@@ -92,12 +92,19 @@ export default async function GlossaryTermPage({ params }: Props) {
 
         <p className="mt-10 text-sm text-text-secondary">
           Put vocabulary into practice on the{" "}
+          <Link href="/crypto" className="font-semibold text-primary">
+            token research hub
+          </Link>
+          ,{" "}
+          <Link
+            href="/tokenomics-analysis"
+            className="font-semibold text-primary"
+          >
+            tokenomics analysis
+          </Link>
+          , or the{" "}
           <Link href="/crypto-research" className="font-semibold text-primary">
-            Alphora research desk
-          </Link>{" "}
-          or browse the{" "}
-          <Link href="/blog" className="font-semibold text-primary">
-            research blog
+            Alphora research platform
           </Link>
           .
         </p>

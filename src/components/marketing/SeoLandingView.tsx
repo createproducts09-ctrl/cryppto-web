@@ -130,6 +130,47 @@ export function SeoLandingView({ page }: { page: SeoLanding }) {
           ))}
         </ul>
 
+        {page.comparison ? (
+          <section className="mt-14 overflow-hidden rounded-2xl border border-border bg-bg-elevated/80">
+            <div className="border-b border-border px-5 py-4">
+              <h2 className="text-xl font-bold tracking-tight">
+                {page.comparison.caption}
+              </h2>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[320px] text-left text-sm">
+                <thead className="bg-bg text-[11px] uppercase tracking-wide text-text-muted">
+                  <tr>
+                    {page.comparison.headers.map((h) => (
+                      <th key={h} className="px-5 py-3 font-semibold">
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {page.comparison.rows.map((row) => (
+                    <tr key={row[0]} className="align-top">
+                      {row.map((cell, i) => (
+                        <td
+                          key={`${row[0]}-${i}`}
+                          className={
+                            i === 0
+                              ? "px-5 py-3.5 font-semibold text-text"
+                              : "px-5 py-3.5 text-text-secondary"
+                          }
+                        >
+                          {cell}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        ) : null}
+
         <div className="mt-16 space-y-12">
           {page.sections.map((section) => {
             const id = slugifyHeading(section.heading);

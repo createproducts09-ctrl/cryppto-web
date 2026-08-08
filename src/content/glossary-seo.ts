@@ -121,6 +121,178 @@ export const glossaryTerms: GlossaryTerm[] = [
     related: ["liquidity", "market-cap"],
     keywords: ["RSI crypto", "relative strength index cryptocurrency"],
   },
+  {
+    slug: "vesting",
+    term: "Vesting",
+    short: "A schedule that releases tokens over time instead of all at once.",
+    definition:
+      "Vesting locks team, investor, or ecosystem tokens and unlocks them on a timetable — cliffs, linear releases, or both. It is the calendar behind token unlocks.",
+    whyItMatters: [
+      "Large cliffs near weak demand are classic sell pressure.",
+      "Who receives vested tokens matters as much as size.",
+      "Pair vesting with liquidity depth before sizing.",
+    ],
+    related: ["token-unlocks", "circulating-supply", "fully-diluted-valuation-fdv"],
+    keywords: ["crypto vesting", "token vesting schedule", "vesting cliff"],
+  },
+  {
+    slug: "on-chain-analysis",
+    term: "On-Chain Analysis",
+    short: "Reading blockchain data — flows, holders, activity — to inform research.",
+    definition:
+      "On-chain analysis uses public ledger data: transfers, active addresses, exchange flows, holder concentration, and contract interactions. It complements — not replaces — product and tokenomics research.",
+    whyItMatters: [
+      "Spot accumulation or distribution before headlines.",
+      "Validate whether usage matches the narrative.",
+      "Whale and exchange flows can change risk overnight.",
+    ],
+    related: ["whale", "liquidity", "market-cap"],
+    keywords: ["on-chain analysis", "on-chain crypto analysis", "blockchain analytics"],
+  },
+  {
+    slug: "whale",
+    term: "Whale",
+    short: "A wallet or entity holding enough supply to move markets.",
+    definition:
+      "Whales are large holders whose transfers can signal distribution, accumulation, or exchange deposits. Concentration risk rises when a few wallets control a large share of float.",
+    whyItMatters: [
+      "Track top-holder concentration on thin floats.",
+      "Exchange deposits from whales can precede sell pressure.",
+      "Memecoins and microcaps are especially whale-sensitive.",
+    ],
+    related: ["on-chain-analysis", "liquidity", "circulating-supply"],
+    keywords: ["crypto whale", "whale wallet", "holder concentration"],
+  },
+  {
+    slug: "slippage",
+    term: "Slippage",
+    short: "The difference between expected price and executed price when trading.",
+    definition:
+      "Slippage rises when order size is large relative to book depth. Researchers treat expected slippage as a cost and a risk — especially in memecoins and illiquid alts.",
+    whyItMatters: [
+      "A great entry dies if exit slippage is brutal.",
+      "Size positions for depth, not just conviction.",
+      "Compare venues before assuming a price is real.",
+    ],
+    related: ["liquidity", "market-cap"],
+    keywords: ["crypto slippage", "trading slippage", "liquidity slippage"],
+  },
+  {
+    slug: "impermanent-loss",
+    term: "Impermanent Loss",
+    short: "LP opportunity cost when pool prices diverge vs simply holding.",
+    definition:
+      "Impermanent loss describes how liquidity providers can underperform holding the assets when prices move. Fees may or may not compensate depending on volatility and volume.",
+    whyItMatters: [
+      "DeFi yield is not free — model IL against fees.",
+      "Volatile pairs amplify IL risk.",
+      "Use when researching DEX tokens and LP incentives.",
+    ],
+    related: ["tvl", "liquidity", "tokenomics"],
+    keywords: ["impermanent loss", "IL crypto", "liquidity provider risk"],
+  },
+  {
+    slug: "layer-1",
+    term: "Layer 1",
+    short: "A base blockchain that settles transactions and hosts apps.",
+    definition:
+      "Layer 1 chains (Bitcoin, Ethereum, Solana, etc.) provide consensus and settlement. Researchers compare security, throughput, fees, developer activity, and how the token captures demand.",
+    whyItMatters: [
+      "L1 narratives rotate — fundamentals move slower.",
+      "Token capture ≠ chain usage automatically.",
+      "See Alphora’s Layer 1 sector page for peer research.",
+    ],
+    related: ["layer-2", "tokenomics", "on-chain-analysis"],
+    keywords: ["layer 1 blockchain", "L1 crypto", "base layer crypto"],
+  },
+  {
+    slug: "layer-2",
+    term: "Layer 2",
+    short: "A scaling network that settles to a Layer 1 for security.",
+    definition:
+      "Layer 2s (optimistic or ZK rollups and related designs) aim for cheaper, faster transactions while inheriting security from a base chain. Economics depend on sequencers, bridges, and fee share.",
+    whyItMatters: [
+      "Bridge and sequencer assumptions are core risks.",
+      "Liquidity can fragment across L2s.",
+      "Token utility varies widely — read the design.",
+    ],
+    related: ["layer-1", "tvl", "liquidity"],
+    keywords: ["layer 2 crypto", "L2 rollup", "ethereum scaling"],
+  },
+  {
+    slug: "dao",
+    term: "DAO",
+    short: "A governance structure coordinated by tokens and on-chain proposals.",
+    definition:
+      "A decentralized autonomous organization uses token voting (and sometimes off-chain signaling) to steer treasuries, parameters, and upgrades. Power often concentrates in large holders.",
+    whyItMatters: [
+      "Governance tokens may not capture cash flows.",
+      "Voter apathy and whale control are common.",
+      "Read proposal history before trusting ‘community owned’ claims.",
+    ],
+    related: ["tokenomics", "whale", "on-chain-analysis"],
+    keywords: ["DAO crypto", "decentralized autonomous organization", "governance token"],
+  },
+  {
+    slug: "max-supply",
+    term: "Max Supply",
+    short: "The maximum number of tokens that can ever exist under current rules.",
+    definition:
+      "Max supply is the hard (or soft) ceiling on token issuance. Researchers compare it to circulating supply to understand dilution path and FDV.",
+    whyItMatters: [
+      "Some chains have no hard max — model emissions instead.",
+      "Max supply alone does not tell unlock timing.",
+      "Use with circulating supply and vesting calendars.",
+    ],
+    related: ["circulating-supply", "fully-diluted-valuation-fdv", "token-unlocks"],
+    keywords: ["max supply crypto", "token max supply", "circulating vs max supply"],
+  },
+  {
+    slug: "circulating-vs-max-supply",
+    term: "Circulating vs Max Supply",
+    short: "Float today versus the eventual ceiling — the dilution gap researchers watch.",
+    definition:
+      "Circulating supply is tradable today; max supply is the eventual ceiling. The gap (and the schedule that closes it) drives unlock and emission risk.",
+    whyItMatters: [
+      "Large gaps with near-term unlocks raise overhang risk.",
+      "FDV uses max (or fully diluted) assumptions — check the calendar.",
+      "Always ask who receives the newly circulating tokens.",
+    ],
+    related: ["circulating-supply", "max-supply", "fully-diluted-valuation-fdv", "vesting"],
+    keywords: [
+      "circulating supply vs max supply",
+      "crypto float vs max supply",
+      "token dilution",
+    ],
+  },
+  {
+    slug: "crypto-research-score",
+    term: "Research Score",
+    short: "Alphora’s composite signal across fundamentals, tokenomics, liquidity, momentum, and risk.",
+    definition:
+      "Alphora’s research score summarizes multiple research categories into a 0–100 style signal to help triage. It is a research aid — not a buy rating or financial advice.",
+    whyItMatters: [
+      "Use it to prioritize which assets to study deeper.",
+      "Always read the category breakdown and concerns.",
+      "Verify primary sources before acting.",
+    ],
+    related: ["tokenomics", "liquidity", "on-chain-analysis"],
+    keywords: ["crypto research score", "token research score", "Alphora research"],
+  },
+  {
+    slug: "narrative",
+    term: "Crypto Narrative",
+    short: "The market story that attracts attention and capital to a sector or token.",
+    definition:
+      "Narratives (AI, RWA, L2s, memes) organize attention. Researchers separate durable demand from temporary storytelling — and track how fast narratives rotate.",
+    whyItMatters: [
+      "Narratives move faster than fundamentals.",
+      "Late narrative entries often buy someone else’s exit.",
+      "Use sector pages to map peers inside a narrative.",
+    ],
+    related: ["market-cap", "liquidity", "tokenomics"],
+    keywords: ["crypto narrative", "crypto narratives", "sector narrative"],
+  },
 ];
 
 export function getGlossaryTerm(slug: string) {

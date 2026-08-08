@@ -45,13 +45,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     (coin?.description && coin.description.slice(0, 155)) ||
     `Research ${name}${symbol ? ` (${symbol})` : ""} on Alphora Labs — price, fundamentals, narratives, and AI desk briefs.${rank}`;
 
+  // Canonical SEO URL is the public research page; desk stays at /coin/[id].
   return pageMetadata({
-    title,
+    title: symbol
+      ? `${name} (${symbol}) desk`
+      : `${name} desk`,
     description,
-    path: `/coin/${id}`,
-    keywords: [name, symbol, `${name} crypto`, `${symbol} research`].filter(
-      Boolean
-    ) as string[],
+    path: `/crypto/${id}`,
+    keywords: [
+      name,
+      symbol,
+      `${name} research`,
+      `${symbol} analysis`,
+      `${name} crypto`,
+    ].filter(Boolean) as string[],
     image: coin?.image,
   });
 }

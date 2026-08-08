@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -16,6 +17,7 @@ import {
 import { MarketingHeader } from "@/components/marketing/MarketingHeader";
 import { Button } from "@/components/ui/Button";
 import { hasUsedFortuneLifetime } from "@/lib/fortuneLifetime";
+import { POPULAR_RESEARCH_COINS } from "@/lib/publicApi";
 import { useAuthStore } from "@/lib/store/auth";
 
 const steps = [
@@ -83,16 +85,16 @@ export default function LandingPage() {
               animate={{ opacity: 1, y: 0 }}
               className="mb-4 text-[11px] font-medium uppercase tracking-[0.18em] text-primary"
             >
-              Crypto research desk
+              Alphora Labs
             </motion.p>
 
             <motion.h1
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-              className="text-[2.65rem] font-semibold leading-[1.05] tracking-[-0.03em] text-text sm:text-5xl lg:text-[3.5rem]"
+              className="text-[2.35rem] font-semibold leading-[1.08] tracking-[-0.03em] text-text sm:text-5xl lg:text-[3.25rem]"
             >
-              Alphora Labs
+              Crypto research, without the noise
             </motion.h1>
 
             <motion.p
@@ -101,8 +103,8 @@ export default function LandingPage() {
               transition={{ duration: 0.5, delay: 0.08 }}
               className="mt-5 max-w-md text-base font-normal leading-[1.65] text-text-secondary sm:text-lg"
             >
-              Swipe markets. Ask AI. Build conviction — research that feels like
-              a modern product.
+              Discover tokens, get AI analysis, and track theses — research in
+              one desk.
             </motion.p>
 
             <motion.div
@@ -168,9 +170,9 @@ export default function LandingPage() {
               className="mt-10 grid grid-cols-3 gap-3 border-t border-border pt-6"
             >
               {[
-                { k: "Swipe", v: "Discover" },
-                { k: "Ask", v: "AI briefs" },
-                { k: "Track", v: "Baskets" },
+                { k: "Discover", v: "Swipe markets" },
+                { k: "Research", v: "AI analysis" },
+                { k: "Track", v: "Baskets & P&L" },
               ].map((item) => (
                 <div key={item.k}>
                   <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-text-muted">
@@ -196,6 +198,67 @@ export default function LandingPage() {
         </section>
 
         <MarketTicker />
+
+        {/* Popular research — crawlable token cluster */}
+        <section className="relative border-b border-border bg-bg">
+          <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-16">
+            <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-primary">
+              Token research
+            </p>
+            <h2 className="mt-3 text-2xl font-semibold tracking-[-0.02em] text-text sm:text-3xl">
+              Popular research
+            </h2>
+            <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-text-secondary">
+              Open public research pages for major assets — then continue into
+              the Alphora desk for live analysis and AI briefs.
+            </p>
+            <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {POPULAR_RESEARCH_COINS.map((c) => (
+                <li key={c.id}>
+                  <Link
+                    href={`/crypto/${c.id}`}
+                    className="flex items-center gap-3 rounded-2xl border border-border bg-bg-elevated px-4 py-3.5 transition hover:border-primary/30 hover:bg-primary-soft/30"
+                  >
+                    <Image
+                      src={c.image}
+                      alt=""
+                      width={40}
+                      height={40}
+                      className="h-10 w-10 shrink-0 rounded-full bg-bg"
+                      unoptimized
+                    />
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-sm font-semibold text-text">
+                        {c.name} research
+                      </span>
+                      <span className="mt-0.5 block text-xs uppercase text-text-muted">
+                        {c.symbol}
+                      </span>
+                    </span>
+                    <ArrowRight className="h-4 w-4 shrink-0 text-text-muted" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-6 flex flex-wrap gap-4 text-sm font-medium">
+              <Link href="/crypto" className="text-primary hover:text-primary-hover">
+                Browse all token research →
+              </Link>
+              <Link
+                href="/sectors"
+                className="text-text-secondary hover:text-primary"
+              >
+                Explore sectors
+              </Link>
+              <Link
+                href="/crypto-research"
+                className="text-text-secondary hover:text-primary"
+              >
+                Platform overview
+              </Link>
+            </div>
+          </div>
+        </section>
 
         {/* How it works — filled panels */}
         <section className="relative border-b border-border bg-bg-elevated">
@@ -392,7 +455,8 @@ export default function LandingPage() {
           <div>
             <BrandLogo className="h-4 w-auto max-w-[7rem]" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-text-secondary">
-              Crypto research desk — swipe markets, ask AI, track baskets.
+              Crypto research platform — discover, analyze, and track digital
+              assets with AI-powered desk workflows.
             </p>
           </div>
           <div>
@@ -400,6 +464,16 @@ export default function LandingPage() {
               Product
             </p>
             <ul className="mt-4 space-y-2 text-sm text-text-secondary">
+              <li>
+                <Link href="/crypto" className="hover:text-primary">
+                  Token research
+                </Link>
+              </li>
+              <li>
+                <Link href="/sectors" className="hover:text-primary">
+                  Sectors
+                </Link>
+              </li>
               <li>
                 <Link href="/crypto-research" className="hover:text-primary">
                   Crypto research
@@ -455,10 +529,15 @@ export default function LandingPage() {
               </li>
               <li>
                 <Link
-                  href="/blog/how-to-research-cryptocurrency"
+                  href="/how-to-research-cryptocurrency"
                   className="hover:text-primary"
                 >
                   How to research crypto
+                </Link>
+              </li>
+              <li>
+                <Link href="/tokenomics-analysis" className="hover:text-primary">
+                  Tokenomics analysis
                 </Link>
               </li>
               <li>
