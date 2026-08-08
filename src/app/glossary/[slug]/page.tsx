@@ -77,6 +77,14 @@ export default async function GlossaryTermPage({ params }: Props) {
           <p className="mt-3 text-[15px] leading-relaxed text-text-secondary">
             {term.definition}
           </p>
+          {term.deepDive?.map((para) => (
+            <p
+              key={para.slice(0, 56)}
+              className="mt-3 text-[15px] leading-relaxed text-text-secondary"
+            >
+              {para}
+            </p>
+          ))}
         </section>
 
         <section className="mt-10">
@@ -87,6 +95,28 @@ export default async function GlossaryTermPage({ params }: Props) {
             ))}
           </ul>
         </section>
+
+        {term.examples?.length ? (
+          <section className="mt-10">
+            <h2 className="text-xl font-bold">How to use it in research</h2>
+            <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-text-secondary">
+              {term.examples.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
+        {term.commonMistakes?.length ? (
+          <section className="mt-10">
+            <h2 className="text-xl font-bold">Common mistakes</h2>
+            <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-text-secondary">
+              {term.commonMistakes.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
         <RelatedCluster title="Related terms" links={related} />
 
