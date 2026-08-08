@@ -251,6 +251,12 @@ export default function LandingPage() {
                 Explore sectors
               </Link>
               <Link
+                href="/reports/research-score-index"
+                className="text-text-secondary hover:text-primary"
+              >
+                Research Score Top 100
+              </Link>
+              <Link
                 href="/crypto-research"
                 className="text-text-secondary hover:text-primary"
               >
@@ -467,6 +473,11 @@ export default function LandingPage() {
               <li>
                 <Link href="/crypto" className="hover:text-primary">
                   Token research
+                </Link>
+              </li>
+              <li>
+                <Link href="/reports" className="hover:text-primary">
+                  Research reports
                 </Link>
               </li>
               <li>

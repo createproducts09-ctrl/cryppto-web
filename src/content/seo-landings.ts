@@ -534,6 +534,142 @@ export const seoLandings: SeoLanding[] = [
     ],
     cta: "Try Discover",
   },
+  {
+    slug: "on-chain-crypto-analysis",
+    title: "On-Chain Crypto Analysis",
+    h1: "On-chain crypto analysis for researchers",
+    description:
+      "Learn on-chain crypto analysis — flows, holders, activity — and how Alphora Labs pairs ledger data with desk research.",
+    keywords: [
+      "on-chain crypto analysis",
+      "on-chain analysis",
+      "blockchain analytics research",
+      "crypto flow analysis",
+    ],
+    hero: "On-chain analysis reads the ledger: flows, holders, and activity. It is an input to research — not a substitute for tokenomics, liquidity, and product judgment.",
+    bullets: [
+      "Track exchange flows and holder concentration",
+      "Validate whether usage matches the narrative",
+      "Pair on-chain clues with unlock calendars",
+      "Use Alphora scores as triage, then verify",
+    ],
+    takeaways: [
+      "On-chain ≠ automatic alpha.",
+      "Context beats raw wallet screenshots.",
+      "See the on-chain analysis glossary for definitions.",
+    ],
+    related: [
+      { href: "/glossary/on-chain-analysis", label: "On-chain glossary" },
+      { href: "/crypto-risk-analysis", label: "Risk analysis" },
+      { href: "/reports/research-score-index", label: "Research Score Index" },
+      { href: "/crypto", label: "Token hub" },
+    ],
+    sections: [
+      {
+        heading: "What to measure",
+        body: [
+          "Active addresses, transfer volumes, exchange net flows, top-holder share, and contract interactions. Always ask whether the metric can be farmed or spoofed.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Is on-chain analysis enough to invest?",
+        a: "No. Combine it with tokenomics, liquidity, and product research. Alphora helps structure the full loop.",
+      },
+    ],
+    cta: "Open token research",
+  },
+  {
+    slug: "crypto-investment-research",
+    title: "Crypto Investment Research",
+    h1: "Crypto investment research workflow",
+    description:
+      "A practical crypto investment research workflow — thesis, risks, monitors, and portfolio tracking with Alphora Labs.",
+    keywords: [
+      "crypto investment research",
+      "cryptocurrency investment research",
+      "crypto research for investors",
+      "crypto due diligence process",
+    ],
+    hero: "Investment research is a written thesis with falsifiers — not a chart screenshot. Alphora Labs helps you discover, brief, and track ideas as measurable baskets.",
+    bullets: [
+      "Write bull / base / bear before sizing",
+      "Define kill criteria you will honor",
+      "Track outcomes in thesis baskets",
+      "Revisit when unlocks or fundamentals change",
+    ],
+    takeaways: [
+      "Process over tips.",
+      "P&L is feedback on research quality.",
+      "Public /crypto pages support shareable research notes.",
+    ],
+    related: [
+      { href: "/how-to-research-cryptocurrency", label: "How to research" },
+      { href: "/crypto-portfolio-tracker", label: "Portfolio tracker" },
+      { href: "/reports", label: "Research reports" },
+    ],
+    sections: [
+      {
+        heading: "From idea to monitored thesis",
+        body: [
+          "Screen → public research page → Ask brief → basket with size and monitors. When the thesis breaks, cut or rewrite — do not average down on vibes.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Does Alphora give buy/sell ratings?",
+        a: "No. Alphora is research software. You make your own decisions.",
+      },
+    ],
+    cta: "Start researching",
+  },
+  {
+    slug: "fdv-crypto-analysis",
+    title: "FDV Crypto Analysis",
+    h1: "FDV crypto analysis — reading dilution risk",
+    description:
+      "How to analyze crypto FDV vs market cap, float, and unlocks — plus Alphora’s FDV overhang watchlist.",
+    keywords: [
+      "FDV crypto analysis",
+      "FDV vs market cap",
+      "fully diluted valuation crypto",
+      "crypto dilution analysis",
+    ],
+    hero: "FDV estimates value if all tokens circulated at today’s price. High FDV with tiny float is a common early-launch risk pattern — pair it with unlock calendars.",
+    bullets: [
+      "Compare FDV to circulating market cap",
+      "Map who unlocks next",
+      "Check liquidity before assuming exits",
+      "Use Alphora’s FDV overhang report as a screen",
+    ],
+    takeaways: [
+      "FDV alone misleads without float timing.",
+      "Low float can juice price — and unwind hard.",
+      "Glossary + overhang report make the concept actionable.",
+    ],
+    related: [
+      { href: "/glossary/fully-diluted-valuation-fdv", label: "FDV glossary" },
+      { href: "/reports/fdv-overhang", label: "FDV overhang watchlist" },
+      { href: "/tokenomics-analysis", label: "Tokenomics analysis" },
+    ],
+    sections: [
+      {
+        heading: "A simple FDV checklist",
+        body: [
+          "1) FDV / mcap ratio. 2) Next 90-day unlocks. 3) Insider vs community float. 4) Venue liquidity. 5) Whether the token must exist for the product.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "Is high FDV always bad?",
+        a: "No — but it raises the bar for demand growth. Study the unlock path before sizing.",
+      },
+    ],
+    cta: "See FDV overhang report",
+  },
 ];
 
 export function getLanding(slug: string) {

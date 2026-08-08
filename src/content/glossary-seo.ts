@@ -293,6 +293,254 @@ export const glossaryTerms: GlossaryTerm[] = [
     related: ["market-cap", "liquidity", "tokenomics"],
     keywords: ["crypto narrative", "crypto narratives", "sector narrative"],
   },
+  {
+    slug: "apy",
+    term: "APY (Annual Percentage Yield)",
+    short: "Compounded yearly return quoted on staking or lending products.",
+    definition:
+      "APY estimates yearly return assuming rewards are compounded. In crypto it is often used for staking, lending, and farm APRs that may not actually compound the same way.",
+    whyItMatters: [
+      "High APY can mean high emissions — check token dilution.",
+      "Compare APY to real fee revenue, not just incentives.",
+      "Unsustainable yields collapse when rewards end.",
+    ],
+    related: ["tvl", "tokenomics", "token-unlocks"],
+    keywords: ["APY crypto", "staking APY", "crypto yield"],
+  },
+  {
+    slug: "apr",
+    term: "APR (Annual Percentage Rate)",
+    short: "Simple yearly rate without assuming compounding.",
+    definition:
+      "APR is a non-compounded annualized rate. DeFi UIs mix APR and APY — always check which one is shown and what drives the yield.",
+    whyItMatters: [
+      "APR looks lower than APY for the same stream if compounding is assumed.",
+      "Incentive APR is not the same as organic fee APR.",
+    ],
+    related: ["apy", "tvl", "tokenomics"],
+    keywords: ["APR crypto", "DeFi APR", "staking APR"],
+  },
+  {
+    slug: "staking",
+    term: "Staking",
+    short: "Locking or bonding tokens to secure a network or earn protocol rewards.",
+    definition:
+      "Staking can mean proof-of-stake validation, liquid staking, or governance locks. Risks include slashing, smart-contract failure, and illiquidity while bonded.",
+    whyItMatters: [
+      "Liquid staking adds smart-contract and depeg risk.",
+      "High staking APY may dilute non-stakers.",
+      "Unbonding periods affect exit liquidity.",
+    ],
+    related: ["apy", "layer-1", "liquidity"],
+    keywords: ["crypto staking", "proof of stake", "liquid staking"],
+  },
+  {
+    slug: "bridging",
+    term: "Bridging",
+    short: "Moving assets between chains — often via lock-and-mint or burn-and-mint designs.",
+    definition:
+      "Bridges transfer value across blockchains. They are historically high-risk attack surfaces; researchers treat bridge TVL and security assumptions carefully.",
+    whyItMatters: [
+      "Bridge exploits have caused some of crypto’s largest losses.",
+      "Withdrawal delays and custody models vary by design.",
+      "L2 research must include bridge risk.",
+    ],
+    related: ["layer-2", "tvl", "liquidity"],
+    keywords: ["crypto bridge", "cross-chain bridge", "bridge risk"],
+  },
+  {
+    slug: "mev",
+    term: "MEV (Maximal Extractable Value)",
+    short: "Value captured by reordering, inserting, or censoring transactions in a block.",
+    definition:
+      "MEV is profit extracted from transaction ordering. It affects user execution quality and can incentivize validators or searchers.",
+    whyItMatters: [
+      "High MEV can mean worse user fills.",
+      "L1/L2 designs differ in MEV mitigation.",
+      "Relevant when researching DEX and chain fee markets.",
+    ],
+    related: ["slippage", "layer-1", "on-chain-analysis"],
+    keywords: ["MEV crypto", "maximal extractable value", "sandwich attack"],
+  },
+  {
+    slug: "stablecoin",
+    term: "Stablecoin",
+    short: "A token designed to hold a stable value, usually pegged to a fiat currency.",
+    definition:
+      "Stablecoins may be fiat-backed, crypto-collateralized, or algorithmic. Peg design and reserves determine depeg risk.",
+    whyItMatters: [
+      "DeFi liquidity often sits in stablecoins — peg breaks cascade.",
+      "Know the collateral and redemption path.",
+      "Treat algorithmic stables as higher risk by default.",
+    ],
+    related: ["liquidity", "tvl", "market-cap"],
+    keywords: ["stablecoin research", "USDT USDC", "stablecoin depeg"],
+  },
+  {
+    slug: "governance-token",
+    term: "Governance Token",
+    short: "A token that grants voting power over protocol parameters or treasuries.",
+    definition:
+      "Governance tokens let holders vote on upgrades, fees, and treasuries. Many do not capture cash flows unless a fee switch or buyback exists.",
+    whyItMatters: [
+      "Voting power ≠ automatic value accrual.",
+      "Whale voters can dominate outcomes.",
+      "Read whether fees flow to token holders.",
+    ],
+    related: ["dao", "tokenomics", "whale"],
+    keywords: ["governance token", "crypto governance", "DAO token"],
+  },
+  {
+    slug: "airdrop",
+    term: "Airdrop",
+    short: "Free token distribution to users, often for past activity or loyalty.",
+    definition:
+      "Airdrops allocate tokens to wallets based on criteria. They create short-term supply events and can distort usage metrics before the drop.",
+    whyItMatters: [
+      "Farming for airdrops can inflate vanity metrics.",
+      "Post-airdrop unlocks and sells are common.",
+      "Separate organic usage from incentive-driven usage.",
+    ],
+    related: ["token-unlocks", "circulating-supply", "narrative"],
+    keywords: ["crypto airdrop", "airdrop farming", "token airdrop"],
+  },
+  {
+    slug: "points-program",
+    term: "Points Program",
+    short: "Off-chain loyalty scores that may later convert into tokens.",
+    definition:
+      "Points programs track user activity before a TGE. They create expectations of future airdrops and can drive mercenary usage.",
+    whyItMatters: [
+      "Points are not tokens until they become tokens.",
+      "Usage may collapse after TGE.",
+      "Treat points TVL/volume as incentive-driven until proven otherwise.",
+    ],
+    related: ["airdrop", "tvl", "narrative"],
+    keywords: ["crypto points", "points airdrop", "pre TGE points"],
+  },
+  {
+    slug: "tge",
+    term: "TGE (Token Generation Event)",
+    short: "The moment a project’s token becomes transferable and tradeable.",
+    definition:
+      "A Token Generation Event is when tokens are minted/unlocked for trading. Liquidity, float, and unlock schedules at TGE heavily influence early price discovery.",
+    whyItMatters: [
+      "Low float + high FDV launches are common risk setups.",
+      "Map who can sell at TGE day one.",
+      "Separate product quality from launch microstructure.",
+    ],
+    related: ["fully-diluted-valuation-fdv", "token-unlocks", "liquidity"],
+    keywords: ["TGE crypto", "token generation event", "token launch"],
+  },
+  {
+    slug: "order-book",
+    term: "Order Book",
+    short: "A list of resting bids and asks that defines market depth.",
+    definition:
+      "Centralized and some on-chain venues use order books. Depth and spread determine how much size you can trade without large slippage.",
+    whyItMatters: [
+      "Thin books amplify wicks and unlock impact.",
+      "Check depth across venues, not just last price.",
+    ],
+    related: ["liquidity", "slippage", "market-cap"],
+    keywords: ["order book crypto", "market depth", "bid ask spread"],
+  },
+  {
+    slug: "amm",
+    term: "AMM (Automated Market Maker)",
+    short: "A pool-based pricing mechanism used by most DEXs.",
+    definition:
+      "AMMs price assets with formulas (e.g. constant product) against liquidity pools. LPs earn fees but take impermanent loss risk.",
+    whyItMatters: [
+      "Pool depth sets practical liquidity.",
+      "IL vs fees is the LP research question.",
+      "Token incentives can rent AMM liquidity.",
+    ],
+    related: ["impermanent-loss", "tvl", "liquidity"],
+    keywords: ["AMM crypto", "automated market maker", "DEX AMM"],
+  },
+  {
+    slug: "smart-contract-risk",
+    term: "Smart Contract Risk",
+    short: "The chance that code bugs, admin keys, or exploits destroy value.",
+    definition:
+      "Smart contract risk covers vulnerabilities, upgrade keys, oracle assumptions, and economic exploits. Audits reduce but do not eliminate it.",
+    whyItMatters: [
+      "TVL without security diligence is incomplete research.",
+      "Admin keys can be as important as bugs.",
+      "Newer codebases carry higher uncertainty.",
+    ],
+    related: ["tvl", "bridging", "liquidity"],
+    keywords: ["smart contract risk", "crypto audit", "DeFi exploit risk"],
+  },
+  {
+    slug: "total-supply",
+    term: "Total Supply",
+    short: "Tokens created so far — may include locked and unlocked units.",
+    definition:
+      "Total supply counts minted tokens, including those not yet circulating. It sits between circulating supply and max supply in most supply frameworks.",
+    whyItMatters: [
+      "Clarify whether burned tokens are excluded.",
+      "Use with circulating and max supply for dilution maps.",
+    ],
+    related: ["circulating-supply", "max-supply", "circulating-vs-max-supply"],
+    keywords: ["total supply crypto", "token total supply"],
+  },
+  {
+    slug: "burn",
+    term: "Token Burn",
+    short: "Permanently removing tokens from supply.",
+    definition:
+      "Burns destroy tokens (or send them to irrecoverable addresses). Burns can be fee-driven, scheduled, or discretionary marketing events.",
+    whyItMatters: [
+      "Burn rate vs issuance determines net inflation.",
+      "One-off burns are weaker than structural fee burns.",
+      "Verify burns on-chain when material to the thesis.",
+    ],
+    related: ["tokenomics", "circulating-supply", "on-chain-analysis"],
+    keywords: ["token burn", "crypto burn", "supply burn"],
+  },
+  {
+    slug: "beta",
+    term: "Market Beta",
+    short: "How much an asset tends to move with the broader crypto market.",
+    definition:
+      "High-beta tokens amplify BTC/ETH moves; lower-beta names may be more idiosyncratic. Beta is descriptive, not a quality score.",
+    whyItMatters: [
+      "Size high-beta names smaller if you already hold BTC/ETH risk.",
+      "Narrative alts often show elevated beta in risk-on tapes.",
+    ],
+    related: ["market-cap", "liquidity", "narrative"],
+    keywords: ["crypto beta", "high beta altcoins", "market correlation crypto"],
+  },
+  {
+    slug: "drawdown",
+    term: "Drawdown",
+    short: "Peak-to-trough decline — how far an asset or portfolio fell.",
+    definition:
+      "Drawdown measures decline from a prior high. Researchers use max drawdown to understand historical pain and position sizing.",
+    whyItMatters: [
+      "Thesis survival requires surviving drawdowns.",
+      "Compare drawdowns across peers in the same sector.",
+    ],
+    related: ["market-cap", "liquidity", "rsi"],
+    keywords: ["crypto drawdown", "max drawdown", "peak to trough"],
+  },
+  {
+    slug: "catalyst",
+    term: "Catalyst",
+    short: "An upcoming event that could reprice a narrative or fundamentals.",
+    definition:
+      "Catalysts include launches, unlocks, listings, upgrades, regulation, and partnership news. Good research separates priced-in catalysts from underappreciated ones.",
+    whyItMatters: [
+      "Map catalysts on a calendar with unlocks.",
+      "Ask what is already priced into FDV.",
+      "Falsify catalysts that depend on perfect execution.",
+    ],
+    related: ["token-unlocks", "narrative", "tge"],
+    keywords: ["crypto catalyst", "token catalysts", "crypto event risk"],
+  },
+
 ];
 
 export function getGlossaryTerm(slug: string) {

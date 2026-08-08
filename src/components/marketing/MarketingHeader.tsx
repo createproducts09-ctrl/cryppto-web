@@ -11,8 +11,8 @@ import { cn } from "@/lib/utils";
 export const MARKETING_NAV = [
   { href: "/crypto", label: "Tokens" },
   { href: "/sectors", label: "Sectors" },
+  { href: "/reports", label: "Reports" },
   { href: "/glossary", label: "Glossary" },
-  { href: "/guides", label: "Guides" },
   { href: "/best-crypto-research-tools", label: "Tools" },
   { href: "/blog", label: "Blog" },
   { href: "/pricing", label: "Pricing" },

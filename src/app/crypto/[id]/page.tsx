@@ -6,6 +6,7 @@ import { MarketingShell } from "@/components/marketing/MarketingShell";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { CryptoResearchLock } from "@/components/seo/CryptoResearchLock";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { ShareLinks } from "@/components/seo/ShareLinks";
 import { Button } from "@/components/ui/Button";
 import { coinMatchesSector, sectors } from "@/content/sectors";
 import { buildCryptoFaqs } from "@/lib/cryptoResearchFaqs";
@@ -217,17 +218,35 @@ export default async function CryptoTokenPage({ params }: Props) {
               {name} ({symbol}) Research & Analysis
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-text-secondary sm:text-base">
-              Public research page for {name} on Alphora Labs — market data,
-              research signals, and links into the live desk for deeper AI
-              analysis.
+              Market data and Alphora research signals for {name} — preview the
+              desk brief, then unlock the full analysis.
             </p>
-            <div className="mt-5 flex flex-wrap gap-3">
+            {(coin.updated_at || coin.last_updated || research) && (
+              <p className="mt-2 text-xs text-text-muted">
+                Research updated{" "}
+                {new Date(
+                  coin.updated_at || coin.last_updated || Date.now()
+                ).toLocaleString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  timeZoneName: "short",
+                })}
+              </p>
+            )}
+            <div className="mt-5 flex flex-wrap items-center gap-3">
               <Link href={`/coin/${id}`}>
                 <Button>Open desk</Button>
               </Link>
               <Link href={`/ask?coin=${encodeURIComponent(id)}`}>
                 <Button variant="secondary">Ask Alphora AI</Button>
               </Link>
+              <ShareLinks
+                path={`/crypto/${id}`}
+                title={`${name} (${symbol}) research on Alphora`}
+              />
             </div>
           </div>
         </header>
@@ -264,71 +283,103 @@ export default async function CryptoTokenPage({ params }: Props) {
 
         <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_280px]">
           <div className="min-w-0 space-y-8">
-            {/* ~20% free peek — same signals as the desk */}
-            <section className="rounded-2xl border border-border bg-bg-elevated p-5 sm:p-6">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
-                    Desk preview
-                  </p>
-                  <h2 className="mt-1.5 text-lg font-semibold tracking-tight text-text">
-                    Alphora research snapshot
-                  </h2>
-                </div>
-                {score != null ? (
-                  <div
-                    className="relative flex h-14 w-14 items-center justify-center rounded-full"
-                    style={{
-                      background: `conic-gradient(var(--color-primary, #6d28d9) ${Math.min(100, Number(score)) * 3.6}deg, var(--color-border, #e4e4e7) 0deg)`,
-                    }}
-                  >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-bg-elevated text-sm font-semibold tabular-nums">
-                      {Math.round(Number(score))}
+            {/* ~20% free peek — desk-style */}
+            <section className="overflow-hidden rounded-2xl border border-primary/20 bg-bg-elevated shadow-[var(--shadow-card)]">
+              <div className="border-b border-border bg-primary-soft/40 px-5 py-3 sm:px-6">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
+                  Desk preview · free peek
+                </p>
+              </div>
+              <div className="p-5 sm:p-6">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div className="min-w-0 flex-1">
+                    <h2 className="text-lg font-semibold tracking-tight text-text">
+                      {soWhat?.headline
+                        ? String(soWhat.headline).slice(0, 120)
+                        : `${name} research snapshot`}
+                    </h2>
+                    {score != null ? (
+                      <p className="mt-1 text-sm text-text-secondary">
+                        Research score{" "}
+                        <span className="font-semibold text-text">
+                          {Math.round(Number(score))}/100
+                        </span>
+                      </p>
+                    ) : null}
+                  </div>
+                  {score != null ? (
+                    <div
+                      className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-full"
+                      style={{
+                        background: `conic-gradient(var(--color-primary, #6d28d9) ${Math.min(100, Number(score)) * 3.6}deg, var(--color-border, #e4e4e7) 0deg)`,
+                      }}
+                    >
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-bg-elevated text-base font-semibold tabular-nums">
+                        {Math.round(Number(score))}
+                      </div>
                     </div>
+                  ) : null}
+                </div>
+
+                {Object.keys(lights).length > 0 ? (
+                  <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                    {Object.entries(lights)
+                      .slice(0, 4)
+                      .map(([k, v]) => (
+                        <div
+                          key={k}
+                          className="rounded-xl border border-border bg-bg px-2.5 py-2"
+                        >
+                          <p className="text-[10px] font-semibold uppercase tracking-wide text-text-muted">
+                            {k.replace(/_/g, " ")}
+                          </p>
+                          <p
+                            className={cn(
+                              "mt-0.5 text-xs font-semibold capitalize",
+                              v === "green" || v === "go"
+                                ? "text-up"
+                                : v === "red" || v === "stop"
+                                  ? "text-down"
+                                  : "text-text-secondary"
+                            )}
+                          >
+                            {toResearchText(v) || String(v)}
+                          </p>
+                        </div>
+                      ))}
                   </div>
                 ) : null}
+
+                {whyBullets[0] ? (
+                  <p className="mt-4 text-sm leading-relaxed text-text-secondary">
+                    <span className="font-medium text-text">
+                      Why interesting:{" "}
+                    </span>
+                    {whyBullets[0].length > 160
+                      ? `${whyBullets[0].slice(0, 160).trim()}…`
+                      : whyBullets[0]}
+                  </p>
+                ) : coin.description ? (
+                  <p className="mt-4 text-sm leading-relaxed text-text-secondary">
+                    {coin.description.slice(0, 200).trim()}
+                    {coin.description.length > 200 ? "…" : ""}
+                  </p>
+                ) : null}
+
+                {concernBullets[0] ? (
+                  <p className="mt-2 text-sm leading-relaxed text-text-secondary">
+                    <span className="font-medium text-text">Watch: </span>
+                    {concernBullets[0].length > 120
+                      ? `${concernBullets[0].slice(0, 120).trim()}…`
+                      : concernBullets[0]}
+                  </p>
+                ) : null}
+
+                <p className="mt-4 border-t border-border pt-3 text-xs font-medium text-text-muted">
+                  ~20% preview — unlock thesis, full risks, catalysts & desk
+                  tools below
+                </p>
               </div>
-
-              {Object.keys(lights).length > 0 ? (
-                <ul className="mt-4 flex flex-wrap gap-2">
-                  {Object.entries(lights)
-                    .slice(0, 4)
-                    .map(([k, v]) => (
-                      <li
-                        key={k}
-                        className={cn(
-                          "rounded-full px-2.5 py-1 text-xs font-semibold capitalize",
-                          v === "green" || v === "go"
-                            ? "bg-up/15 text-up"
-                            : v === "red" || v === "stop"
-                              ? "bg-down/15 text-down"
-                              : "bg-bg-muted text-text-secondary"
-                        )}
-                      >
-                        {k.replace(/_/g, " ")}: {toResearchText(v) || String(v)}
-                      </li>
-                    ))}
-                </ul>
-              ) : null}
-
-              {whyBullets[0] ? (
-                <p className="mt-4 text-sm leading-relaxed text-text-secondary">
-                  <span className="font-medium text-text">Why interesting: </span>
-                  {whyBullets[0].length > 180
-                    ? `${whyBullets[0].slice(0, 180).trim()}…`
-                    : whyBullets[0]}
-                </p>
-              ) : coin.description ? (
-                <p className="mt-4 text-sm leading-relaxed text-text-secondary">
-                  {coin.description.slice(0, 220).trim()}
-                  {coin.description.length > 220 ? "…" : ""}
-                </p>
-              ) : null}
-
-              <p className="mt-4 text-xs font-medium text-text-muted">
-                Preview · ~20% of the desk brief — unlock for thesis, risks,
-                catalysts & full analysis
-              </p>
             </section>
 
             <CryptoResearchLock coinId={id} coinName={name}>

@@ -77,6 +77,8 @@ export type PublicCoin = PublicCoinListItem & {
     why_interesting?: unknown;
     whats_worrying?: unknown;
   };
+  updated_at?: string;
+  last_updated?: string;
 };
 
 export type PublicResearch = {

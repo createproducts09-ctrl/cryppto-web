@@ -26,6 +26,7 @@ export default function robots(): MetadataRoute.Robots {
           "/crypto",
           "/crypto-research",
           "/sectors",
+          "/reports",
           "/glossary",
           "/about",
           "/pricing",

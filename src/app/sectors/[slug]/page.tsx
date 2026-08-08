@@ -159,7 +159,27 @@ export default async function SectorPage({ params }: Props) {
           )}
         </section>
 
-        <section className="mt-12 rounded-2xl border border-border bg-bg-elevated p-6">
+        <section className="mt-12 max-w-3xl">
+          <h2 className="text-xl font-semibold text-text">
+            How Alphora researches {sector.name}
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-text-secondary">
+            Start with sector risks and research focus above, open matching
+            token pages for scores and market data, then continue in the desk
+            for charts and AI briefs. Cross-check definitions in the glossary
+            and use{" "}
+            <Link href="/reports/research-score-index" className="text-primary">
+              Research Score Top 100
+            </Link>{" "}
+            to triage peers.
+          </p>
+          <p className="mt-2 text-xs text-text-muted">
+            Page generated with live market data · Updated{" "}
+            {new Date().toUTCString()}
+          </p>
+        </section>
+
+        <section className="mt-10 rounded-2xl border border-border bg-bg-elevated p-6">
           <h2 className="text-lg font-semibold text-text">Related learning</h2>
           <ul className="mt-4 flex flex-wrap gap-3 text-sm font-medium">
             {sector.relatedGlossary.map((g) => (

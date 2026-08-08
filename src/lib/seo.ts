@@ -167,6 +167,22 @@ export async function getPublicSeoPaths(): Promise<SeoPath[]> {
     { path: "/", changeFrequency: "weekly", priority: 1 },
     { path: "/crypto", changeFrequency: "daily", priority: 0.96 },
     { path: "/sectors", changeFrequency: "weekly", priority: 0.9 },
+    { path: "/reports", changeFrequency: "daily", priority: 0.93 },
+    {
+      path: "/reports/research-score-index",
+      changeFrequency: "daily",
+      priority: 0.92,
+    },
+    {
+      path: "/reports/market-movers",
+      changeFrequency: "hourly",
+      priority: 0.9,
+    },
+    {
+      path: "/reports/fdv-overhang",
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
     { path: "/luck", changeFrequency: "weekly", priority: 0.88 },
     { path: "/blog", changeFrequency: "daily", priority: 0.95 },
     { path: "/guides", changeFrequency: "weekly", priority: 0.92 },
