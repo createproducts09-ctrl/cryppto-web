@@ -57,14 +57,14 @@ export function DeckLoading({
   return (
     <div
       className={cn(
-        "mx-auto flex h-full min-h-0 w-full max-w-[20rem] flex-col items-center",
+        "mx-auto flex h-full min-h-0 w-full max-w-[24rem] flex-col items-center sm:max-w-[20rem]",
         className
       )}
     >
       <div
         className={cn(
-          "relative w-full min-h-[280px] flex-1 overflow-hidden rounded-[20px] border border-border bg-bg-elevated shadow-[0_10px_32px_rgba(24,24,27,0.06)]",
-          "sm:flex-none sm:h-[min(380px,calc(100dvh-20rem))] lg:h-[400px]"
+          "relative w-full min-h-[340px] max-h-[min(620px,calc(100dvh-11.5rem))] flex-1 overflow-hidden rounded-[24px] border border-border bg-bg-elevated shadow-[0_14px_40px_rgba(24,24,27,0.08)]",
+          "sm:max-h-none sm:flex-none sm:h-[min(380px,calc(100dvh-20rem))] sm:rounded-[20px] lg:h-[400px]"
         )}
       >
         <div className="deck-load-shimmer absolute inset-0" />

@@ -126,11 +126,19 @@ export type BasketAsset = {
   coin?: Coin;
 };
 
+export type UnmappedAsset = {
+  symbol: string;
+  amount: number;
+  avg_price?: number;
+};
+
 export type Basket = {
   id: string;
   name: string;
   note?: string;
   assets?: BasketAsset[];
+  unmapped_assets?: UnmappedAsset[];
+  import_platform?: string | null;
   total_value?: number;
   total_cost?: number;
   pnl?: number;

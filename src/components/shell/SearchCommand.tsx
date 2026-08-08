@@ -59,13 +59,16 @@ export function SearchCommand({
     [];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 p-4 pt-[12vh] backdrop-blur-[2px]">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-[2px] sm:items-start sm:p-4 sm:pt-[12vh]">
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 animate-fade-in"
         onClick={onClose}
         aria-hidden
       />
-      <div className="relative w-full max-w-xl overflow-hidden rounded-2xl border border-border bg-bg-elevated shadow-2xl animate-fade-in">
+      <div className="relative flex w-full max-w-xl flex-col overflow-hidden rounded-t-3xl border-t border-border bg-bg-elevated shadow-2xl animate-sheet-up pb-[env(safe-area-inset-bottom)] sm:rounded-2xl sm:border sm:animate-fade-in sm:pb-0">
+        <div className="flex shrink-0 justify-center pt-2.5 sm:hidden" aria-hidden>
+          <div className="h-1 w-10 rounded-full bg-border-strong" />
+        </div>
         <div className="flex items-center gap-2 border-b border-border px-4">
           <Search className="h-4 w-4 text-text-muted" />
           <input
@@ -90,7 +93,7 @@ export function SearchCommand({
           </button>
         </div>
 
-        <div className="max-h-[50vh] overflow-y-auto scrollbar-thin p-2">
+        <div className="max-h-[min(60dvh,480px)] overflow-y-auto overscroll-contain scrollbar-thin p-2 sm:max-h-[50vh]">
           {deferred.length < 2 ? (
             <p className="px-3 py-6 text-center text-sm text-text-muted">
               Type a ticker or name to open the research desk

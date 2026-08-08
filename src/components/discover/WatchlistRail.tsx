@@ -313,19 +313,20 @@ export function WatchlistRail() {
       </button>
 
       {mobileOpen ? (
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className="fixed inset-0 z-50 flex items-end lg:hidden">
           <button
             type="button"
-            className="absolute inset-0 bg-black/35 cursor-pointer"
+            className="absolute inset-0 bg-black/45 cursor-pointer animate-fade-in"
             aria-label="Close"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="absolute bottom-0 right-0 top-16 w-[min(100%,20rem)] border-l border-primary/10 bg-bg-elevated shadow-xl animate-fade-in">
-            {/* drag handle visual */}
-            <div className="flex justify-center pt-2 lg:hidden">
+          <div className="relative z-10 flex max-h-[min(88dvh,720px)] w-full flex-col overflow-hidden rounded-t-3xl border-t border-border bg-bg-elevated shadow-2xl animate-sheet-up pb-[env(safe-area-inset-bottom)]">
+            <div className="flex shrink-0 justify-center pt-2.5" aria-hidden>
               <span className="h-1 w-10 rounded-full bg-border-strong" />
             </div>
-            {panel}
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+              {panel}
+            </div>
           </div>
         </div>
       ) : null}

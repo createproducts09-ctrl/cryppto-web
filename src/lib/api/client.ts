@@ -168,6 +168,13 @@ export const endpoints = {
   removeWatchlist: (coin_id: string) => api.delete(`/watchlist/${coin_id}`),
   portfolio: () => api.get("/portfolio"),
   baskets: () => api.get("/portfolio/baskets"),
+  portfolioPlatforms: () => api.get("/portfolio/platforms"),
+  importThesis: (body: {
+    platform: string;
+    name: string;
+    note?: string;
+    credentials?: Record<string, string>;
+  }) => api.post("/portfolio/import", body),
   createBasket: (body: {
     name: string;
     coin_ids?: string[];
@@ -187,6 +194,14 @@ export const endpoints = {
     coin_id: string,
     body: { amount: number; avg_price?: number; cost_basis?: number }
   ) => api.put(`/portfolio/baskets/${id}/assets/${coin_id}`, body),
+  mapUnmappedAsset: (
+    id: string,
+    body: { symbol: string; coin_id: string }
+  ) => api.post(`/portfolio/baskets/${id}/unmapped/map`, body),
+  dismissUnmappedAsset: (id: string, symbol: string) =>
+    api.delete(
+      `/portfolio/baskets/${id}/unmapped/${encodeURIComponent(symbol)}`
+    ),
   sections: () => api.get("/community/sections"),
   posts: (section?: string) =>
     api.get("/community/posts", { params: { section } }),

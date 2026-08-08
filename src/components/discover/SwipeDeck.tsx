@@ -176,7 +176,7 @@ function HeroSpark({
     <div className="relative">
       <svg
         viewBox={`0 0 ${w} ${h}`}
-        className="h-14 w-full sm:h-[4.5rem]"
+        className="h-16 w-full sm:h-[4.5rem]"
         preserveAspectRatio="none"
         aria-hidden
       >
@@ -372,7 +372,7 @@ function DeckCard({
       <div
         role="button"
         tabIndex={isTop ? 0 : -1}
-        className="relative flex h-full min-h-0 flex-col overflow-hidden rounded-[20px] border border-border bg-white shadow-[0_10px_32px_rgba(24,24,27,0.07)] sm:rounded-[22px]"
+        className="relative flex h-full min-h-0 flex-col overflow-hidden rounded-[24px] border border-border bg-white shadow-[0_14px_40px_rgba(24,24,27,0.09)] sm:rounded-[22px] sm:shadow-[0_10px_32px_rgba(24,24,27,0.07)]"
         onClick={() => {
           if (isTop && Math.abs(x.get()) < 10 && Math.abs(y.get()) < 10) onOpen();
         }}
@@ -411,7 +411,7 @@ function DeckCard({
 
         {/* Brand wash + chart hero */}
         <div
-          className="relative flex min-h-0 flex-[1.1] flex-col overflow-hidden px-3 pb-1.5 pt-2.5 sm:px-3.5 sm:pb-2 sm:pt-3"
+          className="relative flex min-h-0 flex-[1.15] flex-col overflow-hidden px-4 pb-2 pt-3 sm:px-3.5 sm:pb-2 sm:pt-3"
           style={{
             background: `linear-gradient(165deg, ${palette.from} 0%, ${palette.mid} 45%, #ffffff 100%)`,
           }}
@@ -465,27 +465,27 @@ function DeckCard({
             </div>
           </div>
 
-          <div className="relative z-[1] mt-1.5 flex items-center gap-2 sm:mt-2 sm:gap-2.5">
+          <div className="relative z-[1] mt-2 flex items-center gap-3 sm:gap-2.5">
             {coin.image ? (
               <Image
                 src={coin.image}
                 alt=""
-                width={40}
-                height={40}
-                className="h-9 w-9 rounded-xl border border-border bg-white shadow-sm sm:h-10 sm:w-10"
+                width={44}
+                height={44}
+                className="h-11 w-11 rounded-2xl border border-border bg-white shadow-sm sm:h-10 sm:w-10 sm:rounded-xl"
                 unoptimized
                 draggable={false}
               />
             ) : (
               <div
-                className="flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-white text-xs font-bold shadow-sm sm:h-10 sm:w-10"
+                className="flex h-11 w-11 items-center justify-center rounded-2xl border border-border bg-white text-xs font-bold shadow-sm sm:h-10 sm:w-10 sm:rounded-xl"
                 style={{ color: palette.ink }}
               >
                 {(coin.symbol || "?").slice(0, 2).toUpperCase()}
               </div>
             )}
             <div className="min-w-0 flex-1">
-              <h2 className="font-display truncate text-lg font-bold tracking-tight text-text sm:text-xl">
+              <h2 className="font-display truncate text-xl font-bold tracking-tight text-text">
                 {coin.name}
               </h2>
               <p className="text-[11px] font-medium uppercase tracking-wide text-text-muted">
@@ -504,13 +504,13 @@ function DeckCard({
           </div>
         </div>
 
-        <div className="min-h-0 shrink-0 space-y-1.5 overflow-hidden bg-white px-3 py-2 sm:space-y-2 sm:px-3.5 sm:py-2.5">
+        <div className="min-h-0 shrink-0 space-y-2 overflow-hidden bg-white px-4 py-3 sm:px-3.5 sm:py-2.5">
           <div className="flex items-end justify-between gap-3">
             <div className="min-w-0">
               <div className="text-[10px] font-semibold uppercase tracking-wide text-text-muted">
                 Price
               </div>
-              <div className="mt-0.5 truncate text-base font-bold tabular-nums tracking-tight sm:text-lg">
+              <div className="mt-0.5 truncate text-lg font-bold tabular-nums tracking-tight">
                 {formatPrice(coin.current_price)}
               </div>
             </div>
@@ -638,7 +638,7 @@ export function SwipeDeck({
     const noData = coins.length === 0;
     const label = filterLabel?.trim() || "this filter";
     return (
-      <div className="flex h-[min(480px,calc(100dvh-14.5rem))] flex-col items-center justify-center rounded-[20px] border border-dashed border-border bg-bg-elevated/60 px-6 text-center sm:h-[min(520px,calc(100dvh-16rem))] lg:h-[560px]">
+      <div className="mx-auto flex h-[min(560px,calc(100dvh-12.5rem))] w-full max-w-[24rem] flex-col items-center justify-center rounded-[22px] border border-dashed border-border bg-bg-elevated/60 px-6 text-center sm:h-[min(520px,calc(100dvh-16rem))] sm:max-w-[20rem] lg:h-[560px]">
         {noData ? (
           <>
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
@@ -671,8 +671,8 @@ export function SwipeDeck({
     fly?.dir === "left" ? -20 : fly?.dir === "right" ? 20 : 0;
 
   return (
-    <div className="mx-auto flex h-full min-h-0 w-full max-w-[20rem] flex-col">
-      <div className="relative mx-auto min-h-[280px] w-full flex-1 sm:min-h-[360px] sm:flex-none sm:h-[min(520px,calc(100dvh-16rem))] lg:h-[560px]">
+    <div className="mx-auto flex h-full min-h-0 w-full max-w-[24rem] flex-col items-center sm:max-w-[20rem]">
+      <div className="relative mx-auto w-full flex-1 min-h-[340px] max-h-[min(620px,calc(100dvh-11.5rem))] sm:min-h-[360px] sm:max-h-none sm:flex-none sm:h-[min(520px,calc(100dvh-16rem))] lg:h-[560px]">
         <AnimatePresence mode="popLayout">
           {next ? (
             <DeckCard
@@ -711,13 +711,13 @@ export function SwipeDeck({
         </AnimatePresence>
       </div>
 
-      <div className="mt-2 flex shrink-0 items-center justify-center gap-3 sm:mt-3 sm:gap-3.5">
+      <div className="mt-3 flex w-full shrink-0 items-center justify-center gap-4 sm:mt-3 sm:gap-3.5">
         <button
           type="button"
           aria-label="Pass"
           disabled={!!fly}
           onClick={() => decide("left")}
-          className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-down shadow-sm transition hover:scale-105 hover:bg-down-soft disabled:opacity-50 cursor-pointer"
+          className="flex h-12 w-12 items-center justify-center rounded-full border border-border bg-white text-down shadow-sm transition hover:scale-105 hover:bg-down-soft disabled:opacity-50 cursor-pointer sm:h-11 sm:w-11"
         >
           <X className="h-5 w-5" strokeWidth={2.5} />
         </button>
@@ -726,7 +726,7 @@ export function SwipeDeck({
           aria-label="Watch"
           disabled={!!fly}
           onClick={() => decide("up")}
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-white text-primary shadow-sm transition hover:scale-105 hover:bg-primary-soft disabled:opacity-50 cursor-pointer"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white text-primary shadow-sm transition hover:scale-105 hover:bg-primary-soft disabled:opacity-50 cursor-pointer sm:h-9 sm:w-9"
         >
           <Star className="h-4 w-4" strokeWidth={2.5} />
         </button>
@@ -736,7 +736,7 @@ export function SwipeDeck({
             aria-label="Ask AI about this coin"
             disabled={!!fly}
             onClick={() => onAskAttach(top)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-primary/25 bg-primary text-white shadow-sm transition hover:scale-105 hover:bg-primary-hover disabled:opacity-50 cursor-pointer"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/25 bg-primary text-white shadow-sm transition hover:scale-105 hover:bg-primary-hover disabled:opacity-50 cursor-pointer sm:h-9 sm:w-9"
           >
             <AskMark className="h-4 w-4" />
           </button>
@@ -746,13 +746,13 @@ export function SwipeDeck({
           aria-label="Research"
           disabled={!!fly}
           onClick={() => decide("right")}
-          className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-up shadow-sm transition hover:scale-105 hover:bg-up-soft disabled:opacity-50 cursor-pointer"
+          className="flex h-12 w-12 items-center justify-center rounded-full border border-border bg-white text-up shadow-sm transition hover:scale-105 hover:bg-up-soft disabled:opacity-50 cursor-pointer sm:h-11 sm:w-11"
         >
           <Eye className="h-5 w-5" strokeWidth={2.5} />
         </button>
       </div>
-      <p className="mt-1.5 hidden text-center text-[10px] font-medium leading-snug text-text-muted sm:mt-2 sm:block">
-        Pass · Research · Watch — evidence-backed scores on every card
+      <p className="mt-2 text-center text-[10px] font-medium leading-snug text-text-muted">
+        Pass · Research · Watch
       </p>
     </div>
   );

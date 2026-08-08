@@ -5,7 +5,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { LogIn, Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
-import { BrandLogo } from "@/components/brand/BrandLogo";
 import { Button } from "@/components/ui/Button";
 import { UserAvatar } from "@/components/ui/UserAvatar";
 import { useAuthStore } from "@/lib/store/auth";
@@ -25,7 +24,8 @@ const MOBILE_TITLES: Array<{ match: RegExp; title: string }> = [
   { match: /^\/research/, title: "Research" },
   { match: /^\/news/, title: "News" },
   { match: /^\/ask/, title: "Ask" },
-  { match: /^\/portfolio/, title: "Portfolio" },
+  { match: /^\/portfolio\/[^/]+/, title: "Thesis" },
+  { match: /^\/portfolio/, title: "Theses" },
   { match: /^\/pulse/, title: "Pulse" },
   { match: /^\/profile/, title: "You" },
   { match: /^\/pricing/, title: "Pricing" },
@@ -59,16 +59,15 @@ export function TopBar({ onOpenSearch }: { onOpenSearch: () => void }) {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-white/95 backdrop-blur-xl">
       {/* Mobile app bar — Groww / investing style */}
-      <div className="mx-auto flex h-16 max-w-[1400px] items-center gap-2.5 px-3 lg:hidden">
+      <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-2 px-3 lg:hidden">
         <Link
           href="/discover"
-          className="flex shrink-0 items-center"
-          aria-label="Alphora Labs home"
+          className="shrink-0 font-display text-[15px] font-semibold tracking-tight text-text"
         >
-          <BrandLogo className="h-8" priority />
+          Alphora Labs
         </Link>
         <div className="min-w-0 flex-1">
-          <p className="truncate font-display text-[17px] font-semibold tracking-tight text-text">
+          <p className="truncate text-[13px] font-medium text-text-muted">
             {mobileTitle}
           </p>
         </div>
@@ -110,10 +109,9 @@ export function TopBar({ onOpenSearch }: { onOpenSearch: () => void }) {
       <div className="mx-auto hidden h-16 max-w-[1400px] items-center gap-3 px-4 lg:flex lg:px-6">
         <Link
           href="/discover"
-          className="flex shrink-0 items-center"
-          aria-label="Alphora Labs home"
+          className="shrink-0 font-display text-lg font-semibold tracking-tight text-text"
         >
-          <BrandLogo className="h-8" priority />
+          Alphora Labs
         </Link>
 
         <button
@@ -215,7 +213,7 @@ export function TopBar({ onOpenSearch }: { onOpenSearch: () => void }) {
             aria-label="Close"
             onClick={() => setSheetOpen(false)}
           />
-          <div className="absolute inset-x-0 bottom-0 animate-fade-in rounded-t-3xl border-t border-border bg-white px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-3 shadow-2xl">
+          <div className="absolute inset-x-0 bottom-0 animate-sheet-up rounded-t-3xl border-t border-border bg-white px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-3 shadow-2xl">
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-border-strong" />
             {user ? (
               <div className="mb-4 flex items-center gap-3 px-1">

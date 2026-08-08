@@ -188,16 +188,16 @@ export default function DiscoverPage() {
 
   return (
     <div className="relative bg-bg lg:min-h-[calc(100dvh-4rem)]">
-      <div className="flex min-h-[calc(100dvh-4rem-3.75rem-env(safe-area-inset-bottom))] flex-col px-3 pt-3 pb-2 sm:px-6 sm:pt-6 sm:pb-6 lg:min-h-0 lg:px-6 lg:py-8 lg:pr-[340px]">
+      <div className="flex min-h-[calc(100dvh-3.5rem-3.75rem-env(safe-area-inset-bottom))] flex-col px-3 pt-2 pb-3 sm:px-6 sm:pt-6 sm:pb-6 lg:min-h-0 lg:px-6 lg:py-8 lg:pr-[340px]">
         <div
-          className="flex min-h-0 flex-1 flex-col lg:pl-[var(--discover-ask-pad)]"
+          className="mx-auto flex min-h-0 w-full max-w-[24rem] flex-1 flex-col items-stretch lg:mx-0 lg:max-w-none lg:pl-[var(--discover-ask-pad)]"
           style={
             {
               "--discover-ask-pad": `${DISCOVER_ASK_DOCK_W + 16}px`,
             } as CSSProperties
           }
         >
-          <div className="mx-auto w-full max-w-[20rem] shrink-0 sm:max-w-none lg:mx-auto lg:max-w-xl">
+          <div className="mx-auto w-full shrink-0 lg:mx-auto lg:max-w-xl">
             <PageHeader
               title="Discover"
               description="Alphora finds interesting assets for you. Pass · Research · Watch — scores and evidence on every card."
@@ -217,16 +217,16 @@ export default function DiscoverPage() {
                   </button>
                 ) : null
               }
-              className="mx-auto mb-3 max-w-[20rem] sm:mx-0 sm:mb-5 sm:max-w-xl [&_p]:hidden sm:[&_p]:block"
+              className="mb-2 text-center sm:mb-5 sm:text-left lg:mx-0 [&_p]:hidden sm:[&_p]:block"
             />
           </div>
 
-          <div className="mx-auto mb-3 flex w-full max-w-[20rem] shrink-0 gap-2 overflow-x-auto pb-1 scrollbar-thin sm:mb-5 lg:max-w-xl">
+          <div className="mx-auto mb-3 flex w-full shrink-0 justify-start gap-2 overflow-x-auto pb-1 scrollbar-thin sm:mb-5 lg:max-w-xl">
             {filters.map((f) => (
               <Chip
                 key={f.key}
                 active={filter === f.key}
-                className={cn(f.locked && "opacity-70")}
+                className={cn("shrink-0", f.locked && "opacity-70")}
                 onClick={() => {
                   if (f.locked) {
                     setPaywallReason(`"${f.label}" is a Keel Discover filter.`);
@@ -244,7 +244,7 @@ export default function DiscoverPage() {
             ))}
           </div>
 
-          <div className="relative mx-auto flex w-full max-w-[20rem] min-h-0 flex-1 flex-col pb-1">
+          <div className="relative mx-auto flex w-full min-h-0 flex-1 flex-col items-center justify-center">
             {showSkeleton ? (
               <DeckLoading
                 label={filters.find((f) => f.key === filter)?.label || "deck"}
