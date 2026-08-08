@@ -6,6 +6,7 @@ import { FormEvent, Suspense, useState } from "react";
 import { ArrowRight } from "lucide-react";
 
 import { AuthSplitShell } from "@/components/auth/AuthSplitShell";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { endpoints } from "@/lib/api/client";
@@ -63,7 +64,26 @@ function RegisterForm() {
           Join Alphora Labs and start swiping markets with AI research by your side.
         </p>
 
-        <form onSubmit={onSubmit} className="mt-8 flex flex-col gap-4">
+        <div className="mt-8 flex flex-col gap-3">
+          <GoogleSignInButton
+            mode="signup"
+            nextPath={next}
+            onError={setError}
+          />
+        </div>
+
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-border" />
+          </div>
+          <div className="relative flex justify-center text-xs">
+            <span className="bg-white px-3 font-medium text-text-muted">
+              or email
+            </span>
+          </div>
+        </div>
+
+        <form onSubmit={onSubmit} className="flex flex-col gap-4">
           {error ? (
             <div
               role="alert"

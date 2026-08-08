@@ -92,6 +92,7 @@ export const endpoints = {
     api.post("/auth/register", body),
   login: (body: { email: string; password: string }) =>
     api.post("/auth/login", body),
+  googleAuth: (body: { id_token: string }) => api.post("/auth/google", body),
   verifyEmail: (body: { code: string; email?: string }) =>
     api.post("/auth/verify-email", body),
   resendVerification: (body?: { email?: string }) =>
