@@ -647,7 +647,7 @@ export default function AskClient() {
                       label={
                         coinId ? "Writing research brief…" : "Thinking…"
                       }
-                      subtitle="Gemini is analyzing market context"
+                      subtitle="Alpha is analyzing market context"
                       coinName={coinId ? displayName : undefined}
                     />
                   </div>

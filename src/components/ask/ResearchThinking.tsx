@@ -11,7 +11,7 @@ const STEPS = [
 
 export function ResearchThinking({
   label = "Writing research brief…",
-  subtitle = "Gemini is analyzing market context",
+  subtitle = "Alpha is analyzing market context",
   coinName,
   className,
   compact,

@@ -149,7 +149,9 @@ export function GoogleSignInButton({
   function onClick() {
     if (!CLIENT_ID) {
       onError?.(
-        "Google sign-in needs NEXT_PUBLIC_GOOGLE_CLIENT_ID in .env.local (and GOOGLE_CLIENT_ID on the API)."
+        process.env.NODE_ENV === "development"
+          ? "Google sign-in needs NEXT_PUBLIC_GOOGLE_CLIENT_ID in .env.local (and GOOGLE_CLIENT_ID on the API). Restart Next.js after setting it."
+          : "Google sign-in is temporarily unavailable. Redeploy the web app after setting NEXT_PUBLIC_GOOGLE_CLIENT_ID in Vercel (Production), and GOOGLE_CLIENT_ID on the API host."
       );
       return;
     }
