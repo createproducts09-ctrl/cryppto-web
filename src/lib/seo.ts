@@ -149,12 +149,12 @@ export function pageMetadata({
 /** Absolute paths included in sitemap.xml */
 export function getPublicSeoPaths(): {
   path: string;
-  changeFrequency: "daily" | "weekly" | "monthly";
+  changeFrequency: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
   priority: number;
 }[] {
   const core: {
     path: string;
-    changeFrequency: "daily" | "weekly" | "monthly";
+    changeFrequency: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
     priority: number;
   }[] = [
     { path: "/", changeFrequency: "weekly", priority: 1 },
