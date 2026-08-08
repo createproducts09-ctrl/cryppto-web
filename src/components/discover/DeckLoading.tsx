@@ -57,14 +57,14 @@ export function DeckLoading({
   return (
     <div
       className={cn(
-        "mx-auto flex w-full max-w-[20rem] flex-col items-center",
+        "mx-auto flex h-full min-h-0 w-full max-w-[20rem] flex-col items-center",
         className
       )}
     >
       <div
         className={cn(
-          "relative w-full overflow-hidden rounded-[20px] border border-border bg-bg-elevated shadow-[0_10px_32px_rgba(24,24,27,0.06)]",
-          "h-[min(380px,calc(100dvh-20rem))] lg:h-[400px]"
+          "relative w-full min-h-[280px] flex-1 overflow-hidden rounded-[20px] border border-border bg-bg-elevated shadow-[0_10px_32px_rgba(24,24,27,0.06)]",
+          "sm:flex-none sm:h-[min(380px,calc(100dvh-20rem))] lg:h-[400px]"
         )}
       >
         <div className="deck-load-shimmer absolute inset-0" />
@@ -112,12 +112,12 @@ export function DeckLoading({
         </div>
       </div>
 
-      <div className="mt-3 flex items-center justify-center gap-3.5 opacity-40">
+      <div className="mt-2 flex shrink-0 items-center justify-center gap-3.5 opacity-40 sm:mt-3">
         <span className="h-11 w-11 rounded-full border border-border bg-white" />
         <span className="h-9 w-9 rounded-full border border-border bg-white" />
         <span className="h-11 w-11 rounded-full border border-border bg-white" />
       </div>
-      <p className="mt-2 text-center text-[10px] font-medium text-text-muted/70">
+      <p className="mt-1.5 hidden text-center text-[10px] font-medium text-text-muted/70 sm:mt-2 sm:block">
         Pulling the next set of coins
       </p>
     </div>

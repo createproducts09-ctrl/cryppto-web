@@ -20,24 +20,18 @@ function IconDiscover({ className }: { className?: string }) {
   );
 }
 
-function IconNews({ className }: { className?: string }) {
+function IconResearch({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden>
+      <circle cx="10.5" cy="10.5" r="5.75" stroke="currentColor" strokeWidth="1.7" />
       <path
-        d="M6.5 5.75h8.25A1.75 1.75 0 0 1 16.5 7.5v9.25a1.5 1.5 0 0 1-1.5 1.5H6.5A1.75 1.75 0 0 1 4.75 16.5V7.5A1.75 1.75 0 0 1 6.5 5.75Z"
-        stroke="currentColor"
-        strokeWidth="1.7"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M16.5 8.75h1.75A1.5 1.5 0 0 1 19.75 10.25v6A2 2 0 0 1 17.75 18.25H15"
+        d="M15 15.25 19.25 19.5"
         stroke="currentColor"
         strokeWidth="1.7"
         strokeLinecap="round"
-        strokeLinejoin="round"
       />
       <path
-        d="M7.75 9.25h5.5M7.75 12h5.5M7.75 14.75h3.5"
+        d="M8.25 10.5h4.5M10.5 8.25v4.5"
         stroke="currentColor"
         strokeWidth="1.55"
         strokeLinecap="round"
@@ -109,7 +103,7 @@ function IconYou({ className }: { className?: string }) {
 
 const TABS = [
   { href: "/discover", label: "Explore", Icon: IconDiscover },
-  { href: "/news", label: "News", Icon: IconNews },
+  { href: "/research", label: "Research", Icon: IconResearch },
   { href: "/ask", label: "Ask", Icon: IconAsk, center: true },
   { href: "/portfolio", label: "Portfolio", Icon: IconPortfolio },
   { href: "/profile", label: "You", Icon: IconYou },
@@ -123,7 +117,7 @@ export function MobileBottomNav() {
       aria-label="Primary"
       className="fixed inset-x-0 bottom-0 z-40 border-t border-border/80 bg-white/95 shadow-[0_-4px_24px_rgba(24,24,27,0.04)] backdrop-blur-xl lg:hidden"
     >
-      <div className="mx-auto flex h-[3.75rem] max-w-lg items-stretch justify-between px-1 pb-[env(safe-area-inset-bottom)] pt-1">
+      <div className="mx-auto flex h-[3.75rem] max-w-lg items-stretch justify-between gap-0 px-0.5 pb-[max(0.35rem,env(safe-area-inset-bottom))] pt-1">
         {TABS.map((item) => {
           const active =
             pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -135,30 +129,30 @@ export function MobileBottomNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                "relative flex flex-1 flex-col items-center justify-center gap-0.5 outline-none",
+                "relative flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 outline-none",
                 active ? "text-primary" : "text-text-muted"
               )}
             >
               {center ? (
                 <span
                   className={cn(
-                    "mb-0.5 flex h-11 w-11 -translate-y-2 items-center justify-center rounded-2xl shadow-md transition",
+                    "mb-0.5 flex h-10 w-10 -translate-y-1.5 items-center justify-center rounded-2xl shadow-md transition sm:h-11 sm:w-11 sm:-translate-y-2",
                     active
                       ? "bg-primary text-white shadow-primary/25"
                       : "bg-bg-elevated text-text-secondary ring-1 ring-border"
                   )}
                 >
-                  <Icon className="h-5 w-5" />
+                  <Icon className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
                 </span>
               ) : (
                 <span className="flex h-6 items-center justify-center">
-                  <Icon className="h-[22px] w-[22px]" />
+                  <Icon className="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
                 </span>
               )}
               <span
                 className={cn(
-                  "text-[10px] leading-none tracking-wide",
-                  center && "-mt-1.5",
+                  "max-w-full truncate px-0.5 text-center text-[9px] leading-none tracking-wide sm:text-[10px]",
+                  center && "-mt-1",
                   active ? "font-semibold text-primary" : "font-medium"
                 )}
               >

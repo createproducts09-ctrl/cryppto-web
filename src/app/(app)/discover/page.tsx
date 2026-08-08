@@ -187,17 +187,17 @@ export default function DiscoverPage() {
     isLoading || (isFetching && coins.length === 0 && !isError);
 
   return (
-    <div className="relative min-h-[calc(100dvh-4rem)] bg-bg">
-      <div className="px-4 py-6 sm:px-6 sm:py-8 lg:pr-[340px]">
+    <div className="relative bg-bg lg:min-h-[calc(100dvh-4rem)]">
+      <div className="flex min-h-[calc(100dvh-4rem-3.75rem-env(safe-area-inset-bottom))] flex-col px-3 pt-3 pb-2 sm:px-6 sm:pt-6 sm:pb-6 lg:min-h-0 lg:px-6 lg:py-8 lg:pr-[340px]">
         <div
-          className="lg:pl-[var(--discover-ask-pad)]"
+          className="flex min-h-0 flex-1 flex-col lg:pl-[var(--discover-ask-pad)]"
           style={
             {
               "--discover-ask-pad": `${DISCOVER_ASK_DOCK_W + 16}px`,
             } as CSSProperties
           }
         >
-          <div className="mx-auto max-w-[20rem] sm:max-w-none lg:mx-auto lg:max-w-xl">
+          <div className="mx-auto w-full max-w-[20rem] shrink-0 sm:max-w-none lg:mx-auto lg:max-w-xl">
             <PageHeader
               title="Discover"
               description="Alphora finds interesting assets for you. Pass · Research · Watch — scores and evidence on every card."
@@ -217,11 +217,11 @@ export default function DiscoverPage() {
                   </button>
                 ) : null
               }
-              className="mx-auto max-w-[20rem] sm:mx-0 sm:max-w-xl"
+              className="mx-auto mb-3 max-w-[20rem] sm:mx-0 sm:mb-5 sm:max-w-xl [&_p]:hidden sm:[&_p]:block"
             />
           </div>
 
-          <div className="mx-auto mb-6 flex max-w-[20rem] gap-2 overflow-x-auto pb-1 scrollbar-thin lg:max-w-xl">
+          <div className="mx-auto mb-3 flex w-full max-w-[20rem] shrink-0 gap-2 overflow-x-auto pb-1 scrollbar-thin sm:mb-5 lg:max-w-xl">
             {filters.map((f) => (
               <Chip
                 key={f.key}
@@ -244,7 +244,7 @@ export default function DiscoverPage() {
             ))}
           </div>
 
-          <div className="relative mx-auto max-w-[20rem] pb-2">
+          <div className="relative mx-auto flex w-full max-w-[20rem] min-h-0 flex-1 flex-col pb-1">
             {showSkeleton ? (
               <DeckLoading
                 label={filters.find((f) => f.key === filter)?.label || "deck"}

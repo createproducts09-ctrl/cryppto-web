@@ -25,18 +25,32 @@ function SectionTitle({ children }: { children: ReactNode }) {
   );
 }
 
-function ScoreRing({ score }: { score?: number | null }) {
+function ScoreRing({
+  score,
+  compact,
+}: {
+  score?: number | null;
+  compact?: boolean;
+}) {
   const s = score ?? 0;
   const pct = Math.max(0, Math.min(100, s));
   return (
-    <div className="flex items-center gap-3">
+    <div className={cn("flex items-center", compact ? "gap-2" : "gap-3")}>
       <div
-        className="relative flex h-16 w-16 items-center justify-center rounded-full"
+        className={cn(
+          "relative flex items-center justify-center rounded-full",
+          compact ? "h-12 w-12" : "h-16 w-16"
+        )}
         style={{
           background: `conic-gradient(var(--color-primary, #6d28d9) ${pct * 3.6}deg, var(--color-border, #e4e4e7) 0deg)`,
         }}
       >
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-bg-elevated text-lg font-semibold tabular-nums text-text">
+        <div
+          className={cn(
+            "flex items-center justify-center rounded-full bg-bg-elevated font-semibold tabular-nums text-text",
+            compact ? "h-9 w-9 text-sm" : "h-12 w-12 text-lg"
+          )}
+        >
           {score != null ? Math.round(score) : "—"}
         </div>
       </div>
@@ -44,7 +58,7 @@ function ScoreRing({ score }: { score?: number | null }) {
         <div className="text-[11px] font-semibold uppercase tracking-wide text-text-muted">
           Research score
         </div>
-        <div className="text-sm font-semibold text-text">
+        <div className={cn("font-semibold text-text", compact ? "text-xs" : "text-sm")}>
           {score != null ? `${score}/100` : "Computing…"}
         </div>
       </div>
@@ -54,8 +68,10 @@ function ScoreRing({ score }: { score?: number | null }) {
 
 function TrafficRow({
   lights,
+  compact,
 }: {
   lights?: Record<string, TrafficLight>;
+  compact?: boolean;
 }) {
   const rows: Array<[string, string]> = [
     ["on_chain", "On-chain"],
@@ -63,6 +79,25 @@ function TrafficRow({
     ["tokenomics", "Tokenomics"],
     ["valuation", "Valuation"],
   ];
+  if (compact) {
+    return (
+      <div className="flex flex-wrap gap-1.5">
+        {rows.map(([key, label]) => {
+          const light = lights?.[key] || "gray";
+          return (
+            <span
+              key={key}
+              title={`${label}: ${lightLabel(light)}`}
+              className="inline-flex items-center gap-1 rounded-full border border-border bg-bg px-2 py-0.5 text-[10px] font-medium text-text-secondary"
+            >
+              <span className={cn("h-1.5 w-1.5 rounded-full", lightDot(light))} />
+              {label}
+            </span>
+          );
+        })}
+      </div>
+    );
+  }
   return (
     <div className="grid grid-cols-2 gap-2">
       {rows.map(([key, label]) => {
@@ -121,25 +156,28 @@ export function DiscoverResearchBlock({
   why,
   concern,
   change30d,
+  compact,
 }: {
   score?: number | null;
   lights?: Record<string, TrafficLight>;
   why?: string;
   concern?: string;
   change30d?: number | null;
+  compact?: boolean;
 }) {
   return (
-    <div className="space-y-2">
+    <div className={cn(compact ? "space-y-1.5" : "space-y-2")}>
       <div className="flex items-center justify-between gap-2">
-        <ScoreRing score={score} />
+        <ScoreRing score={score} compact={compact} />
         {change30d != null ? (
-          <div className="text-right">
+          <div className="shrink-0 text-right">
             <div className="text-[10px] font-semibold uppercase tracking-wide text-text-muted">
               30D
             </div>
             <div
               className={cn(
-                "text-sm font-semibold tabular-nums",
+                "font-semibold tabular-nums",
+                compact ? "text-xs" : "text-sm",
                 change30d >= 0 ? "text-up" : "text-down"
               )}
             >
@@ -149,9 +187,14 @@ export function DiscoverResearchBlock({
           </div>
         ) : null}
       </div>
-      <TrafficRow lights={lights} />
+      <TrafficRow lights={lights} compact={compact} />
       {why ? (
-        <div className="rounded-lg border border-border bg-bg px-2.5 py-2">
+        <div
+          className={cn(
+            "rounded-lg border border-border bg-bg px-2.5 py-2",
+            compact && "hidden sm:block"
+          )}
+        >
           <div className="text-[10px] font-semibold uppercase tracking-wide text-text-muted">
             Why it&apos;s interesting
           </div>
@@ -161,7 +204,12 @@ export function DiscoverResearchBlock({
         </div>
       ) : null}
       {concern ? (
-        <div className="rounded-lg border border-border bg-bg px-2.5 py-2">
+        <div
+          className={cn(
+            "rounded-lg border border-border bg-bg px-2.5 py-2",
+            compact && "hidden sm:block"
+          )}
+        >
           <div className="text-[10px] font-semibold uppercase tracking-wide text-text-muted">
             Biggest concern
           </div>
