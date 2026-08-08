@@ -158,10 +158,10 @@ export default function DiscoverPage() {
       action,
     }: {
       coin: Coin;
-      action: "pass" | "interested" | "watch";
+      action: "pass" | "research" | "watch";
     }) => {
       if (!accessToken) {
-        if (action === "watch") router.push("/login");
+        if (action === "watch" || action === "research") router.push("/login");
         return;
       }
       await endpoints.discoverSwipe(coin.id, action);
@@ -171,6 +171,9 @@ export default function DiscoverPage() {
         } catch {
           /* already watching */
         }
+      }
+      if (action === "research") {
+        router.push(`/coin/${coin.id}?tab=research`);
       }
     },
     onSuccess: (_d, vars) => {
@@ -197,7 +200,7 @@ export default function DiscoverPage() {
           <div className="mx-auto max-w-[20rem] sm:max-w-none lg:mx-auto lg:max-w-xl">
             <PageHeader
               title="Discover"
-              description="Drag a card onto the left Ask panel, or tap Ask. Swipe right/up for interested & watch."
+              description="Alphora finds interesting assets for you. Pass · Research · Watch — scores and evidence on every card."
               action={
                 !isKeel ? (
                   <button
@@ -256,7 +259,7 @@ export default function DiscoverPage() {
                 showWhy={Boolean(isKeel)}
                 onPass={(coin) => swipe.mutate({ coin, action: "pass" })}
                 onInterested={(coin) =>
-                  swipe.mutate({ coin, action: "interested" })
+                  swipe.mutate({ coin, action: "research" })
                 }
                 onWatch={(coin) => swipe.mutate({ coin, action: "watch" })}
                 onAskAttach={(coin) => setAskCoin(toDiscoverDragCoin(coin))}

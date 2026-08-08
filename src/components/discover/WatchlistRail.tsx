@@ -41,6 +41,25 @@ export function WatchlistRail() {
     enabled: !!accessToken,
   });
 
+  const { data: feed } = useQuery({
+    queryKey: ["watchlist-feed"],
+    queryFn: async () => {
+      const { data } = await endpoints.watchlistFeed();
+      return data as {
+        changed_count?: number;
+        summary?: string;
+        items?: Array<{
+          coin_id: string;
+          severity: string;
+          headline: string;
+          coin?: Coin;
+        }>;
+      };
+    },
+    enabled: !!accessToken,
+    staleTime: 60_000,
+  });
+
   const remove = useMutation({
     mutationFn: (coinId: string) => endpoints.removeWatchlist(coinId),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["watchlist"] }),
@@ -87,7 +106,9 @@ export function WatchlistRail() {
           </h2>
           <p className="mt-0.5 text-[11px] text-text-muted">
             {accessToken
-              ? `${items.length} saved · swipe up on Discover to add`
+              ? feed?.changed_count
+                ? `${feed.changed_count} thing${feed.changed_count === 1 ? "" : "s"} changed`
+                : `${items.length} saved · Alphora is watching`
               : "Login to save coins"}
           </p>
         </div>
@@ -134,6 +155,35 @@ export function WatchlistRail() {
           </div>
         ) : (
           <ul className="divide-y divide-border">
+            {(feed?.items || []).slice(0, 6).map((ch) => {
+              const tone =
+                ch.severity === "negative"
+                  ? "text-down"
+                  : ch.severity === "positive"
+                    ? "text-up"
+                    : "text-amber-600";
+              return (
+                <li key={`chg-${ch.coin_id}-${ch.headline}`}>
+                  <Link
+                    href={`/coin/${ch.coin_id}?tab=research`}
+                    className="block px-3 py-2.5 hover:bg-primary-soft/40"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <div className={cn("text-[10px] font-bold uppercase", tone)}>
+                      {ch.severity === "negative"
+                        ? "Changed · risk"
+                        : ch.severity === "positive"
+                          ? "Changed · up"
+                          : "New"}
+                    </div>
+                    <div className="mt-0.5 text-[12px] font-semibold text-text">
+                      {(ch.coin?.symbol || ch.coin_id).toUpperCase()} —{" "}
+                      {ch.headline}
+                    </div>
+                  </Link>
+                </li>
+              );
+            })}
             {items.map((item) => {
               const coin = (item.coin || {
                 id: item.coin_id,
@@ -145,7 +195,7 @@ export function WatchlistRail() {
                   className="group flex items-center gap-2.5 px-3 py-2.5 hover:bg-primary-soft/40"
                 >
                   <Link
-                    href={`/coin/${coin.id}`}
+                    href={`/coin/${coin.id}?tab=research`}
                     className="flex min-w-0 flex-1 items-center gap-2.5"
                     onClick={() => setMobileOpen(false)}
                   >
@@ -171,6 +221,11 @@ export function WatchlistRail() {
                         <span className="uppercase text-text-muted">
                           {coin.symbol}
                         </span>
+                        {coin.research_score != null ? (
+                          <span className="font-semibold tabular-nums text-text">
+                            {Math.round(Number(coin.research_score))}
+                          </span>
+                        ) : null}
                         <span className="tabular-nums">
                           {formatPrice(coin.current_price)}
                         </span>

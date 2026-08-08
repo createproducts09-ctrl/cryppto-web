@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,6 +12,7 @@ import {
   BulletSectionCard,
   SectionStack,
 } from "@/components/research/BulletList";
+import { AlphoraResearchPanel } from "@/components/research/AlphoraResearch";
 import { FundamentalsPanel } from "@/components/research/FundamentalsPanel";
 import {
   ChartLoading,
@@ -38,12 +39,14 @@ import {
   normalizePrices,
   toBullets,
 } from "@/lib/research";
+import type { ResearchPack } from "@/lib/researchTypes";
 import { useAuthStore } from "@/lib/store/auth";
 import { capitalize, type ChartData, type Coin } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 const TIMEFRAMES = ["1H", "24H", "7D", "30D", "3M", "1Y", "ALL"] as const;
 const TABS = [
+  { key: "research", label: "Alphora" },
   { key: "overview", label: "Overview" },
   { key: "analytics", label: "Charts" },
   { key: "fundamental", label: "Fundamentals" },
@@ -55,11 +58,20 @@ type TabKey = (typeof TABS)[number]["key"];
 
 export default function CoinDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const accessToken = useAuthStore((s) => s.accessToken);
   const queryClient = useQueryClient();
   const [tf, setTf] = useState<(typeof TIMEFRAMES)[number]>("7D");
-  const [tab, setTab] = useState<TabKey>("overview");
+  const initialTab = (searchParams.get("tab") as TabKey) || "research";
+  const [tab, setTab] = useState<TabKey>(
+    TABS.some((t) => t.key === initialTab) ? initialTab : "research"
+  );
+
+  useEffect(() => {
+    const t = searchParams.get("tab") as TabKey | null;
+    if (t && TABS.some((x) => x.key === t)) setTab(t);
+  }, [searchParams]);
 
   const coinQuery = useQuery({
     queryKey: ["coin", id],
@@ -85,6 +97,16 @@ export default function CoinDetailPage() {
       return (data.items || data || []) as Array<{ coin_id: string }>;
     },
     enabled: !!accessToken,
+  });
+
+  const researchQuery = useQuery({
+    queryKey: ["research", id],
+    queryFn: async () => {
+      const { data } = await endpoints.research(id);
+      return data as ResearchPack;
+    },
+    enabled: !!id,
+    staleTime: 60_000,
   });
 
   const coin = coinQuery.data;
@@ -242,6 +264,19 @@ export default function CoinDetailPage() {
                 <span className="inline-flex items-center rounded-md bg-primary-soft px-1.5 py-0.5 font-medium text-primary">
                   Rank #{coin.market_cap_rank ?? "—"}
                 </span>
+                {(researchQuery.data?.research_score ?? coin.research_score) !=
+                null ? (
+                  <span className="inline-flex items-center rounded-md bg-bg px-1.5 py-0.5 font-semibold text-text">
+                    Score{" "}
+                    {Math.round(
+                      Number(
+                        researchQuery.data?.research_score ??
+                          coin.research_score
+                      )
+                    )}
+                    /100
+                  </span>
+                ) : null}
                 {coin.sentiment ? (
                   <span>{capitalize(coin.sentiment)}</span>
                 ) : null}
@@ -294,6 +329,50 @@ export default function CoinDetailPage() {
       </div>
 
       <div className="px-4 py-5 sm:px-6">
+        {tab === "research" && (
+          <div className="space-y-4 animate-fade-in">
+            {researchQuery.isLoading ? (
+              <PanelLoading label="Alphora is investigating…" />
+            ) : researchQuery.isError || !researchQuery.data ? (
+              <EmptyState
+                title="Research unavailable"
+                description="Could not build the evidence pack. Retry in a moment."
+                action={
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => researchQuery.refetch()}
+                  >
+                    Retry
+                  </Button>
+                }
+              />
+            ) : (
+              <AlphoraResearchPanel data={researchQuery.data} />
+            )}
+            <div className="grid gap-2 sm:grid-cols-2">
+              <Button
+                variant="secondary"
+                className="w-full"
+                onClick={() =>
+                  router.push(
+                    `/ask?coin=${encodeURIComponent(id)}&name=${encodeURIComponent(coin.name || id)}&q=${encodeURIComponent("Why did the research score change?")}`
+                  )
+                }
+              >
+                Ask: why did score change?
+              </Button>
+              <Button
+                variant="secondary"
+                className="w-full"
+                onClick={() => researchQuery.refetch()}
+              >
+                Re-research
+              </Button>
+            </div>
+          </div>
+        )}
+
         {tab === "overview" && (
           <div className="space-y-4 animate-fade-in">
             {/* Desk: chart + side panels */}

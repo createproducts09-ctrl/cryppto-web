@@ -82,6 +82,15 @@ export type Coin = {
   fundamentals?: Record<string, unknown>;
   ath?: number;
   atl?: number;
+  research_score?: number | null;
+  research?: {
+    research_score?: number | null;
+    traffic_lights?: Record<string, "green" | "yellow" | "red" | "gray">;
+    why_interesting?: string;
+    biggest_concern?: string;
+    categories?: Record<string, unknown>;
+  };
+  why_blurb?: string;
   [key: string]: unknown;
 };
 
@@ -127,6 +136,11 @@ export type Basket = {
   pnl?: number;
   pnl_pct?: number | null;
   asset_count?: number;
+  is_thesis?: boolean;
+  thesis_health?: number | null;
+  thesis_narrative?: string | null;
+  strengthening_count?: number;
+  weakening_count?: number;
   [key: string]: unknown;
 };
 

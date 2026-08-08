@@ -36,10 +36,10 @@ import type { Basket, Entitlements, PortfolioSummary } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 const NAME_IDEAS = [
-  "Core holds",
+  "AI Infrastructure",
+  "L1 growth",
+  "DeFi blue chips",
   "High conviction",
-  "Long-term",
-  "Watch & size later",
 ];
 
 function money(n?: number | null) {
@@ -211,12 +211,12 @@ export default function PortfolioPage() {
         }
       >
       <PageHeader
-        title="Portfolio"
-        description="Group coins into baskets. Drag a basket onto Ask for insights or a full desk report."
+        title="Theses"
+        description="Each basket is a thesis. Alphora tracks thesis health from research scores — drag onto Ask to investigate."
         action={
           <Button size="sm" onClick={openCreate}>
             <Plus className="h-4 w-4" />
-            New basket
+            New thesis
           </Button>
         }
       />
@@ -368,14 +368,24 @@ export default function PortfolioPage() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1">
+                        <span className="mr-1 rounded bg-primary-soft px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-primary">
+                          Thesis
+                        </span>
                         <h3 className="truncate font-display text-[15px] font-semibold tracking-tight">
                           {b.name}
                         </h3>
                         <ChevronRight className="h-4 w-4 shrink-0 text-text-muted opacity-0 transition group-hover:opacity-100" />
                       </div>
                       <p className="mt-0.5 truncate text-xs text-text-muted">
+                        {b.thesis_health != null
+                          ? `Health ${Math.round(Number(b.thesis_health))}/100 · `
+                          : ""}
                         {count} coin{count === 1 ? "" : "s"}
-                        {b.note ? ` · ${b.note}` : ""}
+                        {b.thesis_narrative
+                          ? ` · ${b.thesis_narrative}`
+                          : b.note
+                            ? ` · ${b.note}`
+                            : ""}
                         {count === 0 ? " · empty — tap to add" : ""}
                       </p>
                       {assets.length > 0 ? (
@@ -409,6 +419,14 @@ export default function PortfolioPage() {
                       ) : null}
                     </div>
                     <div className="shrink-0 text-right">
+                      {b.thesis_health != null ? (
+                        <p className="text-[10px] font-semibold uppercase tracking-wide text-text-muted">
+                          Health{" "}
+                          <span className="text-base font-bold tabular-nums text-text">
+                            {Math.round(Number(b.thesis_health))}
+                          </span>
+                        </p>
+                      ) : null}
                       <p className="text-base font-semibold tabular-nums tracking-tight">
                         {money(b.total_value)}
                       </p>

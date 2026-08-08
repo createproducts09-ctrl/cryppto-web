@@ -21,6 +21,7 @@ import { Eye, Star, X } from "lucide-react";
 
 import { isOverAskDrop } from "@/components/discover/AskDragGhost";
 import { AskMark } from "@/components/discover/AskMark";
+import { DiscoverResearchBlock } from "@/components/research/AlphoraResearch";
 import { PriceChange } from "@/components/coins/PriceChange";
 import { formatCompact, formatPrice } from "@/lib/format";
 import type { Coin } from "@/lib/types";
@@ -385,7 +386,7 @@ function DeckCard({
               style={{ opacity: likeOp }}
               className="pointer-events-none absolute left-4 top-4 z-30 rounded-xl border-2 border-up bg-up/15 px-3 py-1.5 text-sm font-bold uppercase tracking-wide text-up backdrop-blur-sm"
             >
-              Interested
+              Research
             </motion.div>
             {!askHover ? (
               <motion.div
@@ -516,6 +517,19 @@ function DeckCard({
             <PriceChange value={change} className="text-sm" />
           </div>
 
+          <DiscoverResearchBlock
+            score={coin.research_score ?? coin.research?.research_score}
+            lights={coin.research?.traffic_lights}
+            why={
+              coin.research?.why_interesting ||
+              (showWhy && typeof coin.why_blurb === "string"
+                ? coin.why_blurb
+                : undefined)
+            }
+            concern={coin.research?.biggest_concern}
+            change30d={coin.price_change_percentage_30d}
+          />
+
           <div className="grid grid-cols-2 gap-1.5 text-sm">
             <div className="rounded-lg bg-bg px-2 py-1.5">
               <div className="text-[10px] font-semibold uppercase tracking-wide text-text-muted">
@@ -535,7 +549,10 @@ function DeckCard({
             </div>
           </div>
 
-          {showWhy && typeof coin.why_blurb === "string" && coin.why_blurb ? (
+          {!coin.research?.why_interesting &&
+          showWhy &&
+          typeof coin.why_blurb === "string" &&
+          coin.why_blurb ? (
             <div className="rounded-lg border border-border bg-bg px-2.5 py-2">
               <div className="text-[10px] font-semibold uppercase tracking-wide text-text-muted">
                 Why this coin
@@ -544,7 +561,7 @@ function DeckCard({
                 {coin.why_blurb}
               </p>
             </div>
-          ) : onUnlockWhy ? (
+          ) : !coin.research?.why_interesting && onUnlockWhy ? (
             <button
               type="button"
               onClick={(e) => {
@@ -620,7 +637,7 @@ export function SwipeDeck({
     const noData = coins.length === 0;
     const label = filterLabel?.trim() || "this filter";
     return (
-      <div className="flex h-[min(380px,calc(100dvh-20rem))] flex-col items-center justify-center rounded-[20px] border border-dashed border-border bg-bg-elevated/60 px-6 text-center lg:h-[400px]">
+      <div className="flex h-[min(520px,calc(100dvh-16rem))] flex-col items-center justify-center rounded-[20px] border border-dashed border-border bg-bg-elevated/60 px-6 text-center lg:h-[560px]">
         {noData ? (
           <>
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
@@ -654,7 +671,7 @@ export function SwipeDeck({
 
   return (
     <div className="mx-auto w-full max-w-[20rem]">
-      <div className="relative mx-auto h-[min(380px,calc(100dvh-20rem))] w-full lg:h-[400px]">
+      <div className="relative mx-auto h-[min(520px,calc(100dvh-16rem))] w-full lg:h-[560px]">
         <AnimatePresence mode="popLayout">
           {next ? (
             <DeckCard
@@ -725,7 +742,7 @@ export function SwipeDeck({
         ) : null}
         <button
           type="button"
-          aria-label="Interested"
+          aria-label="Research"
           disabled={!!fly}
           onClick={() => decide("right")}
           className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white text-up shadow-sm transition hover:scale-105 hover:bg-up-soft disabled:opacity-50 cursor-pointer"
@@ -734,7 +751,7 @@ export function SwipeDeck({
         </button>
       </div>
       <p className="mt-2 text-center text-[10px] font-medium leading-snug text-text-muted">
-        Drag card onto Ask (left) · or hold Ask pill · swipe for pass / watch
+        Pass · Research · Watch — evidence-backed scores on every card
       </p>
     </div>
   );

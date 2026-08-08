@@ -1,5 +1,11 @@
 import axios from "axios";
 
+import {
+  decryptPayload,
+  encryptPayload,
+  encryptionReady,
+  isEncryptedEnvelope,
+} from "@/lib/api/payloadCrypto";
 import { useAuthStore } from "@/lib/store/auth";
 
 const API_URL =
@@ -11,28 +17,61 @@ export const api = axios.create({
   timeout: 30000,
 });
 
-api.interceptors.request.use((config) => {
+api.interceptors.request.use(async (config) => {
   const token = useAuthStore.getState().accessToken;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+  }
+  if (await encryptionReady()) {
+    config.headers["X-Accept-Encrypted"] = "1";
+    const method = (config.method || "get").toLowerCase();
+    if (
+      ["post", "put", "patch"].includes(method) &&
+      config.data != null &&
+      typeof config.data === "object" &&
+      !isEncryptedEnvelope(config.data)
+    ) {
+      config.data = await encryptPayload(config.data);
+    }
   }
   return config;
 });
 
 api.interceptors.response.use(
-  (r) => r,
+  async (response) => {
+    if (isEncryptedEnvelope(response.data)) {
+      response.data = await decryptPayload(response.data);
+    }
+    return response;
+  },
   async (error) => {
+    if (error.response && isEncryptedEnvelope(error.response.data)) {
+      try {
+        error.response.data = await decryptPayload(error.response.data);
+      } catch {
+        /* keep envelope */
+      }
+    }
     const original = error.config;
     if (error.response?.status === 401 && original && !original._retry) {
       original._retry = true;
       const refresh = useAuthStore.getState().refreshToken;
       if (refresh) {
         try {
-          const { data } = await axios.post(
+          const headers: Record<string, string> = {
+            Authorization: `Bearer ${refresh}`,
+          };
+          if (await encryptionReady()) {
+            headers["X-Accept-Encrypted"] = "1";
+          }
+          const { data: raw } = await axios.post(
             `${API_URL}/api/auth/refresh`,
             null,
-            { headers: { Authorization: `Bearer ${refresh}` } }
+            { headers }
           );
+          const data = isEncryptedEnvelope(raw)
+            ? await decryptPayload<{ access_token: string }>(raw)
+            : raw;
           useAuthStore.setState({ accessToken: data.access_token });
           original.headers.Authorization = `Bearer ${data.access_token}`;
           return api(original);
@@ -91,14 +130,38 @@ export const endpoints = {
     api.get("/coins", {
       params: { limit: opts?.limit ?? 100, skip: opts?.skip ?? 0 },
     }),
-  discoverSwipe: (coin_id: string, action: "pass" | "interested" | "watch") =>
-    api.post("/discover/swipe", { coin_id, action }),
+  discoverSwipe: (
+    coin_id: string,
+    action: "pass" | "interested" | "research" | "watch"
+  ) => api.post("/discover/swipe", { coin_id, action }),
   discoverPulse: (limit = 12) =>
     api.get("/discover/pulse", { params: { limit } }),
   coin: (id: string) => api.get(`/coins/${id}`),
   chart: (id: string, timeframe: string) =>
     api.get(`/coins/${id}/chart`, { params: { timeframe } }),
-  watchlist: () => api.get("/watchlist"),
+  research: (id: string, opts?: { force?: boolean; ai?: boolean }) =>
+    api.get(`/research/${id}`, {
+      params: {
+        force: opts?.force ? "1" : undefined,
+        ai: opts?.ai === false ? "0" : undefined,
+      },
+      timeout: 120000,
+    }),
+  researchChanges: (id: string, days = 7) =>
+    api.get(`/research/${id}/changes`, { params: { days } }),
+  researchCompare: (coin_ids: string[]) =>
+    api.post("/research/compare", { coin_ids }),
+  researchInvestigate: (body: {
+    question: string;
+    coin_id?: string;
+    coin_ids?: string[];
+  }) => api.post("/research/investigate", body, { timeout: 120000 }),
+  thesisHealth: (basketId: string) => api.get(`/research/thesis/${basketId}`),
+  watchlist: (opts?: { changes?: boolean }) =>
+    api.get("/watchlist", {
+      params: opts?.changes ? { changes: "1" } : undefined,
+    }),
+  watchlistFeed: () => api.get("/research/watchlist/feed"),
   addWatchlist: (coin_id: string, extras?: object) =>
     api.post("/watchlist", { coin_id, ...extras }),
   removeWatchlist: (coin_id: string) => api.delete(`/watchlist/${coin_id}`),
@@ -155,6 +218,26 @@ export const endpoints = {
   entitlements: () => api.get("/billing/entitlements"),
   upgradePlan: (plan: "keel" | "free" = "keel") =>
     api.post("/billing/upgrade", { plan }),
+  adminUnlock: (admin_key: string) =>
+    api.post(
+      "/admin/unlock",
+      { admin_key },
+      { headers: { "X-Admin-Key": admin_key } }
+    ),
+  adminUsers: (
+    admin_key: string,
+    opts?: { limit?: number; skip?: number; q?: string }
+  ) =>
+    api.get("/admin/users", {
+      params: {
+        limit: opts?.limit ?? 100,
+        skip: opts?.skip ?? 0,
+        q: opts?.q || undefined,
+      },
+      headers: { "X-Admin-Key": admin_key },
+    }),
+  adminStats: (admin_key: string) =>
+    api.get("/admin/stats", { headers: { "X-Admin-Key": admin_key } }),
 };
 
 declare module "axios" {
