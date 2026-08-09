@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { ArrowRight, Bot, Compass, Layers } from "lucide-react";
 
 import { BrandLogo } from "@/components/brand/BrandLogo";
@@ -18,9 +19,8 @@ import { MarketingHeader } from "@/components/marketing/MarketingHeader";
 import { POPULAR_RESEARCH_COINS } from "@/lib/publicApi";
 import { pageMetadata } from "@/lib/seo";
 
-export const metadata = pageMetadata({
-  title:
-    "Crypto Research Platform | AI Crypto Analysis & Token Research",
+const homeSeo = pageMetadata({
+  title: "Crypto Research Platform",
   description:
     "Alphora Labs is a crypto research platform for discovering tokens, getting AI analysis, and tracking theses — Discover, Ask, and portfolio baskets in one desk.",
   path: "/",
@@ -32,6 +32,12 @@ export const metadata = pageMetadata({
     "Alphora Labs",
   ],
 });
+
+export const metadata: Metadata = {
+  ...homeSeo,
+  // Avoid layout template doubling brand length past ~580px SERP limit.
+  title: { absolute: "Crypto Research Platform | Alphora Labs" },
+};
 
 const steps = [
   {
@@ -86,12 +92,13 @@ export default function LandingPage() {
             </p>
 
             <h1 className="text-[2.35rem] font-semibold leading-[1.08] tracking-[-0.03em] text-text sm:text-5xl lg:text-[3.25rem]">
-              Crypto research, without the noise
+              Crypto research platform without the noise
             </h1>
 
             <p className="mt-5 max-w-md text-base font-normal leading-[1.65] text-text-secondary sm:text-lg">
-              Discover tokens, get AI analysis, and track theses — research in
-              one desk.
+              Alphora Labs is a crypto research platform for AI crypto analysis
+              and token research — discover markets, structure briefs, and track
+              theses in one desk.
             </p>
 
             <HomeAuthActions variant="hero" />
@@ -127,9 +134,11 @@ export default function LandingPage() {
             <h2 className="mt-3 text-2xl font-semibold tracking-[-0.02em] text-text sm:text-3xl">
               Popular research
             </h2>
-            <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-text-secondary">
-              Open public research pages for major assets — then continue into
-              the Alphora desk for live analysis and AI briefs.
+            <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-text-secondary">
+              Open public research pages for major assets — Bitcoin, Ethereum,
+              Solana, and more — then continue into the Alphora desk for live
+              market context, risk notes, and AI crypto analysis. These pages are
+              built for reading and sharing; the desk is built for deciding.
             </p>
             <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {POPULAR_RESEARCH_COINS.map((c) => (
@@ -140,7 +149,7 @@ export default function LandingPage() {
                   >
                     <Image
                       src={c.image}
-                      alt=""
+                      alt={`${c.name} token logo`}
                       width={40}
                       height={40}
                       className="h-10 w-10 shrink-0 rounded-full bg-bg"
@@ -196,9 +205,11 @@ export default function LandingPage() {
             <h2 className="mt-3 text-2xl font-semibold tracking-[-0.02em] text-text sm:text-3xl">
               Three moves. One desk.
             </h2>
-            <p className="mt-3 max-w-lg text-[15px] font-normal leading-relaxed text-text-secondary">
+            <p className="mt-3 max-w-2xl text-[15px] font-normal leading-relaxed text-text-secondary">
               From first swipe to a full portfolio brief — without the noise of
-              ten open tabs.
+              ten open tabs. The same loop powers public token research pages and
+              the live desk: shortlist fast, structure AI crypto analysis, then
+              track whether the thesis is working.
             </p>
 
             <div className="mt-10 grid gap-4 md:grid-cols-3">
@@ -241,7 +252,9 @@ export default function LandingPage() {
               </h2>
               <p className="mt-4 max-w-md text-[15px] font-normal leading-relaxed text-text-secondary">
                 Ask anything about a coin or basket. Get a desk-style report —
-                snapshot, risks, catalysts — not a wall of chat fluff.
+                snapshot, risks, catalysts, and what to monitor next — not a wall
+                of chat fluff. Pair Ask with Discover so AI crypto analysis stays
+                tied to names you already triaged.
               </p>
               <HomeDeskLink hrefWhenEntered="/ask">Open Ask</HomeDeskLink>
             </div>
@@ -260,12 +273,101 @@ export default function LandingPage() {
                 Baskets with live P&L.
               </h2>
               <p className="mt-4 max-w-md text-[15px] font-normal leading-relaxed text-text-secondary">
-                Group holdings, drag a basket onto Ask for a full desk report,
-                and keep your edge in one place.
+                Group holdings by thesis, drag a basket onto Ask for a full desk
+                report, and keep live P&amp;L next to the story — so token
+                research feedback compounds instead of living in a spreadsheet.
               </p>
               <HomeDeskLink hrefWhenEntered="/portfolio">
                 View portfolio
               </HomeDeskLink>
+            </div>
+          </div>
+        </section>
+
+        <section className="relative border-t border-border bg-bg">
+          <div className="mx-auto max-w-3xl px-5 py-16 sm:px-8 sm:py-20">
+            <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-primary">
+              Why Alphora
+            </p>
+            <h2 className="mt-3 text-2xl font-semibold tracking-[-0.02em] text-text sm:text-3xl">
+              A research desk, not another tab stack
+            </h2>
+            <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-text-secondary">
+              <p>
+                Most crypto research still means juggling market data sites,
+                protocol reports, wallet explorers, and a notes app that never
+                quite becomes a thesis. Alphora Labs compresses that loop into
+                one crypto research platform: triage candidates on Discover, run
+                AI crypto analysis in Ask, and measure conviction with thesis
+                baskets and live P&amp;L.
+              </p>
+              <p>
+                Public token research pages on{" "}
+                <Link href="/crypto" className="font-medium text-primary">
+                  /crypto
+                </Link>{" "}
+                give you shareable context for major assets. Sector hubs help you
+                compare peers inside a narrative. Reports like the{" "}
+                <Link
+                  href="/reports/research-score-index"
+                  className="font-medium text-primary"
+                >
+                  Research Score Top 100
+                </Link>{" "}
+                and{" "}
+                <Link
+                  href="/reports/fdv-overhang"
+                  className="font-medium text-primary"
+                >
+                  FDV overhang watchlist
+                </Link>{" "}
+                turn screens into starting points — not endless feeds.
+              </p>
+              <p>
+                When you need vocabulary, the{" "}
+                <Link href="/glossary" className="font-medium text-primary">
+                  glossary
+                </Link>{" "}
+                covers FDV, unlocks, liquidity, and more. When you need process,
+                guides like{" "}
+                <Link
+                  href="/how-to-research-cryptocurrency"
+                  className="font-medium text-primary"
+                >
+                  how to research cryptocurrency
+                </Link>{" "}
+                and{" "}
+                <Link
+                  href="/tokenomics-analysis"
+                  className="font-medium text-primary"
+                >
+                  tokenomics analysis
+                </Link>{" "}
+                show the checklist behind the desk. Alphora is research software
+                — not a brokerage and not financial advice. You keep custody,
+                execution, and the final call.
+              </p>
+              <p>
+                Start free, swipe a shortlist, and open an Ask brief on the names
+                that survive Pass. If the workflow sticks, deepen with baskets and
+                Keel. If you already use CoinGecko, Messari, or DeFiLlama for
+                primary data, keep them — Alphora is the desk that sits on top so
+                token research compounds instead of resetting every cycle. Follow
+                product updates on{" "}
+                <a
+                  href="https://twitter.com/alphoralabs"
+                  className="font-medium text-primary"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  X (@alphoralabs)
+                </a>{" "}
+                or read the{" "}
+                <Link href="/blog" className="font-medium text-primary">
+                  blog
+                </Link>
+                .
+              </p>
             </div>
           </div>
         </section>
@@ -397,7 +499,7 @@ export default function LandingPage() {
           </div>
           <div>
             <p className="text-xs font-medium uppercase tracking-[0.12em] text-text-muted">
-              App
+              App &amp; social
             </p>
             <ul className="mt-4 space-y-2 text-sm text-text-secondary">
               <li>
@@ -414,6 +516,26 @@ export default function LandingPage() {
                 <Link href="/login" className="hover:text-primary">
                   Sign in
                 </Link>
+              </li>
+              <li>
+                <a
+                  href="https://twitter.com/alphoralabs"
+                  className="hover:text-primary"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  X / Twitter
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.producthunt.com/posts/alphora-labs"
+                  className="hover:text-primary"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Product Hunt
+                </a>
               </li>
             </ul>
           </div>

@@ -12,9 +12,12 @@ function resolveSiteUrl() {
   const vercel = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
     : "";
-  const raw = (fromEnv || vercel || "https://alphoralabs.com").trim();
+  const raw = (fromEnv || vercel || "https://www.alphoralabs.com").trim();
   const withProtocol = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
-  return withProtocol.replace(/\/$/, "");
+  // Prefer apex www in production so canonicals match the live host.
+  return withProtocol
+    .replace(/\/$/, "")
+    .replace(/^https?:\/\/alphoralabs\.com$/i, "https://www.alphoralabs.com");
 }
 
 export const SITE = {

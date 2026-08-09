@@ -26,8 +26,7 @@ const CLARITY_ID =
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default:
-      "Crypto Research Platform | AI Crypto Analysis & Token Research | Alphora Labs",
+    default: "Crypto Research Platform | Alphora Labs",
     template: `%s · ${SITE.name}`,
   },
   description: SITE.description,
@@ -64,8 +63,7 @@ export const metadata: Metadata = {
     locale: SITE.locale,
     url: SITE.url,
     siteName: SITE.name,
-    title:
-      "Crypto Research Platform | AI Crypto Analysis & Token Research | Alphora Labs",
+    title: "Crypto Research Platform | Alphora Labs",
     description: SITE.description,
     images: [
       {
@@ -78,8 +76,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title:
-      "Crypto Research Platform | AI Crypto Analysis & Token Research | Alphora Labs",
+    title: "Crypto Research Platform | Alphora Labs",
     description: SITE.description,
     images: ["/twitter-image"],
     creator: SITE.twitter,

@@ -74,7 +74,7 @@ export function SwipeStackVisual() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="https://assets.coingecko.com/coins/images/1/small/bitcoin.png"
-            alt=""
+            alt="Bitcoin logo"
             width={22}
             height={22}
             className="h-[22px] w-[22px] rounded-full"
@@ -113,7 +113,7 @@ export function SwipeStackVisual() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={peek.img}
-            alt=""
+            alt={`${peek.name} logo`}
             width={36}
             height={36}
             className="h-9 w-9 rounded-full bg-bg"
@@ -136,7 +136,7 @@ export function SwipeStackVisual() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={next.img}
-            alt=""
+            alt={`${next.name} logo`}
             width={36}
             height={36}
             className="h-9 w-9 rounded-full bg-bg"
@@ -188,7 +188,7 @@ export function SwipeStackVisual() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={active.img}
-                alt=""
+                alt={`${active.name} logo`}
                 width={56}
                 height={56}
                 className="h-14 w-14 rounded-2xl border border-border bg-bg object-cover shadow-sm"
@@ -426,7 +426,7 @@ export function BasketStripVisual() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={r.img}
-              alt=""
+              alt={`${r.name} logo`}
               width={36}
               height={36}
               className="h-9 w-9 rounded-full bg-bg"
@@ -563,7 +563,7 @@ export function MarketTicker() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={item.img}
-              alt=""
+              alt={`${item.s} logo`}
               width={18}
               height={18}
               className="h-[18px] w-[18px] rounded-full bg-bg"

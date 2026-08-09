@@ -11,6 +11,16 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "alphoralabs.com" }],
+        destination: "https://www.alphoralabs.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
