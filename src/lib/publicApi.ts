@@ -1,6 +1,6 @@
 /** Server-side fetches for public SEO pages (no auth). */
 
-const DEFAULT_API = "http://127.0.0.1:5002";
+const DEFAULT_API = "http://127.0.0.1:5001";
 
 export function apiBase(): string {
   return (

@@ -1,12 +1,14 @@
 import Link from "next/link";
 
-import { BrandLogo } from "@/components/brand/BrandLogo";
+import { BrandGiant, BrandLogo } from "@/components/brand/BrandLogo";
+import { SarvamPowered } from "@/components/bhasha/SarvamPowered";
 
 const LINKS = [
   { href: "/discover", label: "Discover" },
   { href: "/research", label: "Research" },
   { href: "/news", label: "News" },
   { href: "/ask", label: "Ask AI" },
+  { href: "/#bhasha", label: "Bhasha" },
   { href: "/portfolio", label: "Portfolio" },
   { href: "/pulse", label: "Pulse" },
   { href: "/pricing", label: "Pricing" },
@@ -17,13 +19,13 @@ export function AppFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-auto hidden border-t border-border bg-white lg:block">
-      <div className="mx-auto flex max-w-[1400px] flex-col gap-8 px-6 py-10">
+    <footer className="mt-auto hidden overflow-hidden border-t border-border bg-white lg:block">
+      <div className="mx-auto flex max-w-[1400px] flex-col gap-10 px-6 pt-12">
         <div className="flex flex-wrap items-start justify-between gap-8">
-          <div className="max-w-xs">
-            <BrandLogo className="h-9" />
-            <p className="mt-3 text-sm leading-relaxed text-text-secondary">
-              Crypto research tools — swipe markets, ask AI, track baskets.
+          <div className="max-w-sm">
+            <BrandLogo />
+            <p className="mt-4 text-sm leading-relaxed text-text-secondary">
+              Crypto research platform — swipe markets, ask AI, track baskets.
             </p>
           </div>
           <nav
@@ -41,8 +43,10 @@ export function AppFooter() {
             ))}
           </nav>
         </div>
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-6 text-xs text-text-muted">
+        <BrandGiant className="text-center text-[clamp(4.5rem,16vw,11rem)]" />
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border py-6 text-xs text-text-muted">
           <p>© {year} Alphora Labs</p>
+          <SarvamPowered />
           <p>Research only · Not financial advice</p>
         </div>
       </div>

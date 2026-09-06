@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 40" fill="none">
+  <rect width="32" height="32" x="0" y="4" rx="9" fill="#6d28d9"/>
+  <path d="M16 11.2 24.8 28.2h-3.7l-1.55-3.85h-7.1L10.9 28.2H7.2L16 11.2Zm-1.7 9.7h3.4L16 16.55 14.3 20.9Z" fill="#fff"/>
+  <text x="42" y="28" fill="#18181b" font-family="Syne, Outfit, ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="700" letter-spacing="-0.04em">Alphora</text>
+  <text x="132" y="27" fill="#a1a1aa" font-family="Outfit, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="600" letter-spacing="0.16em">LABS</text>
+</svg>

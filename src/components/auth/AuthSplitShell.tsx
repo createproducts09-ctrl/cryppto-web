@@ -4,6 +4,9 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { type ReactNode } from "react";
 
+import { BrandLogo } from "@/components/brand/BrandLogo";
+import { SarvamPowered } from "@/components/bhasha/SarvamPowered";
+
 export function AuthSplitShell({
   children,
   eyebrow = "Welcome",
@@ -29,11 +32,8 @@ export function AuthSplitShell({
         </div>
 
         <div className="relative z-10 p-10 xl:p-12">
-          <Link
-            href="/"
-            className="font-display text-lg font-bold tracking-tight text-white/90 transition hover:text-white"
-          >
-            Alphora Labs
+          <Link href="/" className="inline-flex" aria-label="Alphora Labs">
+            <BrandLogo onDark compact />
           </Link>
         </div>
 
@@ -115,6 +115,8 @@ export function AuthSplitShell({
 
         <footer className="hidden px-5 py-4 text-center text-[11px] text-text-muted lg:block lg:px-10">
           Research only · Not financial advice
+          <span className="mx-2 text-border-strong">·</span>
+          <SarvamPowered compact />
         </footer>
       </section>
     </div>

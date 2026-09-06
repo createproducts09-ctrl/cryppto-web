@@ -68,6 +68,11 @@ body {
   font-family: var(--font-syne), var(--font-outfit), sans-serif;
 }
 
+.font-indic {
+  font-family: var(--font-indic), var(--font-outfit), "Noto Sans", ui-sans-serif,
+    system-ui, sans-serif;
+}
+
 /* App page rhythm — PageShell / PageHeader */
 :root {
   --page-pad-x: 1rem;
@@ -193,6 +198,21 @@ body {
   animation: float-y 5.5s ease-in-out infinite;
 }
 
+@keyframes bhasha-wave {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.bhasha-wave {
+  transform-origin: bottom;
+  animation: bhasha-wave 0.7s ease-in-out infinite;
+}
+
 /* Ask AI — research thinking illustration */
 @keyframes research-bar-pulse {
   0%,
@@ -251,54 +271,6 @@ body {
   50% {
     transform: translateY(-6px);
   }
-}
-
-.research-float-a {
-  animation: research-card-float 3.2s ease-in-out infinite;
-}
-.research-float-b {
-  animation: research-card-float 3.6s ease-in-out infinite 0.4s;
-}
-.research-float-c {
-  animation: research-card-float 2.8s ease-in-out infinite 0.2s;
-}
-
-@keyframes research-progress {
-  0% {
-    width: 12%;
-    margin-left: 0;
-  }
-  50% {
-    width: 45%;
-    margin-left: 28%;
-  }
-  100% {
-    width: 12%;
-    margin-left: 78%;
-  }
-}
-
-.research-progress {
-  animation: research-progress 2.2s ease-in-out infinite;
-}
-
-@keyframes research-step-in {
-  0%,
-  20% {
-    opacity: 0.35;
-  }
-  40%,
-  70% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.45;
-  }
-}
-
-.research-step-dot,
-.research-step-label {
-  animation: research-step-in 2.8s ease-in-out infinite;
 }
 
 /* Landing only — barely-there accent, mostly white */

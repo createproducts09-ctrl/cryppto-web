@@ -39,7 +39,7 @@ export function ResearchSkeleton() {
         </div>
       </div>
       <p className="px-4 pb-6 text-center text-xs text-text-muted sm:px-6">
-        Loading research desk…
+        Loading…
       </p>
     </div>
   );
@@ -51,6 +51,23 @@ export function ChartLoading({ label = "Loading chart…" }: { label?: string })
       <p className="text-center text-sm text-text-muted">{label}</p>
       <Skeleton className="mx-auto h-3 w-40" />
       <Skeleton className="h-40 w-full rounded-lg" />
+    </div>
+  );
+}
+
+export function AlphoraTabSkeleton() {
+  return (
+    <div className="space-y-4 animate-fade-in">
+      <div className="rounded-xl border border-primary/10 bg-bg-elevated px-4 py-4 sm:px-5">
+        <Skeleton className="h-3 w-20" />
+        <Skeleton className="mt-2 h-6 w-48" />
+        <Skeleton className="mt-2 h-4 w-full max-w-md" />
+      </div>
+      <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
+        <Skeleton className="h-56 w-full rounded-xl" />
+        <Skeleton className="h-56 w-full rounded-xl" />
+      </div>
+      <Skeleton className="h-40 w-full rounded-xl" />
     </div>
   );
 }

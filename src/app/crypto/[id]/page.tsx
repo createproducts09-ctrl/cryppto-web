@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { CoinBhashaPanel } from "@/components/bhasha/CoinBhashaPanel";
 import { MarketingShell } from "@/components/marketing/MarketingShell";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { CryptoResearchLock } from "@/components/seo/CryptoResearchLock";
@@ -250,6 +251,8 @@ export default async function CryptoTokenPage({ params }: Props) {
             </div>
           </div>
         </header>
+
+        <CoinBhashaPanel coinId={id} name={name} />
 
         {/* Market strip */}
         <dl className="mt-8 grid grid-cols-2 gap-3 rounded-2xl border border-border bg-bg-elevated p-4 sm:grid-cols-3 lg:grid-cols-6">

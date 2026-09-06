@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MarkArrow } from "@/components/marketing/MarketingMarks";
@@ -13,7 +14,14 @@ import {
 } from "@/components/seo/OnPage";
 import { StickyToc } from "@/components/seo/StickyToc";
 import { Button } from "@/components/ui/Button";
-import { allPostSlugs, getPost, relatedPosts } from "@/content/blog";
+import { BlogCard } from "@/components/blog/BlogCard";
+import {
+  allPostSlugs,
+  blogCoverPath,
+  formatBlogDate,
+  getPost,
+  relatedPosts,
+} from "@/content/blog";
 import { pageMetadata, SITE } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -31,6 +39,7 @@ export async function generateMetadata({ params }: Props) {
     description: post.description,
     path: `/blog/${post.slug}`,
     keywords: post.keywords,
+    image: blogCoverPath(post.slug),
     type: "article",
     publishedTime: post.publishedAt,
     modifiedTime: post.updatedAt,
@@ -76,6 +85,7 @@ export default async function BlogPostPage({ params }: Props) {
       "@id": `${SITE.url}/blog/${post.slug}`,
     },
     keywords: post.keywords.join(", "),
+    image: `${SITE.url}${blogCoverPath(post.slug)}`,
     articleSection: post.category,
     wordCount: post.sections.reduce(
       (n, s) => n + s.body.join(" ").split(/\s+/).length,
@@ -110,19 +120,15 @@ export default async function BlogPostPage({ params }: Props) {
       }
     : null;
 
-  const more = relatedPosts(post.slug, 3).map((p) => ({
-    href: `/blog/${p.slug}`,
-    label: p.title,
-    blurb: p.description,
-  }));
+  const more = relatedPosts(post.slug, 3);
 
   return (
-    <MarketingShell>
+    <MarketingShell wide>
       <JsonLd data={articleLd} />
       {faqLd ? <JsonLd data={faqLd} /> : null}
       {howToLd ? <JsonLd data={howToLd} /> : null}
 
-      <div className="mx-auto max-w-6xl px-5 pb-16 pt-10 sm:px-8">
+      <div className="mx-auto max-w-[1400px] px-5 pb-20 pt-10 sm:px-8 lg:px-12">
         <Breadcrumbs
           items={[
             { name: "Blog", href: "/blog" },
@@ -130,34 +136,49 @@ export default async function BlogPostPage({ params }: Props) {
           ]}
         />
 
-        <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_240px] xl:grid-cols-[minmax(0,1fr)_260px] xl:gap-14">
-          <article className="min-w-0">
-            <header
-              id="overview"
-              className="scroll-mt-28 overflow-hidden rounded-2xl border border-border bg-bg-elevated/90 p-6 shadow-sm backdrop-blur sm:p-8"
-            >
+        <div className="mt-8 grid gap-12 lg:grid-cols-[minmax(0,1fr)_240px] xl:grid-cols-[minmax(0,760px)_1fr_260px]">
+          <article className="min-w-0 xl:col-start-1">
+            <header id="overview" className="scroll-mt-28">
               <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-text-muted">
-                <span className="rounded-md bg-primary-soft px-2 py-0.5 text-primary">
+                <span className="rounded-full bg-primary-soft px-2.5 py-0.5 font-semibold text-primary">
                   {post.category}
                 </span>
                 <time dateTime={post.publishedAt}>
-                  Published {post.publishedAt}
+                  {formatBlogDate(post.publishedAt)}
                 </time>
-                <span>·</span>
-                <time dateTime={post.updatedAt}>Updated {post.updatedAt}</time>
                 <span>·</span>
                 <span>{post.readingMinutes} min read</span>
               </div>
-              <h1 className="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">
+              <h1 className="font-display mt-4 max-w-3xl text-3xl font-bold tracking-[-0.04em] sm:text-5xl sm:leading-[1.08]">
                 {post.title}
               </h1>
-              <p className="mt-4 text-base leading-relaxed text-text-secondary">
+              <p className="mt-5 max-w-2xl text-base leading-relaxed text-text-secondary sm:text-lg">
                 {post.description}
               </p>
-              <p className="mt-3 text-xs text-text-muted">
-                By {SITE.name} Research Desk · Educational content · Not financial
-                advice
-              </p>
+              <div className="mt-8 flex items-center gap-3 border-y border-border py-4">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-soft text-sm font-bold text-primary">
+                  A
+                </span>
+                <div>
+                  <p className="text-sm font-semibold text-text">
+                    {SITE.name} Research
+                  </p>
+                  <p className="text-xs text-text-muted">
+                    Updated {formatBlogDate(post.updatedAt)} · Education, not
+                    advice
+                  </p>
+                </div>
+              </div>
+              <div className="relative mt-8 aspect-video overflow-hidden rounded-2xl border border-border bg-bg-muted">
+                <Image
+                  src={blogCoverPath(post.slug)}
+                  alt=""
+                  fill
+                  priority
+                  className="object-cover"
+                  sizes="(min-width: 1280px) 760px, 100vw"
+                />
+              </div>
             </header>
 
             <div className="mt-8 lg:hidden">
@@ -219,7 +240,7 @@ export default async function BlogPostPage({ params }: Props) {
               </section>
             ) : null}
 
-            <RelatedCluster links={[...post.related, ...more].slice(0, 6)} />
+            <RelatedCluster links={post.related} />
 
             <MarketingCtaGlow className="mt-14">
               <h2 className="text-lg font-bold">Run this workflow on Alphora</h2>
@@ -240,7 +261,7 @@ export default async function BlogPostPage({ params }: Props) {
             </MarketingCtaGlow>
           </article>
 
-          <aside className="relative hidden lg:block">
+          <aside className="relative hidden lg:block xl:col-start-3">
             <div className="sticky top-24 z-20 max-h-[calc(100dvh-6.5rem)] space-y-4 overflow-y-auto pb-8 [scrollbar-width:thin]">
               <StickyToc items={tocItems} />
               <div className="rounded-2xl border border-border bg-bg-elevated/90 p-4 text-sm shadow-sm backdrop-blur">
@@ -261,6 +282,30 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
           </aside>
         </div>
+
+        {more.length ? (
+          <section className="mt-16 border-t border-border pt-12">
+            <h2 className="text-xl font-semibold tracking-tight">
+              More from the journal
+            </h2>
+            <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              {more.map((p) => (
+                <BlogCard
+                  key={p.slug}
+                  post={{
+                    slug: p.slug,
+                    title: p.title,
+                    description: p.description,
+                    publishedAt: p.publishedAt,
+                    dateLabel: formatBlogDate(p.publishedAt),
+                    readingMinutes: p.readingMinutes,
+                    category: p.category,
+                  }}
+                />
+              ))}
+            </div>
+          </section>
+        ) : null}
       </div>
     </MarketingShell>
   );

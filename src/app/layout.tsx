@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit, Syne } from "next/font/google";
+import { Noto_Sans, Outfit, Syne } from "next/font/google";
 import Script from "next/script";
 
 import { Providers } from "@/components/providers";
@@ -18,6 +18,13 @@ const syne = Syne({
   variable: "--font-syne",
   display: "swap",
   weight: ["500", "600", "700", "800"],
+});
+
+const notoSans = Noto_Sans({
+  subsets: ["latin", "devanagari"],
+  variable: "--font-indic",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
 const CLARITY_ID =
@@ -148,7 +155,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${outfit.variable} ${syne.variable} antialiased`}>
+      <body
+        className={`${outfit.variable} ${syne.variable} ${notoSans.variable} antialiased`}
+      >
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

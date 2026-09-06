@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { LogIn, Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
+import { BrandLogo } from "@/components/brand/BrandLogo";
 import { Button } from "@/components/ui/Button";
 import { UserAvatar } from "@/components/ui/UserAvatar";
 import { useAuthStore } from "@/lib/store/auth";
@@ -60,11 +61,8 @@ export function TopBar({ onOpenSearch }: { onOpenSearch: () => void }) {
     <header className="sticky top-0 z-40 border-b border-border bg-white/95 backdrop-blur-xl">
       {/* Mobile app bar — Groww / investing style */}
       <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-2 px-3 lg:hidden">
-        <Link
-          href="/discover"
-          className="shrink-0 font-display text-[15px] font-semibold tracking-tight text-text"
-        >
-          Alphora Labs
+        <Link href="/discover" className="shrink-0" aria-label="Alphora Labs">
+          <BrandLogo compact className="[&>svg]:h-7 [&>svg]:w-7 [&_span]:text-[1.05rem]" />
         </Link>
         <div className="min-w-0 flex-1">
           <p className="truncate text-[13px] font-medium text-text-muted">
@@ -107,11 +105,8 @@ export function TopBar({ onOpenSearch }: { onOpenSearch: () => void }) {
 
       {/* Desktop bar */}
       <div className="mx-auto hidden h-16 max-w-[1400px] items-center gap-3 px-4 lg:flex lg:px-6">
-        <Link
-          href="/discover"
-          className="shrink-0 font-display text-lg font-semibold tracking-tight text-text"
-        >
-          Alphora Labs
+        <Link href="/discover" className="shrink-0" aria-label="Alphora Labs">
+          <BrandLogo compact />
         </Link>
 
         <button

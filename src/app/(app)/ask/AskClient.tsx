@@ -6,13 +6,16 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowUp, Plus, Sparkles, Trash2 } from "lucide-react";
 import Link from "next/link";
 
+import { BhashaLanguageChips } from "@/components/bhasha/BhashaLanguageChips";
+import { BhashaListenButton } from "@/components/bhasha/BhashaListenButton";
+import { BhashaMicButton } from "@/components/bhasha/BhashaMicButton";
+import { SarvamPowered } from "@/components/bhasha/SarvamPowered";
 import { MarkdownMessage } from "@/components/ask/MarkdownMessage";
 import {
   isDeskResearchReport,
   isResearchReportContent,
   ResearchReportView,
 } from "@/components/ask/ResearchReport";
-import { ResearchThinking } from "@/components/ask/ResearchThinking";
 import { AskSidebar } from "@/components/shell/AskSidebar";
 import { UpgradeModal } from "@/components/billing/UpgradeModal";
 import { Button } from "@/components/ui/Button";
@@ -58,9 +61,12 @@ export default function AskClient() {
   const coinNameParam = searchParams.get("name");
   const autoResearch = searchParams.get("auto") === "1";
   const promptParam = searchParams.get("q");
+  const langParam = searchParams.get("lang");
   const accessToken = useAuthStore((s) => s.accessToken);
   const isGuest = useAuthStore((s) => s.isGuest);
   const queryClient = useQueryClient();
+  const [language, setLanguage] = useState(langParam || "en");
+  const [micError, setMicError] = useState("");
   const [input, setInput] = useState("");
   const [localMessages, setLocalMessages] = useState<AiMessage[]>([]);
   const [activeThread, setActiveThread] = useState<string | null>(threadId);
@@ -148,6 +154,20 @@ export default function AskClient() {
 
   const chatMutation = useMutation({
     mutationFn: async (content: string) => {
+      if (language !== "en") {
+        const { data } = await endpoints.bhashaAsk({
+          question: content,
+          language,
+          thread_id: activeThread || undefined,
+          coin_id: basketId ? undefined : coinId || undefined,
+        });
+        return data as {
+          thread_id?: string;
+          reply?: string;
+          message?: AiMessage;
+          messages?: AiMessage[];
+        };
+      }
       const { data } = await endpoints.aiChat({
         content,
         thread_id: activeThread || undefined,
@@ -535,12 +555,14 @@ export default function AskClient() {
                 accessToken &&
                 autoResearch &&
                 chatMutation.isPending ? (
-                  <div className="mt-8 w-full max-w-lg">
-                    <ResearchThinking
-                      label={`Researching ${displayName}`}
-                      subtitle="Building charts, trends, and fundamentals"
-                      coinName={displayName}
-                    />
+                  <div
+                    className="mt-8 flex items-center gap-1.5"
+                    aria-live="polite"
+                    aria-label="Alphora is answering"
+                  >
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary [animation-delay:-0.2s]" />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary [animation-delay:-0.1s]" />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary" />
                   </div>
                 ) : (
                   <div className="mt-8 grid w-full gap-2 sm:grid-cols-2">
@@ -603,6 +625,15 @@ export default function AskClient() {
                           variant={desk ? "compact" : "inline"}
                           showOpenButton={desk}
                         />
+                        {language !== "en" && i === messages.length - 1 ? (
+                          <div className="mt-2">
+                            <BhashaListenButton
+                              text={m.content}
+                              language={language}
+                              label="Listen"
+                            />
+                          </div>
+                        ) : null}
                       </div>
                     );
                   }
@@ -634,22 +665,34 @@ export default function AskClient() {
                           )}
                         </div>
                       ) : (
-                        <MarkdownMessage content={m.content} />
+                        <div>
+                          <MarkdownMessage content={m.content} />
+                          {language !== "en" &&
+                          i === messages.length - 1 &&
+                          !awaitingReply ? (
+                            <div className="mt-2">
+                              <BhashaListenButton
+                                text={m.content}
+                                language={language}
+                                label="Listen"
+                              />
+                            </div>
+                          ) : null}
+                        </div>
                       )}
                     </div>
                   );
                 })}
 
                 {awaitingReply ? (
-                  <div className="mr-auto w-full max-w-[92%]">
-                    <ResearchThinking
-                      compact
-                      label={
-                        coinId ? "Writing research brief…" : "Thinking…"
-                      }
-                      subtitle="Alpha is analyzing market context"
-                      coinName={coinId ? displayName : undefined}
-                    />
+                  <div
+                    className="mr-auto flex items-center gap-1.5 rounded-2xl border border-border bg-bg-elevated px-3.5 py-2.5"
+                    aria-live="polite"
+                    aria-label="Alphora is answering"
+                  >
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary [animation-delay:-0.2s]" />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary [animation-delay:-0.1s]" />
+                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-primary" />
                   </div>
                 ) : null}
 
@@ -674,6 +717,15 @@ export default function AskClient() {
         </div>
 
         <div className="shrink-0 border-t border-border bg-bg-elevated/95 px-3 pt-3 backdrop-blur-md pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:px-6 lg:pb-4">
+          <div className="mx-auto mb-2 flex max-w-2xl flex-wrap items-center justify-between gap-2 px-1">
+            <BhashaLanguageChips value={language} onChange={setLanguage} />
+            <SarvamPowered compact />
+          </div>
+          {micError ? (
+            <p className="mx-auto mb-2 max-w-2xl px-1 text-[11px] text-down">
+              {micError}
+            </p>
+          ) : null}
           {accessToken && !isKeel && aiLimit != null ? (
             <div className="mx-auto mb-2 flex max-w-2xl items-center justify-between px-1 text-[11px] text-text-muted">
               <span>
@@ -709,7 +761,15 @@ export default function AskClient() {
                   ? `Ask about ${displayName}…`
                   : "Ask about any coin, narrative, or thesis…"
               }
-              className="max-h-40 min-h-[44px] flex-1 resize-none bg-transparent px-3 py-2.5 text-sm leading-relaxed outline-none placeholder:text-text-muted"
+              className="font-indic max-h-40 min-h-[44px] flex-1 resize-none bg-transparent px-3 py-2.5 text-sm leading-relaxed outline-none placeholder:text-text-muted"
+            />
+            <BhashaMicButton
+              language={language}
+              onTranscript={(text) => {
+                setInput(text);
+                setMicError("");
+              }}
+              onError={setMicError}
             />
             <Button
               type="submit"

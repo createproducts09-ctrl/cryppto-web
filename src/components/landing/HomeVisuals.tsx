@@ -16,7 +16,7 @@ export function HomeHeroVisual() {
       initial={{ opacity: 0, y: 28, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.7, delay: 0.1 }}
-      className="relative overflow-hidden rounded-[2rem] border border-border/80 bg-gradient-to-br from-bg-elevated via-bg-elevated/90 to-primary-soft/30 p-5 shadow-[var(--shadow-card)] sm:p-7"
+      className="relative overflow-hidden rounded-[1.5rem] border border-border/70 bg-bg-elevated p-4 sm:rounded-[2rem] sm:p-6 lg:rounded-l-[2rem] lg:rounded-r-none lg:border-r-0"
     >
       <OrbitField className="absolute inset-0" />
       <SwipeStackVisual />
@@ -47,7 +47,6 @@ export function HomeBasketVisual() {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="order-2 lg:order-1"
     >
       <BasketStripVisual />
     </motion.div>

@@ -33,7 +33,7 @@ export function HomeAuthActions({ variant }: Props) {
 
   if (variant === "closing") {
     return (
-      <div className="relative mt-8 flex flex-wrap items-center justify-center gap-3">
+      <div className="relative mt-8 flex flex-wrap items-center justify-start gap-3">
         {entered ? (
           <Link href="/discover">
             <Button size="lg">

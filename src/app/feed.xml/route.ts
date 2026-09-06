@@ -1,4 +1,4 @@
-import { blogPosts } from "@/content/blog";
+import { blogCoverPath, blogPosts } from "@/content/blog";
 import { SITE } from "@/lib/seo";
 
 export const dynamic = "force-static";
@@ -18,6 +18,7 @@ export async function GET() {
     .sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1))
     .map((post) => {
       const url = `${SITE.url}/blog/${post.slug}`;
+      const cover = `${SITE.url}${blogCoverPath(post.slug)}`;
       return `
     <item>
       <title>${escapeXml(post.title)}</title>
@@ -26,6 +27,7 @@ export async function GET() {
       <pubDate>${new Date(post.publishedAt).toUTCString()}</pubDate>
       <description>${escapeXml(post.description)}</description>
       <category>${escapeXml(post.category)}</category>
+      <enclosure url="${escapeXml(cover)}" type="image/png"/>
     </item>`;
     })
     .join("\n");

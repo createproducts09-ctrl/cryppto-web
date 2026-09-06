@@ -15,6 +15,7 @@ import {
 import { AlphoraResearchPanel } from "@/components/research/AlphoraResearch";
 import { FundamentalsPanel } from "@/components/research/FundamentalsPanel";
 import {
+  AlphoraTabSkeleton,
   ChartLoading,
   PanelLoading,
   ResearchSkeleton,
@@ -102,7 +103,7 @@ export default function CoinDetailPage() {
   const researchQuery = useQuery({
     queryKey: ["research", id],
     queryFn: async () => {
-      const { data } = await endpoints.research(id);
+      const { data } = await endpoints.research(id, { ai: false });
       return data as ResearchPack;
     },
     enabled: !!id,
@@ -332,7 +333,7 @@ export default function CoinDetailPage() {
         {tab === "research" && (
           <div className="space-y-4 animate-fade-in">
             {researchQuery.isLoading ? (
-              <PanelLoading label="Alphora is investigating…" />
+              <AlphoraTabSkeleton />
             ) : researchQuery.isError || !researchQuery.data ? (
               <EmptyState
                 title="Research unavailable"

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-import { BrandLogo } from "@/components/brand/BrandLogo";
+import { BrandGiant, BrandLogo } from "@/components/brand/BrandLogo";
+import { SarvamPowered } from "@/components/bhasha/SarvamPowered";
 import { MarketingHeader } from "@/components/marketing/MarketingHeader";
 import { MarketingAtmosphere } from "@/components/marketing/MarketingVisuals";
 import { SITE } from "@/lib/seo";
@@ -35,6 +36,7 @@ const footerCols = [
     title: "Product",
     links: [
       { href: "/ai-crypto-assistant", label: "AI crypto assistant" },
+      { href: "/#bhasha", label: "Alphora Bhasha" },
       { href: "/crypto-portfolio-tracker", label: "Portfolio tracker" },
       { href: "/discover", label: "Open Discover" },
       { href: "/about", label: "About" },
@@ -47,22 +49,28 @@ const footerCols = [
 export function MarketingShell({
   children,
   showCta = true,
+  wide = false,
 }: {
   children: React.ReactNode;
   showCta?: boolean;
+  wide?: boolean;
 }) {
+  const shell = wide
+    ? "mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12"
+    : "mx-auto max-w-6xl px-5 sm:px-8";
+
   return (
     <div className="relative min-h-dvh bg-bg font-sans text-text">
       <MarketingAtmosphere />
 
-      <MarketingHeader showCta={showCta} />
+      <MarketingHeader showCta={showCta} wide={wide} />
 
       <main className="relative z-10">{children}</main>
 
-      <footer className="relative z-10 border-t border-border bg-bg-elevated/95 backdrop-blur">
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-8 md:grid-cols-4">
+      <footer className="relative z-10 overflow-hidden border-t border-border bg-bg-elevated/95 backdrop-blur">
+        <div className={`${shell} grid gap-10 pt-12 md:grid-cols-4`}>
           <div className="md:col-span-1">
-            <BrandLogo className="h-4 w-auto max-w-[7rem]" />
+            <BrandLogo />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-text-secondary">
               {SITE.tagline} for discovering, analyzing, and tracking digital
               assets — AI briefs, token research, and thesis baskets.
@@ -88,11 +96,17 @@ export function MarketingShell({
             </div>
           ))}
         </div>
-        <div className="border-t border-border px-5 py-6 text-center text-xs text-text-muted sm:px-8">
-          © {new Date().getFullYear()} {SITE.name} · Research only · Not financial advice ·{" "}
-          <a href={SITE.url} className="hover:text-text">
-            alphoralabs.com
-          </a>
+        <div className={shell}>
+          <BrandGiant className="text-center text-[clamp(3.5rem,14vw,9rem)]" />
+        </div>
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 border-t border-border px-5 py-6 text-center text-xs text-text-muted sm:px-8">
+          <span>
+            © {new Date().getFullYear()} {SITE.name} · Research only · Not financial advice ·{" "}
+            <a href={SITE.url} className="hover:text-text">
+              alphoralabs.com
+            </a>
+          </span>
+          <SarvamPowered />
         </div>
       </footer>
     </div>

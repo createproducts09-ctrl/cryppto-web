@@ -221,6 +221,37 @@ export const endpoints = {
     coin_id?: string;
     basket_id?: string;
   }) => api.post("/ai/chat", body, { timeout: 120000 }),
+  bhashaStatus: () => api.get("/bhasha/status"),
+  bhashaBrief: (body: {
+    coin_id: string;
+    language?: string;
+    question?: string;
+  }) => api.post("/bhasha/brief", body, { timeout: 120000 }),
+  bhashaAsk: (body: {
+    question: string;
+    language?: string;
+    coin_id?: string;
+    thread_id?: string;
+  }) => api.post("/bhasha/ask", body, { timeout: 120000 }),
+  bhashaStt: (body: {
+    audio: string;
+    language?: string;
+    mime?: string;
+    filename?: string;
+  }) => api.post("/bhasha/stt", body, { timeout: 90000 }),
+  bhashaTts: (
+    body: { text: string; language?: string },
+    config?: { signal?: AbortSignal }
+  ) => api.post("/bhasha/tts", body, { timeout: 60000, ...config }),
+  bhashaAssistant: (body: {
+    question: string;
+    history?: { role: "user" | "assistant"; content: string }[];
+  }) => api.post("/bhasha/assistant", body, { timeout: 120000 }),
+  bhashaNews: (body: {
+    title: string;
+    summary?: string;
+    language?: string;
+  }) => api.post("/bhasha/news", body, { timeout: 60000 }),
   search: (q: string) => api.get("/search", { params: { q } }),
   news: (opts?: { limit?: number; category?: string }) =>
     api.get("/news", {

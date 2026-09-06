@@ -455,6 +455,10 @@ export const blogPosts: BlogPost[] = [
   },
 ];
 
+export function blogCoverPath(slug: string) {
+  return `/blog/${slug}.png`;
+}
+
 export function getPost(slug: string) {
   return blogPosts.find((p) => p.slug === slug);
 }
@@ -463,6 +467,54 @@ export function allPostSlugs() {
   return blogPosts.map((p) => p.slug);
 }
 
+export function postsNewestFirst() {
+  return [...blogPosts].sort((a, b) =>
+    a.publishedAt < b.publishedAt ? 1 : a.publishedAt > b.publishedAt ? -1 : 0
+  );
+}
+
+export function blogCategories() {
+  const preferred = [
+    "Guides",
+    "AI",
+    "Portfolio",
+    "Fundamentals",
+    "Workflow",
+  ];
+  const found = new Set(blogPosts.map((p) => p.category));
+  return [
+    ...preferred.filter((name) => found.has(name)),
+    ...[...found].filter((name) => !preferred.includes(name)),
+  ];
+}
+
 export function relatedPosts(slug: string, limit = 3) {
-  return blogPosts.filter((p) => p.slug !== slug).slice(0, limit);
+  const current = getPost(slug);
+  const rest = blogPosts.filter((p) => p.slug !== slug);
+  const same = current
+    ? rest.filter((p) => p.category === current.category)
+    : [];
+  const other = rest.filter((p) => p.category !== current?.category);
+  return [...same, ...other].slice(0, limit);
+}
+
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+] as const;
+
+export function formatBlogDate(iso: string) {
+  const [year, month, day] = iso.split("-").map(Number);
+  if (!year || !month || !day) return iso;
+  return `${MONTHS[month - 1]} ${day}, ${year}`;
 }

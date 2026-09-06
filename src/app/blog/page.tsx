@@ -1,17 +1,18 @@
 import Link from "next/link";
 import { MarkArrow } from "@/components/marketing/MarketingMarks";
 
+import { BlogIndexClient } from "@/components/blog/BlogIndexClient";
+import type { BlogCardPost } from "@/components/blog/blogMeta";
 import { MarketingShell } from "@/components/marketing/MarketingShell";
-import {
-  BlogCardAccent,
-  MarketingCtaGlow,
-  MarketingHeroArt,
-  MarketingStatStrip,
-} from "@/components/marketing/MarketingVisuals";
-import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { MarketingCtaGlow } from "@/components/marketing/MarketingVisuals";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/Button";
-import { blogPosts } from "@/content/blog";
+import {
+  blogCategories,
+  blogCoverPath,
+  formatBlogDate,
+  postsNewestFirst,
+} from "@/content/blog";
 import { pageMetadata, SITE } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -28,92 +29,60 @@ export const metadata = pageMetadata({
 });
 
 export default function BlogIndexPage() {
+  const posts = postsNewestFirst();
+  const cards: BlogCardPost[] = posts.map((p) => ({
+    slug: p.slug,
+    title: p.title,
+    description: p.description,
+    publishedAt: p.publishedAt,
+    dateLabel: formatBlogDate(p.publishedAt),
+    readingMinutes: p.readingMinutes,
+    category: p.category,
+  }));
+
   const itemList = {
     "@context": "https://schema.org",
     "@type": "Blog",
     name: `${SITE.name} Blog`,
     description: "Crypto research guides and workflows from Alphora Labs.",
     url: `${SITE.url}/blog`,
-    blogPost: blogPosts.map((p) => ({
+    blogPost: posts.map((p) => ({
       "@type": "BlogPosting",
       headline: p.title,
       description: p.description,
       datePublished: p.publishedAt,
       dateModified: p.updatedAt,
       url: `${SITE.url}/blog/${p.slug}`,
+      image: `${SITE.url}${blogCoverPath(p.slug)}`,
     })),
   };
 
   return (
-    <MarketingShell>
+    <MarketingShell wide>
       <JsonLd data={itemList} />
-      <div className="mx-auto max-w-6xl px-5 pb-16 pt-10 sm:px-8">
-        <Breadcrumbs items={[{ name: "Blog" }]} />
+      <div className="mx-auto max-w-[1400px] px-5 pb-20 pt-12 sm:px-8 lg:px-12">
+        <header className="max-w-2xl">
+          <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-primary">
+            Journal
+          </p>
+          <h1 className="font-display mt-3 text-4xl font-bold tracking-[-0.04em] text-text sm:text-5xl">
+            Research notes from the desk
+          </h1>
+          <p className="mt-4 max-w-xl text-base leading-relaxed text-text-secondary sm:text-[17px]">
+            Frameworks for discovery, AI briefs, portfolios, and tokenomics —
+            written like a CRM changelog, not a hype feed.
+          </p>
+        </header>
 
-        <section className="mt-8 grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary">
-              Blog
-            </p>
-            <h1 className="mt-3 max-w-xl text-4xl font-extrabold tracking-tight sm:text-5xl">
-              Crypto research guides that compound
-            </h1>
-            <p className="mt-4 max-w-xl text-base leading-relaxed text-text-secondary">
-              Frameworks for discovery, AI briefs, portfolios, and tokenomics — written for people who want clarity, not hype.{" "}
-              <Link href="/feed.xml" className="font-semibold text-primary hover:underline">
-                RSS
-              </Link>
-              {" · "}
-              <Link href="/guides" className="font-semibold text-primary hover:underline">
-                Guides hub
-              </Link>
-            </p>
-            <div className="mt-8">
-              <MarketingStatStrip />
-            </div>
-          </div>
-          <MarketingHeroArt variant="blog" />
-        </section>
-
-        <div className="mt-14 grid gap-5 md:grid-cols-2">
-          {blogPosts.map((post, i) => (
-            <Link
-              key={post.slug}
-              href={`/blog/${post.slug}`}
-              className="group relative overflow-hidden rounded-2xl border border-border bg-bg-elevated/90 p-6 shadow-sm backdrop-blur transition hover:border-primary/40 hover:shadow-md"
-            >
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-primary-soft/80 to-transparent opacity-0 transition group-hover:opacity-100"
-              />
-              <div className="relative">
-                <BlogCardAccent index={i} />
-                <div className="flex items-center gap-2 text-xs font-medium text-text-muted">
-                  <span className="text-primary">{post.category}</span>
-                  <span>·</span>
-                  <time dateTime={post.publishedAt}>{post.publishedAt}</time>
-                  <span>·</span>
-                  <span>{post.readingMinutes} min</span>
-                </div>
-                <h2 className="mt-3 text-xl font-bold tracking-tight group-hover:text-primary">
-                  {post.title}
-                </h2>
-                <p className="mt-2 text-sm leading-relaxed text-text-secondary">
-                  {post.description}
-                </p>
-                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary">
-                  Read guide
-                  <MarkArrow className="h-4 w-4 transition group-hover:translate-x-0.5" />
-                </span>
-              </div>
-            </Link>
-          ))}
+        <div className="mt-10">
+          <BlogIndexClient posts={cards} categories={blogCategories()} />
         </div>
 
-        <MarketingCtaGlow className="mt-16">
-          <h2 className="text-2xl font-bold">Put the guides into practice</h2>
+        <MarketingCtaGlow className="mt-20">
+          <h2 className="text-2xl font-bold">Put the notes into practice</h2>
           <p className="mx-auto mt-2 max-w-md text-sm text-text-secondary">
-            Open Discover, Ask for a desk brief, and track baskets on Alphora Labs.
+            Open Discover, Ask for a desk brief, and track baskets on Alphora
+            Labs.
           </p>
           <Link href="/register" className="mt-6 inline-block">
             <Button size="lg">

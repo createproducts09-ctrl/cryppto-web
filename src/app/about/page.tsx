@@ -36,7 +36,7 @@ export default function AboutPage() {
       name: SITE.name,
       url: SITE.url,
       description: SITE.description,
-      logo: `${SITE.url}/logo.png`,
+      logo: `${SITE.url}/brand-mark.png`,
     },
   };
 

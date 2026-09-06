@@ -27,11 +27,24 @@ function visualForSlug(slug: string): MarketingVisualVariant {
   return "desk";
 }
 
-export function SeoLandingView({ page }: { page: SeoLanding }) {
-  const headings = page.sections.map((s) => ({
-    id: slugifyHeading(s.heading),
-    label: s.heading,
-  }));
+export function SeoLandingView({
+  page,
+  wide = false,
+  children,
+}: {
+  page: SeoLanding;
+  wide?: boolean;
+  children?: React.ReactNode;
+}) {
+  const headings = [
+    ...(children
+      ? [{ id: "real-world-stack", label: "Required stack" }]
+      : []),
+    ...page.sections.map((s) => ({
+      id: slugifyHeading(s.heading),
+      label: s.heading,
+    })),
+  ];
   const visual = visualForSlug(page.slug);
 
   const softwareLd = {
@@ -70,12 +83,18 @@ export function SeoLandingView({ page }: { page: SeoLanding }) {
   };
 
   return (
-    <MarketingShell>
+    <MarketingShell wide={wide}>
       <JsonLd data={softwareLd} />
       <JsonLd data={faqLd} />
       <JsonLd data={webPageLd} />
 
-      <div className="mx-auto max-w-6xl px-5 pb-16 pt-10 sm:px-8">
+      <div
+        className={
+          wide
+            ? "mx-auto max-w-[1400px] px-5 pb-16 pt-10 sm:px-8 lg:px-12"
+            : "mx-auto max-w-6xl px-5 pb-16 pt-10 sm:px-8"
+        }
+      >
         <Breadcrumbs items={[{ name: page.title }]} />
 
         <section className="mt-8 grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
@@ -129,6 +148,8 @@ export function SeoLandingView({ page }: { page: SeoLanding }) {
             </li>
           ))}
         </ul>
+
+        {children}
 
         {page.comparison ? (
           <section className="mt-14 overflow-hidden rounded-2xl border border-border bg-bg-elevated/80">

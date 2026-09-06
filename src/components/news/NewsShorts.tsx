@@ -9,6 +9,7 @@ import {
   Newspaper,
 } from "lucide-react";
 
+import { NewsBhashaBar } from "@/components/bhasha/NewsBhashaBar";
 import { formatRelative } from "@/lib/format";
 import type { NewsItem } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -66,7 +67,13 @@ function NewsCard({
   total: number;
 }) {
   const sentiment = sentimentMeta(item.sentiment);
-  const text = storyText(item);
+  const english = storyText(item);
+  const [localized, setLocalized] = useState<{
+    title: string;
+    summary: string;
+  } | null>(null);
+  const text = localized?.summary || english;
+  const title = localized?.title || item.title;
   const source = cleanSource(item.source);
 
   return (
@@ -124,13 +131,19 @@ function NewsCard({
           <span>~30 sec read</span>
         </div>
 
-        <h2 className="font-display text-[1.35rem] font-semibold leading-snug tracking-tight text-text sm:text-[1.55rem]">
-          {item.title}
+        <h2 className="font-indic font-display text-[1.35rem] font-semibold leading-snug tracking-tight text-text sm:text-[1.55rem]">
+          {title}
         </h2>
 
-        <p className="mt-3 flex-1 overflow-y-auto text-[15px] leading-relaxed text-text-secondary sm:text-base">
+        <p className="font-indic mt-3 flex-1 overflow-y-auto text-[15px] leading-relaxed text-text-secondary sm:text-base">
           {text || "Summary unavailable for this story."}
         </p>
+
+        <NewsBhashaBar
+          title={item.title}
+          summary={english}
+          onLocalized={setLocalized}
+        />
 
         <div className="mt-4 flex items-center justify-between gap-3 border-t border-border/80 pt-3">
           {item.url ? (

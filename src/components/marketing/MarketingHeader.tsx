@@ -21,10 +21,12 @@ export const MARKETING_NAV = [
 export function MarketingHeader({
   sticky = true,
   showCta = true,
+  wide = false,
   className,
 }: {
   sticky?: boolean;
   showCta?: boolean;
+  wide?: boolean;
   className?: string;
 }) {
   const accessToken = useAuthStore((s) => s.accessToken);
@@ -39,9 +41,16 @@ export function MarketingHeader({
         className,
       )}
     >
-      <div className="relative mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
+      <div
+        className={cn(
+          "relative mx-auto flex items-center justify-between gap-4 py-3",
+          wide
+            ? "max-w-[1400px] px-5 sm:px-8 lg:px-12"
+            : "max-w-6xl px-5 sm:px-8"
+        )}
+      >
         <Link href="/" className="flex shrink-0 items-center" aria-label={SITE.name}>
-          <BrandLogo className="h-4 w-auto max-w-[7rem] sm:h-[18px] sm:max-w-[7.5rem]" priority />
+          <BrandLogo priority compact />
         </Link>
         <nav className="hidden items-center gap-5 text-sm font-medium text-text-secondary lg:flex">
           {MARKETING_NAV.map((item) => (
@@ -76,7 +85,12 @@ export function MarketingHeader({
         ) : null}
       </div>
       {/* Compact links on smaller screens */}
-      <nav className="flex gap-4 overflow-x-auto border-t border-border/60 px-5 py-2 text-xs font-medium text-text-secondary sm:px-8 lg:hidden">
+      <nav
+        className={cn(
+          "flex gap-4 overflow-x-auto border-t border-border/60 py-2 text-xs font-medium text-text-secondary lg:hidden",
+          wide ? "mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12" : "px-5 sm:px-8"
+        )}
+      >
         {MARKETING_NAV.map((item) => (
           <Link
             key={item.href}

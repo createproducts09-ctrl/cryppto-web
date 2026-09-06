@@ -1,15 +1,14 @@
 import Link from "next/link";
-import { MarkArrow } from "@/components/marketing/MarketingMarks";
 
+import { BlogCard } from "@/components/blog/BlogCard";
 import { MarketingShell } from "@/components/marketing/MarketingShell";
 import {
-  BlogCardAccent,
   MarketingHeroArt,
   MarketingStatStrip,
 } from "@/components/marketing/MarketingVisuals";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { blogPosts } from "@/content/blog";
+import { blogPosts, formatBlogDate } from "@/content/blog";
 import { pageMetadata, SITE } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -62,25 +61,19 @@ export default function GuidesHubPage() {
         </section>
 
         <div className="mt-14 grid gap-5 md:grid-cols-2">
-          {guides.map((g, i) => (
-            <Link
+          {guides.map((g) => (
+            <BlogCard
               key={g.slug}
-              href={`/blog/${g.slug}`}
-              className="group rounded-2xl border border-border bg-bg-elevated/90 p-6 shadow-sm backdrop-blur transition hover:border-primary/40"
-            >
-              <BlogCardAccent index={i} />
-              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">
-                {g.category}
-              </p>
-              <h2 className="mt-2 text-xl font-bold group-hover:text-primary">
-                {g.title}
-              </h2>
-              <p className="mt-2 text-sm text-text-secondary">{g.description}</p>
-              <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary">
-                Open guide
-                <MarkArrow className="h-4 w-4" />
-              </span>
-            </Link>
+              post={{
+                slug: g.slug,
+                title: g.title,
+                description: g.description,
+                publishedAt: g.publishedAt,
+                dateLabel: formatBlogDate(g.publishedAt),
+                readingMinutes: g.readingMinutes,
+                category: g.category,
+              }}
+            />
           ))}
         </div>
 
