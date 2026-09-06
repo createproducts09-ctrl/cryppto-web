@@ -453,6 +453,93 @@ export const blogPosts: BlogPost[] = [
       },
     ],
   },
+  {
+    slug: "alphora-sarvam-voice-research",
+    title: "Alphora Labs × Sarvam AI: Voice-First Crypto Research",
+    description:
+      "Ask about assets and theses in Indian languages. Alphora returns evidence-backed briefs from market, on-chain, and desk research — then reads them back.",
+    keywords: [
+      "Alphora Sarvam",
+      "voice crypto research",
+      "Hindi crypto research",
+      "multilingual AI crypto",
+      "Alphora Bhasha",
+      "Sarvam AI",
+    ],
+    publishedAt: "2026-09-07",
+    updatedAt: "2026-09-07",
+    readingMinutes: 6,
+    category: "Bhasha",
+    takeaways: [
+      "Bhasha is voice-first research — not another dashboard.",
+      "Sarvam handles Indic speech and language; Alphora keeps the desk.",
+      "Answers pull market, on-chain, and proprietary research — then you hear them.",
+      "Research only. You keep custody, execution, and the call.",
+    ],
+    related: [
+      {
+        href: "/bhasha",
+        label: "Alphora Bhasha",
+        blurb: "Try voice research in Indian languages.",
+      },
+      {
+        href: "/ai-crypto-assistant",
+        label: "AI crypto assistant",
+        blurb: "The Ask desk behind the brief.",
+      },
+      {
+        href: "/crypto-research",
+        label: "Research platform",
+        blurb: "Discover → Ask → Basket.",
+      },
+    ],
+    howTo: {
+      name: "How to ask Alphora in your language",
+      steps: [
+        "Open Bhasha and pick Hindi, Tamil, or another supported language.",
+        "Speak or type a question about an asset or a thesis.",
+        "Read the snapshot, risk, and monitor cards.",
+        "Listen to the brief, then open Ask or the public token page if you need the full note.",
+      ],
+    },
+    sections: [
+      {
+        heading: "Talk to the desk, skip the tab stack",
+        body: [
+          "Most crypto research still means five dashboards, a PDF, and a notes app that never becomes a thesis. Alphora Labs × Sarvam AI is built for a different loop: speak the question in the language you actually think in, and get a desk brief back.",
+          "Alphora Bhasha is voice-first and multilingual. You ask about an asset or an investment thesis in Hindi, Tamil, Telugu, Bengali, Marathi, Gujarati, Kannada, Malayalam, or Punjabi. The product answers with structure — snapshot, risk, what to monitor — not a wall of chat.",
+        ],
+      },
+      {
+        heading: "Evidence, not a translated chatbot",
+        body: [
+          "The point is not to bolt a voice overlay onto English research. Sarvam AI powers Indic speech-to-text, language, and playback. Alphora keeps the research job: market tape, on-chain context, and proprietary desk notes sit underneath the answer.",
+          "If the thesis is unlock overhang, the brief should say so. If liquidity is the kill criterion, that belongs in the risk card. Voice is the interface. Evidence is still the product.",
+        ],
+      },
+      {
+        heading: "What you can do today",
+        body: [
+          "Pick a language, speak or type, run a brief on Bitcoin, Ethereum, Solana, or XRP from the homepage or the dedicated Bhasha page. Hear it back. Jump into Ask for a longer note, or open the public /crypto page if you want something shareable.",
+          "This is research software — not a brokerage and not financial advice. You keep custody, execution, and the final call. Bhasha just removes the English-only tax on the first five minutes of diligence.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        q: "What is Alphora Labs × Sarvam AI?",
+        a: "A partnership for voice-first crypto research in Indian languages. Sarvam handles Indic voice and language; Alphora structures the research desk.",
+      },
+      {
+        q: "Where do I try it?",
+        a: "On /bhasha, the homepage Bhasha widget, coin pages, and the floating Ask Alphora assistant.",
+      },
+      {
+        q: "Is this investment advice?",
+        a: "No. Briefs are educational research notes. You decide.",
+      },
+    ],
+  },
 ];
 
 export function blogCoverPath(slug: string) {
@@ -480,6 +567,7 @@ export function blogCategories() {
     "Portfolio",
     "Fundamentals",
     "Workflow",
+    "Bhasha",
   ];
   const found = new Set(blogPosts.map((p) => p.category));
   return [

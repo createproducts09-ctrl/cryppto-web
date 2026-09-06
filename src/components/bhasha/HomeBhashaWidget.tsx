@@ -19,7 +19,11 @@ import {
 } from "@/lib/bhasha";
 import { cn } from "@/lib/utils";
 
-export function HomeBhashaWidget() {
+export function HomeBhashaWidget({
+  embedded = false,
+}: {
+  embedded?: boolean;
+}) {
   const [language, setLanguage] = useState("hi");
   const [coinId, setCoinId] = useState("bitcoin");
   const [question, setQuestion] = useState(BHASHA_PROMPTS.hi);
@@ -61,26 +65,8 @@ export function HomeBhashaWidget() {
     }
   }
 
-  return (
-    <section id="bhasha" className="relative border-b border-border bg-primary-soft/40">
-      <div className="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 sm:py-20 lg:px-12">
-        <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
-          <div className="lg:col-span-6">
-            <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-primary">
-              Alphora Bhasha
-            </p>
-            <h2 className="font-display mt-3 text-3xl font-bold tracking-[-0.04em] text-text sm:text-4xl">
-              Research you can speak, read, and hear
-            </h2>
-          </div>
-          <p className="max-w-md text-[15px] leading-relaxed text-text-secondary lg:col-span-5 lg:col-start-8">
-            Ask in Hindi, Tamil, or any Indian language. Alphora returns a
-            structured desk brief — snapshot, risk, what to monitor — then reads
-            it back. Built for Bharat. Research only.
-          </p>
-        </div>
-
-        <div className="mt-8 rounded-3xl border border-border bg-bg-elevated p-5 shadow-[var(--shadow-card)] sm:p-7">
+  const desk = (
+    <div className="rounded-3xl border border-border bg-bg-elevated p-5 shadow-[var(--shadow-card)] sm:p-7">
           <BhashaLanguageChips value={language} onChange={changeLanguage} />
 
           <div className="mt-4 flex flex-wrap gap-1.5">
@@ -186,8 +172,48 @@ export function HomeBhashaWidget() {
             >
               Public research page →
             </Link>
+            {!embedded ? (
+              <Link
+                href="/bhasha"
+                className="text-text-secondary hover:text-primary"
+              >
+                Bhasha page →
+              </Link>
+            ) : (
+              <Link
+                href="/blog/alphora-sarvam-voice-research"
+                className="text-text-secondary hover:text-primary"
+              >
+                Why we built this →
+              </Link>
+            )}
           </div>
         </div>
+  );
+
+  if (embedded) {
+    return <div id="try">{desk}</div>;
+  }
+
+  return (
+    <section id="bhasha" className="relative border-b border-border bg-primary-soft/40">
+      <div className="mx-auto max-w-[1400px] px-5 py-16 sm:px-8 sm:py-20 lg:px-12">
+        <div className="grid gap-6 lg:grid-cols-12 lg:items-end">
+          <div className="lg:col-span-6">
+            <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-primary">
+              Alphora Bhasha
+            </p>
+            <h2 className="font-display mt-3 text-3xl font-bold tracking-[-0.04em] text-text sm:text-4xl">
+              Research you can speak, read, and hear
+            </h2>
+          </div>
+          <p className="max-w-md text-[15px] leading-relaxed text-text-secondary lg:col-span-5 lg:col-start-8">
+            Ask in Hindi, Tamil, or any Indian language. Alphora returns a
+            structured desk brief — snapshot, risk, what to monitor — then reads
+            it back. Built for Bharat. Research only.
+          </p>
+        </div>
+        <div className="mt-8">{desk}</div>
       </div>
     </section>
   );

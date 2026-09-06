@@ -36,7 +36,7 @@ const footerCols = [
     title: "Product",
     links: [
       { href: "/ai-crypto-assistant", label: "AI crypto assistant" },
-      { href: "/#bhasha", label: "Alphora Bhasha" },
+      { href: "/bhasha", label: "Alphora Bhasha" },
       { href: "/crypto-portfolio-tracker", label: "Portfolio tracker" },
       { href: "/discover", label: "Open Discover" },
       { href: "/about", label: "About" },

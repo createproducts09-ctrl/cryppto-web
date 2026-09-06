@@ -37,6 +37,11 @@ const CATEGORY_TONE: Record<
     wash: "from-primary/15 via-bg-muted to-accent/10",
     ink: "text-primary",
   },
+  Bhasha: {
+    chip: "bg-primary-soft text-primary",
+    wash: "from-primary/20 via-accent/10 to-primary/5",
+    ink: "text-primary",
+  },
 };
 
 export function categoryTone(category: string) {

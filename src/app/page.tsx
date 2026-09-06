@@ -383,7 +383,7 @@ export default function LandingPage() {
             </p>
             <ul className="mt-4 space-y-2 text-sm text-text-secondary">
               <li>
-                <Link href="/#bhasha" className="hover:text-primary">
+                <Link href="/bhasha" className="hover:text-primary">
                   Alphora Bhasha
                 </Link>
               </li>
