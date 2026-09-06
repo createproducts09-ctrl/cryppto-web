@@ -1,37 +1,4 @@
-import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-
-import { cn } from "@/lib/utils";
-
-export function HomeShot({
-  src,
-  alt,
-  className,
-  priority = false,
-}: {
-  src: string;
-  alt: string;
-  className?: string;
-  priority?: boolean;
-}) {
-  return (
-    <div
-      className={cn(
-        "relative aspect-[16/10] overflow-hidden rounded-2xl border border-border bg-bg-muted shadow-[0_8px_30px_rgba(24,24,27,0.04)]",
-        className,
-      )}
-    >
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        priority={priority}
-        className="object-cover"
-        sizes="(min-width: 1024px) 50vw, 100vw"
-      />
-    </div>
-  );
-}
 
 export function HomeDeskWidgets() {
   return (

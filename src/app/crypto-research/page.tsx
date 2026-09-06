@@ -1,4 +1,4 @@
-import { SeoLandingView } from "@/components/marketing/SeoLandingView";
+import { ResearchPageView } from "@/components/marketing/ResearchPageView";
 import { getLanding } from "@/content/seo-landings";
 import { pageMetadata } from "@/lib/seo";
 
@@ -12,5 +12,5 @@ export const metadata = pageMetadata({
 });
 
 export default function CryptoResearchPage() {
-  return <SeoLandingView page={page} />;
+  return <ResearchPageView page={page} />;
 }

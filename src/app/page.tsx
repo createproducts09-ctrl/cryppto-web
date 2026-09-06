@@ -9,8 +9,13 @@ import {
   HomeDeskLink,
 } from "@/components/landing/HomeAuthActions";
 import {
+  HomeAskScene,
+  HomeBasketScene,
+  HomeCloseScene,
+  HomeWorkflowScene,
+} from "@/components/landing/HomeScenes";
+import {
   HomeDeskWidgets,
-  HomeShot,
   HomeStepWidgets,
 } from "@/components/landing/HomeWidgets";
 import { HomeBhashaWidget } from "@/components/bhasha/HomeBhashaWidget";
@@ -199,11 +204,7 @@ export default function LandingPage() {
                 the thesis is working — public pages and the live desk share the
                 same loop.
               </p>
-              <HomeShot
-                src="/home/workflow.png"
-                alt="Three-step research workflow on a desk"
-                className="mt-8"
-              />
+              <HomeWorkflowScene className="mt-8" />
             </div>
             <div className="lg:col-span-8">
               <HomeStepWidgets />
@@ -229,10 +230,7 @@ export default function LandingPage() {
               <HomeDeskLink hrefWhenEntered="/ask">Open Ask</HomeDeskLink>
             </div>
             <div className="lg:col-span-6 lg:col-start-7">
-              <HomeShot
-                src="/home/ask.png"
-                alt="Ask desk — AI brief on a research laptop"
-              />
+              <HomeAskScene />
             </div>
           </div>
         </section>
@@ -240,10 +238,7 @@ export default function LandingPage() {
         <section className="relative border-t border-border bg-bg-elevated">
           <div className="mx-auto grid max-w-[1400px] items-center gap-10 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-12 lg:px-12">
             <div className="order-2 lg:order-1 lg:col-span-6">
-              <HomeShot
-                src="/home/portfolio.png"
-                alt="Thesis baskets with coins on a research desk"
-              />
+              <HomeBasketScene />
             </div>
             <div className="order-1 lg:order-2 lg:col-span-5 lg:col-start-8">
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-primary">
@@ -367,10 +362,7 @@ export default function LandingPage() {
               <HomeAuthActions variant="closing" />
             </div>
             <div className="lg:col-span-6 lg:col-start-7">
-              <HomeShot
-                src="/home/desk.png"
-                alt="Calm research desk at the end of the day"
-              />
+              <HomeCloseScene />
             </div>
           </div>
         </section>
